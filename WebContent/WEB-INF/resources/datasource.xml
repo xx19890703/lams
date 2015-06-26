@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DatasourceManager xmlVersion="20100901">
+<ConnectionMap>
+<Connection name="msdb" class="com.fr.data.impl.JDBCDatabaseConnection">
+<DatabaseAttr/>
+<JDBCDatabaseAttr driver="com.mysql.jdbc.Driver" url="jdbc:mysql://localhost:3306/msdb" user="root" password="root" encryptPassword="false">
+<!--<DBCPAttr charSet="gb2312"/>
+     basicdatasource.addConnectionProperty("charSet","gb2312");MemoryConnection.java -->
+</JDBCDatabaseAttr>
+</Connection>
+</ConnectionMap>
+</DatasourceManager>

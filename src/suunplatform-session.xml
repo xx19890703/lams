@@ -1,0 +1,5 @@
+<session>  
+  <mapping path="/resources/**" exclue="true"/>
+  <mapping path="/common/**" exclue="true"/> 
+  <mapping path="/system/demo/demo!ajaxdemo.do*" exclue="true"/>
+</session>

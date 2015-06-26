@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.0" 
+	xmlns="http://java.sun.com/xml/ns/javaee" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+	http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" metadata-complete="true">
+	
+	<display-name>suunplatform</display-name>
+	<description>suunplatform</description>
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath:spring*.xml</param-value>
+	</context-param>
+
+	<!-- Spring Security的 配置-->
+   	  <filter>  
+          <filter-name>springSecurityFilterChain</filter-name>  
+      <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>  
+      </filter>  
+      <filter-mapping>  
+         <filter-name>springSecurityFilterChain</filter-name>  
+          <url-pattern>/*</url-pattern>  
+      </filter-mapping> 
+  <!-- 配置UTF-8编码过滤 -->
+    <filter>  
+        <filter-name>Set Character Encoding</filter-name>  
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>  
+        <init-param>  
+            <param-name>encoding</param-name>  
+            <param-value>UTF-8</param-value>  
+        </init-param>  
+        <init-param>  
+            <param-name>forceEncoding</param-name>  
+            <param-value>true</param-value>
+        </init-param>  
+    </filter> 
+     
+   <filter-mapping>  
+        <filter-name>Set Character Encoding</filter-name>  
+        <url-pattern>/*</url-pattern>  
+   </filter-mapping> 
+      
+   <filter>
+   <filter-name>OpenSessionInViewFilter</filter-name>
+   <filter-class>org.springframework.orm.hibernate4.support.OpenSessionInViewFilter</filter-class>
+        <init-param>
+			<param-name>singleSession</param-name>
+			<param-value>true</param-value>
+		</init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>OpenSessionInViewFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+  <filter>
+    <filter-name>sitemesh</filter-name>
+    <filter-class>org.sitemesh.config.ConfigurableSiteMeshFilter</filter-class>
+    <init-param>
+			<param-name>configFile</param-name>
+			<param-value>WEB-INF/classes/suunplatform-sitemesh3.xml</param-value>
+		</init-param>
+  </filter>
+ 
+  <filter-mapping>
+    <filter-name>sitemesh</filter-name>
+    <url-pattern>/*</url-pattern>     
+  </filter-mapping>
+  
+  <filter>
+    <filter-name>suunSession</filter-name>
+    <filter-class>com.suun.publics.filter.SessionFilter</filter-class>
+    <init-param>
+			<param-name>configFile</param-name>
+			<param-value>WEB-INF/classes/suunplatform-session.xml</param-value>
+		</init-param>
+  </filter>
+ 
+  <filter-mapping>
+    <filter-name>suunSession</filter-name>
+    <url-pattern>/*</url-pattern>     
+  </filter-mapping>
+  
+  <filter>  
+        <filter-name>gzipFilter</filter-name>  
+        <filter-class>net.sf.ehcache.constructs.web.filter.GzipFilter</filter-class>  
+    </filter>  
+    
+    <filter-mapping>  
+        <filter-name>gzipFilter</filter-name>  
+        <url-pattern>*.css</url-pattern>  
+    </filter-mapping>  
+    <filter-mapping>  
+        <filter-name>gzipFilter</filter-name>  
+        <url-pattern>*.png</url-pattern>  
+    </filter-mapping>  
+    <filter-mapping>  
+        <filter-name>gzipFilter</filter-name>  
+        <url-pattern>*.gif</url-pattern>  
+    </filter-mapping>  <!--  
+    <filter-mapping>  
+        <filter-name>gzipFilter</filter-name>  
+        <url-pattern>*.html</url-pattern>  
+    </filter-mapping>  
+    <filter-mapping>  
+        <filter-name>gzipFilter</filter-name>  
+        <url-pattern>*.jsp</url-pattern>  
+    </filter-mapping>  -->
+    <filter-mapping>  
+        <filter-name>gzipFilter</filter-name>  
+        <url-pattern>*.js</url-pattern>  
+    </filter-mapping>  
+    <filter-mapping>  
+        <filter-name>gzipFilter</filter-name>  
+        <url-pattern>*.json</url-pattern>  
+    </filter-mapping> 
+    
+    <filter>  
+        <filter-name>suungzipFilter</filter-name>  
+        <filter-class>com.suun.publics.filter.SuunGzipFilter</filter-class>  
+    </filter> 
+    <filter-mapping>  
+             <filter-name>suungzipFilter</filter-name>  
+             <url-pattern>*.do</url-pattern>  
+    </filter-mapping> 
+  
+    <!-- Spring 刷新Introspector防止内存泄露 -->
+	<listener>
+		<listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
+	</listener> 
+   <!--  Spring MVC的配置    -->  
+    <servlet>  
+        <servlet-name>suunplatform</servlet-name>
+        <servlet-class>com.suun.publics.spring.suunDispatcherServlet</servlet-class> 
+        <init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>classpath:suunplatform-servlet.xml</param-value>
+		</init-param>
+        <load-on-startup>1</load-on-startup> 
+    </servlet>  
+    <servlet-mapping>  
+        <servlet-name>suunplatform</servlet-name>  
+        <!-- 这里可以用 / 但不能用 /* ，那样会拦截所有的访问，连JSP页面都访问不了
+                      拦截了所有请求会导致静态资源无法访问，所以要在*-servlet.xml中配置mvc:resources -->  
+        <url-pattern>/</url-pattern> 
+    </servlet-mapping> 
+    
+    <servlet>
+        <servlet-name>ReportServer</servlet-name>
+        <servlet-class>com.fr.web.ReportServlet</servlet-class>
+        <load-on-startup>0</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ReportServer</servlet-name>
+        <url-pattern>/ReportServer</url-pattern>
+    </servlet-mapping>
+    
+
+    <!-- 默认的spring配置文件是在WEB-INF下的spring-context.xml-->  
+    <listener>  
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>  
+    </listener>        
+    
+    <listener>  
+        <listener-class>org.springframework.security.web.session.HttpSessionEventPublisher</listener-class>  
+    </listener>
+    
+    <listener> 
+        <listener-class>com.suun.publics.system.InitListener</listener-class>
+    </listener>
+   
+   <welcome-file-list>
+       <welcome-file>index.jsp</welcome-file>
+   </welcome-file-list> 
+   <!--  
+   <taglib>
+       <taglib-uri>/jstlcore</taglib-uri>
+       <taglib-location>/WEB-INF/tld/c.tld</taglib-location>
+   </taglib>
+   <taglib>
+       <taglib-uri>/spring</taglib-uri>
+       <taglib-location>/WEB-INF/tld/spring.tld</taglib-location>
+   </taglib>
+   <taglib>
+       <taglib-uri>/security</taglib-uri>
+       <taglib-location>/WEB-INF/tld/security.tld</taglib-location>
+   </taglib>
+   -->
+   <!-- session超时定义,单位为分钟-->
+	<session-config>
+		<session-timeout>20</session-timeout>
+	</session-config>
+ 
+	<error-page>
+		<error-code>500</error-code>
+		<location>/common/500.jsp</location>
+	</error-page>
+	<error-page>
+		<error-code>404</error-code>
+		<location>/common/404.jsp</location>
+	</error-page>
+	<error-page>
+		<error-code>403</error-code>
+		<location>/common/403.jsp</location>
+	</error-page>
+	
+</web-app>

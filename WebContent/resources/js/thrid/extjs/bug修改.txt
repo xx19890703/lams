@@ -1,0 +1,24 @@
+ext-all
+//zyfang return new Function('obj', 'return obj' + (i > 0 ? '.' : '') + expr);
+return new Function('obj', 'try{ return obj' + (i > 0 ? '.' : '') + expr+'; }catch(e){return null;}' );
+
+update : function(html, loadScripts, callback)
+改
+    if (window.execScript) {
+       window.execScript(match[2]);
+    } else {
+       window.eval(match[2]);
+    }
+为
+//zyfang 防止执行脚本有错误
+try{
+    if (window.execScript) {
+       window.execScript(match[2]);
+    } else {
+       window.eval(match[2]);
+    }
+}catch(e){
+   alert(e);
+}
+
+			

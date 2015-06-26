@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration >
+	<jmxConfigurator />
+
+    <property resource="logback.properties" />
+
+	<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+		<Encoding>UTF-8</Encoding>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<pattern>%date [%thread] %-5level %logger{50} - %msg%n</pattern>
+		</layout>
+	</appender>
+	 <!-- 用邮件的方式发送 -->
+	 <!--  
+    <appender name="EMAIL" class="ch.qos.logback.classic.net.SMTPAppender">
+        <SMTPHost>${MAIL_HOST}</SMTPHost>
+        <Username>${MAIL_USER}</Username>
+        <Password>${MAIL_PWD}</Password>
+        <To>${MAIL_TO}</To>
+        
+        
+        <From>${MAIL_FROM}</From>
+        <Subject>软件信息: %logger{20} - %m</Subject> 
+        <layout class="ch.qos.logback.classic.html.HTMLLayout"> 
+            
+        </layout>
+    </appender>
+    <root level="debug">
+        <appender-ref ref="EMAIL"/>
+    </root>
+ 
+
+    <logger name="com.util.PrintUtil" level="EMAIL">
+        <appender-ref ref="PrintUtil"/>
+    </logger>
+        -->
+<!-- 文件 -->
+ 
+	<appender name="logfile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<Encoding>UTF-8</Encoding>
+		<File>${LOG_PATH}/suun-web.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${LOG_PATH}/suun-web.%d{yyyy-MM-dd}.log</FileNamePattern>
+		</rollingPolicy>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<pattern>%date [%thread] %-5level %logger{50} - %msg%n</pattern>
+		</layout>
+	</appender>
+
+	<logger name="com.suun">
+		<level value="${SUUN_LOG_LEVEL}" />
+	</logger>
+	
+	<logger name="org.hibernate.SQL">
+		<level value="${HIBERNATE_LOG_LEVEL}" />
+	</logger>
+	
+  <!-- 关闭等级 root level="OFF" -->
+	<root >
+		<level value="${ROOT_LOG_LEVEL}" />
+		<appender-ref ref="stdout" />
+		<appender-ref ref="logfile" />
+	</root>
+</configuration>
+

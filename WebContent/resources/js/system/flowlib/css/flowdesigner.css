@@ -1,0 +1,97 @@
+@CHARSET "UTF-8";
+    body {
+	margin: 0;
+	pading: 0;
+	text-align: left;
+	font-family: Arial, sans-serif, Helvetica, Tahoma;
+	font-size: 12px;
+	line-height: 1.5;
+	overflow: auto;
+	background-image: url('../images/bg.png');
+	color: black;
+
+}
+
+.node {
+	width: 70px;
+	text-align: center;
+	vertical-align: middle;
+	border: 1px solid #fff;
+}
+
+.mover {
+	border: 1px solid #ddd;
+	background-color: #ddd;
+}
+
+.selected {
+	background-color: #ddd;
+}
+
+.state {
+	
+}
+
+#myflow_props table {
+	
+}
+
+#myflow_props th {
+	letter-spacing: 2px;
+	text-align: left;
+	padding: 6px;
+	background: #ddd;
+}
+
+#myflow_props td {
+	background: #fff;
+	padding: 6px;
+}
+
+#pointer {
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+#delete1 {
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+
+#path {
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+#task {
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+#state {
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+#myflow_tools{
+
+    position: absolute;
+    top: 10; left: 10;
+ 	background-color: #fff;
+    width: 70px; 
+    cursor: default;
+    padding: 3px;
+
+}
+
+#myflow_props{
+	position: absolute;
+	top: 30;
+	right: 50;
+	background-color: #fff;
+	width: 220px;
+	padding: 3px;
+
+
+}

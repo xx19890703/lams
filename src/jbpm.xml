@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+<jbpm-configuration>
+
+  <process-engine-context>
+
+    <repository-service />
+    <repository-cache />
+    <execution-service />
+    <history-service />
+    <management-service />
+    <identity-service />
+    <task-service />
+
+    <script-manager default-expression-language="juel"
+                    default-script-language="juel"
+                    read-contexts="execution, environment, process-engine"
+                    write-context="">
+      <script-language name="juel" factory="org.jbpm.pvm.internal.script.JuelScriptEngineFactory" />
+    </script-manager>
+
+    <authentication />
+
+    <id-generator />
+    <types resource="jbpm.variable.types.xml" />
+
+    <address-resolver />
+
+    <business-calendar>
+      <monday    hours="9:00-12:00 and 12:30-17:00"/>
+      <tuesday   hours="9:00-12:00 and 12:30-17:00"/>
+      <wednesday hours="9:00-12:00 and 12:30-17:00"/>
+      <thursday  hours="9:00-12:00 and 12:30-17:00"/>
+      <friday    hours="9:00-12:00 and 12:30-17:00"/>
+      <holiday period="01/07/2008 - 31/08/2008"/>
+    </business-calendar>
+
+    <mail-template name='task-notification'>
+      <to users="${task.assignee}"/>
+      <subject>${task.name}</subject>
+      <text><![CDATA[Hi ${task.assignee},
+Task "${task.name}" has been assigned to you.
+${task.description}
+
+Sent by JBoss jBPM
+]]></text>
+    </mail-template>
+
+    <mail-template name='task-reminder'>
+      <to users="${task.assignee}"/>
+      <subject>${task.name}</subject>
+      <text><![CDATA[Hey ${task.assignee},
+Do not forget about task "${task.name}".
+${task.description}
+
+Sent by JBoss jBPM
+]]></text>
+    </mail-template>
+
+  </process-engine-context>
+
+  <transaction-context>
+    <repository-session />
+    <db-session />
+
+    <message-session />
+    <timer-session />
+    <history-session />
+    <mail-session>
+      <mail-server>
+        <session-properties resource="jbpm.mail.properties" />
+      </mail-server>
+    </mail-session>
+  </transaction-context>
+
+</jbpm-configuration>
+
+-->
+
+
+
+
+
+<jbpm-configuration>
+	<import resource="jbpm.default.cfg.xml" />
+    <import resource="jbpm.businesscalendar.cfg.xml" />
+    
+    <import resource="jbpm.jpdl.cfg.xml" />
+    <import resource="jbpm.bpmn.cfg.xml" />
+  <!--
+  <import resource="jbpm.tx.spring.cfg.xml"/>
+  <import resource="jbpm.identity.cfg.xml" />
+  -->
+  <import resource="jbpm.console.cfg.xml" />
+  <import resource="jbpm.jobexecutor.cfg.xml" />
+  
+  <!-- Spring Specific Configuration -->
+    <process-engine-context>
+    	<string name="spring.cfg" value="spring.xml" /> 
+    	
+        <command-service name="newTxRequiredCommandService">
+            <retry-interceptor />
+            <environment-interceptor policy="requiresNew" />
+            <spring-transaction-interceptor
+                policy="requiresNew" />
+        </command-service>
+ 
+        <command-service name="txRequiredCommandService">
+            <retry-interceptor />
+            <environment-interceptor />
+            <spring-transaction-interceptor />
+        </command-service>
+ 
+    <mail-template name='task-notification'>
+      <to users="${task.assignee}"/>
+      <subject>${task.name}</subject>
+      <text><![CDATA[Hi ${task.assignee},
+Task "${task.name}" has been assigned to you.
+${task.description}
+
+Sent by jBPM]]></text>
+    </mail-template>
+
+    <mail-template name='task-reminder'>
+      <to users="${task.assignee}"/>
+      <subject>${task.name}</subject>
+      <text><![CDATA[Hey ${task.assignee},
+Do not forget about task "${task.name}".
+${task.description}
+
+Sent by jBPM]]></text>
+    </mail-template>
+
+    <mail-template name="rectify-template">
+      <to addresses="${addressee}" />
+      <cc users="bb" groups="innerparty" />
+      <bcc groups="thinkpol" />
+      <subject>rectify ${newspaper}</subject>
+      <text>${newspaper} ${date} ${details}</text>
+    </mail-template>
+
+  </process-engine-context>
+
+  <transaction-context>  
+        <transaction type="spring" />
+        <hibernate-session factory="sessionFactory"  current="true" />
+<!--强制从当前线程中获取, 删掉了原来的<transaction />  
+        <hibernate-session factory="sessionFactory"  current="true" />  -->
+        <object class="com.suun.service.system.workflow.suunIdentitySession"></object>
+<!--jbpm.default.cfg.xml中的配置 
+        
+        <repository-session />  
+                <db-session />  
+        <message-session />  
+        <timer-session />  
+        <history-session />    --> 
+    </transaction-context>  
+
+</jbpm-configuration>

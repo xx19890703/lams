@@ -1,0 +1,85 @@
+.x-btn-default-small .x-btn-inner,.x-btn-default-medium .x-btn-inner,.x-btn-default-large .x-btn-inner,.x-btn-default-toolbar-small .x-btn-inner,.x-btn-default-toolbar-medium .x-btn-inner,.x-btn-default-toolbar-large .x-btn-inner,.x-menu-item-text,.x-html-editor-tb .x-font-select,.x-panel-header-default,.x-panel-header-text-default,.x-panel-header-default-framed,.x-tip-header,.x-tip-body,.x-form-invalid-tip-body,.x-tip-header-text,.x-progress-text,.x-toolbar,.x-toolbar .x-form-item-label,.x-toolbar .x-toolbar-text,.x-window-header-text-default,.x-grid-rowbody,.x-grid-row .x-grid-cell,.x-grid-group-title,.x-grid-row-editor .x-form-field,.x-grid-row-editor .x-form-display-field,.x-form-invalid-under,.x-fieldset-header,.x-column-header,.x-mask-msg div,.x-btn-group-header-text-default-framed,table.x-datepicker-inner a,.x-monthpicker-item,.x-dd-drag-ghost
+{
+	font-size: 12px;
+}
+
+.x-tab-inner {
+	font-size: 12px;
+	padding-top: 2px;
+}
+
+.x-column-header {
+	text-shadow: 0 0 0 rgba(255, 255, 255, 0.3);
+}
+
+.x-panel-header-text {
+	font-size: 12px;
+	color: #ffffff;
+}
+
+.x-panel-header-text-default-framed {
+	font-size: 12px;
+	color: #ffffff;
+}
+
+.x-accordion-hd {
+    border-top-color: #F3F7FB !important;
+    border-width: 1px 0 !important;
+    padding: 3px 2px 1px;
+}
+
+
+.x-tree-node-text {
+    font-size: 12px;
+    line-height: 15px;
+    padding-left: 3px;
+}
+
+
+.x-column-header-text {
+    line-height: 15px;
+}
+
+.msg .x-box-mc {
+    font-size:14px;
+}
+#msg-div {
+    position:absolute;
+    left:35%;
+    top:10px;
+    width:300px;
+    z-index:20000;
+}
+#msg-div .msg {
+    border-radius: 8px;
+    -moz-border-radius: 8px;
+    background: #F6F6F6;
+    border: 2px solid #ccc;
+    margin-top: 2px;
+    padding: 10px 15px;
+    color: #555;
+}
+
+.x-form-text{
+	margin:0px 0px 0px 0px;
+}
+.x-tree-icon, .x-tree-ec-icon, .x-tree-elbow-line, .x-tree-elbow, .x-tree-elbow-end, .x-tree-elbow-plus, .x-tree-elbow-minus, .x-tree-elbow-end-plus, .x-tree-elbow-end-minus{
+	border: 0 none;
+	height: 16px;
+	margin: 0;
+	padding: 0;
+	vertical-align: top;
+	width: 16px;
+    background-repeat: no-repeat;
+}
+
+.x-tree-node-collapsed .x-tree-node-icon, .x-tree-node-expanded .x-tree-node-icon, .x-tree-node-leaf .x-tree-node-icon {
+  border: 0 none;
+  height: 16px;
+  margin: 0;
+  padding: 0;
+  vertical-align: top;
+  width: 16px;
+  background-position: center;
+  background-repeat: no-repeat;
+}

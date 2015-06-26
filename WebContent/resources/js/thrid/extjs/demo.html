@@ -1,0 +1,52 @@
+    <html>  
+    <head>  
+    <link rel="stylesheet" type="text/css" href="file:///E:/JavaWorkspace/lams/WebContent/resources/js/thrid/extjs/resources/css/ext-all.css" />   
+<script type="text/javascript" src="file:///E:/JavaWorkspace/lams/WebContent/resources/js/thrid/extjs/adapter/ext/ext-base.js"></script>
+    
+    <script type="text/javascript" src="file:///E:/JavaWorkspace/lams/WebContent/resources/js/thrid/extjs/ext-all.js" mce_src="ext-all.js"></script>  
+	<script type="text/javascript" src="file:///E:/JavaWorkspace/lams/WebContent/resources/js/thrid/extjs/locale/ext-lang-zh_CN.js"></script>	
+    <script type="text/javascript"> 
+    var dateSign;  
+    var dateSignShow;  
+    Ext.onReady(function(){  
+      dateSign = new Ext.DatePicker({  
+        applyTo:"dateSign",  
+        renderTo:"dateSign",   
+        hidden:"true",  
+        format:"Y-m-d"  
+      });  
+      dateSign.on("select",function(src,date){  
+       document.getElementById("dateSign").value=date.format('Y-m-d');  
+        dateSign.hide();  
+        dateSignShow = false;  
+      });  
+    });  
+    function showExtCal(){  
+	  new Ext.DatePicker({  
+        applyTo:"dateSign",  
+        renderTo:"dateSign",   
+        hidden:"true",  
+        format:"Y-m-d",
+        value:Date.parseDate(document.getElementById("dateSign").value,'Y-m-d'),
+        liseners:{
+		   select:function(src,date){  
+       document.getElementById("dateSign").value=date.format('Y-m-d');  
+        src.hide();   
+      }
+		}		
+      }).show();
+      /*if(dateSignShow){  
+        dateSign.hide();  
+        dateSignShow = false;  
+      }else{  
+        dateSign.setValue(Date.parseDate(document.getElementById("dateSign").value,'Y-m-d'));  
+        dateSign.show();  
+        dateSignShow = true;  
+      } */ 
+    }  
+    </script>  
+    </head>  
+    <body id="defaultuser">  
+    <input type="text" name="dateSign" id="dateSign" value="2009-01-07" onclick="showExtCal()"/>  
+    </body>  
+    </html>  

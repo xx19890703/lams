@@ -1,0 +1,20 @@
+<sitemesh>  
+  <mapping path="/resources/**" exclue="true"/>
+  <mapping path="/common/**" exclue="true"/>
+  <mapping path="/login.do*" exclue="true"/>
+  <mapping path="/main.do*" exclue="true"/>
+  <mapping path="/ReportServer*" exclue="true"/>
+  
+  <mapping path="/system/security/changePswd.do*" exclue="true"/>
+  
+  <mapping path="/system/flowjquery/flowdesgner.do*" exclue="true"/>
+  <mapping path="/system/workflow/NoEditError.do*" exclue="true"/>  
+  <mapping path="/system/workflow/jbpm!editor.do*" exclue="true"/> 
+  <mapping path="/system/workflow/workflow.do*" exclue="true"/>
+  <mapping path="/system/demo/ajaxdemo.do*" exclue="true"/>
+  <!--
+  <mapping path="/*edit.do" decorator="/common/decorator.jsp"/>
+  <mapping path="/*_new.do" decorator="/common/decorator.jsp"/>
+  -->
+  <mapping path="/*.do" decorator="/common/decorator.jsp"/>
+</sitemesh>

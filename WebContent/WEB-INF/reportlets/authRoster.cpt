@@ -1,0 +1,1311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WorkBook xmlVersion="20110221">
+<TableDataMap>
+<TableData name="ds1" class="com.fr.data.impl.DBTableData">
+<Parameters>
+<Parameter>
+<Attributes name="startTime"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=YEAR(TODAY())+'-'+MONTH(MONTHDELTA(TODAY(),-1))+'-01']]></Attributes>
+</O>
+</Parameter>
+<Parameter>
+<Attributes name="endTime"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=TODAY()]]></Attributes>
+</O>
+</Parameter>
+</Parameters>
+<Attributes maxMemRowCount="-1"/>
+<Connection class="com.fr.data.impl.NameDatabaseConnection">
+<DatabaseName>
+<![CDATA[msdb]]></DatabaseName>
+</Connection>
+<Query>
+<![CDATA[SELECT
+sr.*,de.*,dq.*,dr.*,dd.*,slr.reviewGist,slr.extensionGist,slr.helpers,slr.disAssociation,slr.remark,ROUND(datediff(slr.extensionTimeEnd,slr.extensionTimeStart)/365*12) ext,ROUND(datediff(slr.recoveryTimeEnd,slr.recoveryTimeStart)/365*12) recovery
+FROM app_softlinereview as slr
+left JOIN app_softlinee as sr on(slr.sle_id = sr.baseId) 
+left JOIN (select dic_no,data_name gg,data_no from sys_dic_data where dic_no ='SEX') dd on (sr.sex = dd.data_no)
+left JOIN (select dic_no,data_name ll,data_no from sys_dic_data where dic_no ='INVALIDISMGRADES') de on (slr.invalidismGrades = de.data_no)
+left JOIN (select dic_no,data_name hh,data_no from sys_dic_data where dic_no ='SLSTATE') dq on (sr.slstate = dq.data_no)
+left JOIN sys_dic_data dr on (slr.nursingGrades = dr.data_no and dr.dic_no='NURSINGGRADES')
+where ${IF($type=="","sr.slstate in ('4','5') and","dq.hh='$type' and")} systemData1 between '${startTime}' and '${endTime}']]></Query>
+</TableData>
+</TableDataMap>
+<Report class="com.fr.report.WorkSheet" name="sheet1">
+<ReportSettings headerHeight="0" footerHeight="0">
+<PaperSetting orientation="1">
+<Margin top="986400" left="2743200" bottom="986400" right="2743200"/>
+</PaperSetting>
+</ReportSettings>
+<ElementCase class="com.fr.report.SingleBlock">
+<ReportPageAttr>
+<HR/>
+<FR/>
+<HC/>
+<FC/>
+</ReportPageAttr>
+<RowHeight defaultValue="723900">
+<![CDATA[1676400,723900,1409700,723900,723900,723900,723900,723900,723900,723900,723900]]></RowHeight>
+<ColumnWidth defaultValue="2743200">
+<![CDATA[304800,1524000,2552700,1524000,6400800,3810000,3886200,1257300,1257300,3276600,1219200,2971800,1257300,3200400,2743200,0,2743200]]></ColumnWidth>
+<CellElementList>
+<C c="0" r="0" s="0">
+<Expand/>
+</C>
+<C c="1" r="0" cs="15" s="1">
+<O>
+<![CDATA[西安市职工工伤与职业病致残程度鉴定结论花名册]]></O>
+<Expand/>
+</C>
+<C c="0" r="1" s="0">
+<Expand/>
+</C>
+<C c="1" r="1" cs="14" s="0">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=LEFT(TODAY(), 10)]]></Attributes>
+</O>
+<Expand/>
+</C>
+<C c="15" r="1" s="0">
+<Expand/>
+</C>
+<C c="0" r="2" s="0">
+<Expand/>
+</C>
+<C c="1" r="2" s="2">
+<O>
+<![CDATA[序号]]></O>
+<CellGUIAttr adjustmode="1"/>
+<CellPageAttr/>
+<CellInsertPolicy/>
+<Expand/>
+</C>
+<C c="2" r="2" s="2">
+<O>
+<![CDATA[姓名]]></O>
+<CellGUIAttr adjustmode="1"/>
+<CellPageAttr/>
+<CellInsertPolicy/>
+<Expand/>
+</C>
+<C c="3" r="2" s="2">
+<O>
+<![CDATA[性别]]></O>
+<CellGUIAttr adjustmode="1"/>
+<CellPageAttr/>
+<CellInsertPolicy/>
+<Expand/>
+</C>
+<C c="4" r="2" s="2">
+<O>
+<![CDATA[工作单位]]></O>
+<CellGUIAttr adjustmode="1"/>
+<CellPageAttr/>
+<CellInsertPolicy/>
+<Expand/>
+</C>
+<C c="5" r="2" s="2">
+<O>
+<![CDATA[科别]]></O>
+<CellGUIAttr adjustmode="1"/>
+<CellPageAttr/>
+<CellInsertPolicy/>
+<Expand/>
+</C>
+<C c="6" r="2" s="2">
+<O>
+<![CDATA[审评依据]]></O>
+<CellGUIAttr adjustmode="1"/>
+<CellPageAttr/>
+<CellInsertPolicy/>
+<Expand/>
+</C>
+<C c="7" r="2" s="2">
+<O>
+<![CDATA[伤残等级]]></O>
+<CellGUIAttr adjustmode="1"/>
+<CellPageAttr/>
+<CellInsertPolicy/>
+<Expand/>
+</C>
+<C c="8" r="2" s="2">
+<O>
+<![CDATA[护理等级]]></O>
+<CellGUIAttr adjustmode="1"/>
+<CellPageAttr/>
+<CellInsertPolicy/>
+<Expand/>
+</C>
+<C c="9" r="2" s="2">
+<O>
+<![CDATA[延长依据]]></O>
+<CellGUIAttr adjustmode="1"/>
+<CellPageAttr/>
+<CellInsertPolicy/>
+<Expand/>
+</C>
+<C c="10" r="2" s="2">
+<O>
+<![CDATA[延长(月)]]></O>
+<CellGUIAttr adjustmode="1"/>
+<CellPageAttr/>
+<CellInsertPolicy/>
+<Expand/>
+</C>
+<C c="11" r="2" s="2">
+<O>
+<![CDATA[辅助器具]]></O>
+<CellGUIAttr adjustmode="1"/>
+<CellPageAttr/>
+<CellInsertPolicy/>
+<Expand/>
+</C>
+<C c="12" r="2" s="2">
+<O>
+<![CDATA[康复(月)]]></O>
+<CellGUIAttr adjustmode="1"/>
+<CellPageAttr/>
+<CellInsertPolicy/>
+<Expand/>
+</C>
+<C c="13" r="2" s="2">
+<O>
+<![CDATA[疾病关联]]></O>
+<CellGUIAttr adjustmode="1"/>
+<CellPageAttr/>
+<CellInsertPolicy/>
+<Expand/>
+</C>
+<C c="14" r="2" s="2">
+<O>
+<![CDATA[备注]]></O>
+<CellGUIAttr adjustmode="1"/>
+<CellPageAttr/>
+<CellInsertPolicy/>
+<Expand/>
+</C>
+<C c="15" r="2" s="0">
+<O>
+<![CDATA[身份证号]]></O>
+<Expand/>
+</C>
+<C c="0" r="3" s="0">
+<Expand/>
+</C>
+<C c="1" r="3" s="2">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=seq()]]></Attributes>
+</O>
+<Expand dir="0" leftParentDefault="false" left="C4"/>
+</C>
+<C c="2" r="3" s="2">
+<O t="DSColumn">
+<Attributes dsName="ds1" columnName="name"/>
+<Complex/>
+<RG class="com.fr.report.cellElement.core.FunctionGrouper"/>
+<Parameters/>
+</O>
+<Expand dir="0"/>
+</C>
+<C c="3" r="3" s="2">
+<O t="DSColumn">
+<Attributes dsName="ds1" columnName="gg"/>
+<Complex/>
+<RG class="com.fr.report.cellElement.core.FunctionGrouper"/>
+<Parameters/>
+</O>
+<Expand dir="0"/>
+</C>
+<C c="4" r="3" s="2">
+<O t="DSColumn">
+<Attributes dsName="ds1" columnName="unitName"/>
+<Complex/>
+<RG class="com.fr.report.cellElement.core.FunctionGrouper"/>
+<Parameters/>
+</O>
+<Expand dir="0"/>
+</C>
+<C c="5" r="3" s="2">
+<O t="DSColumn">
+<Attributes dsName="ds1" columnName="mustCheck"/>
+<Complex/>
+<RG class="com.fr.report.cellElement.core.FunctionGrouper"/>
+<Parameters/>
+</O>
+<Expand dir="0"/>
+</C>
+<C c="6" r="3" s="2">
+<O t="DSColumn">
+<Attributes dsName="ds1" columnName="reviewGist"/>
+<Complex/>
+<RG class="com.fr.report.cellElement.core.FunctionGrouper"/>
+<Parameters/>
+</O>
+<Expand dir="0"/>
+</C>
+<C c="7" r="3" s="2">
+<O t="DSColumn">
+<Attributes dsName="ds1" columnName="ll"/>
+<Complex/>
+<RG class="com.fr.report.cellElement.core.FunctionGrouper"/>
+<Parameters/>
+</O>
+<Expand dir="0"/>
+</C>
+<C c="8" r="3" s="2">
+<O t="DSColumn">
+<Attributes dsName="ds1" columnName="data_name"/>
+<Complex/>
+<RG class="com.fr.report.cellElement.core.FunctionGrouper"/>
+<Parameters/>
+</O>
+<Expand dir="0"/>
+</C>
+<C c="9" r="3" s="2">
+<O t="DSColumn">
+<Attributes dsName="ds1" columnName="extensionGist"/>
+<Complex/>
+<RG class="com.fr.report.cellElement.core.FunctionGrouper"/>
+<Parameters/>
+</O>
+<Expand dir="0"/>
+</C>
+<C c="10" r="3" s="2">
+<O t="DSColumn">
+<Attributes dsName="ds1" columnName="ext"/>
+<Complex/>
+<RG class="com.fr.report.cellElement.core.FunctionGrouper"/>
+<Parameters/>
+</O>
+<Expand dir="0"/>
+</C>
+<C c="11" r="3" s="2">
+<O t="DSColumn">
+<Attributes dsName="ds1" columnName="helpers"/>
+<Complex/>
+<RG class="com.fr.report.cellElement.core.FunctionGrouper"/>
+<Parameters/>
+</O>
+<Expand dir="0"/>
+</C>
+<C c="12" r="3" s="2">
+<O t="DSColumn">
+<Attributes dsName="ds1" columnName="recovery"/>
+<Complex/>
+<RG class="com.fr.report.cellElement.core.FunctionGrouper"/>
+<Parameters/>
+</O>
+<Expand dir="0"/>
+</C>
+<C c="13" r="3" s="2">
+<O t="DSColumn">
+<Attributes dsName="ds1" columnName="disAssociation"/>
+<Complex/>
+<RG class="com.fr.report.cellElement.core.FunctionGrouper"/>
+<Parameters/>
+</O>
+<Expand dir="0"/>
+</C>
+<C c="14" r="3" s="2">
+<O t="DSColumn">
+<Attributes dsName="ds1" columnName="remark"/>
+<Complex/>
+<RG class="com.fr.report.cellElement.core.FunctionGrouper"/>
+<Parameters/>
+</O>
+<Expand dir="0"/>
+</C>
+<C c="15" r="3" s="0">
+<O t="DSColumn">
+<Attributes dsName="ds1" columnName="idcarNo"/>
+<Complex/>
+<RG class="com.fr.report.cellElement.core.FunctionGrouper"/>
+<Parameters/>
+</O>
+<Expand dir="0" leftParentDefault="false"/>
+</C>
+<C c="1" r="4" s="3">
+<Expand/>
+</C>
+<C c="2" r="4" s="3">
+<Expand/>
+</C>
+<C c="3" r="4" s="3">
+<Expand/>
+</C>
+<C c="4" r="4" s="3">
+<Expand/>
+</C>
+<C c="5" r="4" s="3">
+<Expand/>
+</C>
+<C c="6" r="4" s="3">
+<Expand/>
+</C>
+<C c="7" r="4" s="3">
+<Expand/>
+</C>
+<C c="8" r="4" s="3">
+<Expand/>
+</C>
+<C c="9" r="4" s="3">
+<Expand/>
+</C>
+<C c="10" r="4" s="3">
+<Expand/>
+</C>
+<C c="11" r="4" s="3">
+<Expand/>
+</C>
+<C c="12" r="4" s="3">
+<Expand/>
+</C>
+<C c="13" r="4" s="3">
+<Expand/>
+</C>
+<C c="14" r="4" s="3">
+<Expand/>
+</C>
+<C c="1" r="5" s="3">
+<Expand/>
+</C>
+<C c="2" r="5" s="3">
+<Expand/>
+</C>
+<C c="3" r="5" s="3">
+<Expand/>
+</C>
+<C c="4" r="5" s="3">
+<Expand/>
+</C>
+<C c="5" r="5" s="3">
+<Expand/>
+</C>
+<C c="6" r="5" s="3">
+<Expand/>
+</C>
+<C c="7" r="5" s="3">
+<Expand/>
+</C>
+<C c="8" r="5" s="3">
+<Expand/>
+</C>
+<C c="9" r="5" s="3">
+<Expand/>
+</C>
+<C c="10" r="5" s="3">
+<Expand/>
+</C>
+<C c="11" r="5" s="3">
+<Expand/>
+</C>
+<C c="12" r="5" s="3">
+<Expand/>
+</C>
+<C c="13" r="5" s="3">
+<Expand/>
+</C>
+<C c="14" r="5" s="3">
+<Expand/>
+</C>
+<C c="1" r="6" s="3">
+<Expand/>
+</C>
+<C c="2" r="6" s="3">
+<Expand/>
+</C>
+<C c="3" r="6" s="3">
+<Expand/>
+</C>
+<C c="4" r="6" s="3">
+<Expand/>
+</C>
+<C c="5" r="6" s="3">
+<Expand/>
+</C>
+<C c="6" r="6" s="3">
+<Expand/>
+</C>
+<C c="7" r="6" s="3">
+<Expand/>
+</C>
+<C c="8" r="6" s="3">
+<Expand/>
+</C>
+<C c="9" r="6" s="3">
+<Expand/>
+</C>
+<C c="10" r="6" s="3">
+<Expand/>
+</C>
+<C c="11" r="6" s="3">
+<Expand/>
+</C>
+<C c="12" r="6" s="3">
+<Expand/>
+</C>
+<C c="13" r="6" s="3">
+<Expand/>
+</C>
+<C c="14" r="6" s="3">
+<Expand/>
+</C>
+<C c="1" r="7" s="3">
+<Expand/>
+</C>
+<C c="2" r="7" s="3">
+<Expand/>
+</C>
+<C c="3" r="7" s="3">
+<Expand/>
+</C>
+<C c="4" r="7" s="3">
+<Expand/>
+</C>
+<C c="5" r="7" s="3">
+<Expand/>
+</C>
+<C c="6" r="7" s="3">
+<Expand/>
+</C>
+<C c="7" r="7" s="3">
+<Expand/>
+</C>
+<C c="8" r="7" s="3">
+<Expand/>
+</C>
+<C c="9" r="7" s="3">
+<Expand/>
+</C>
+<C c="10" r="7" s="3">
+<Expand/>
+</C>
+<C c="11" r="7" s="3">
+<Expand/>
+</C>
+<C c="12" r="7" s="3">
+<Expand/>
+</C>
+<C c="13" r="7" s="3">
+<Expand/>
+</C>
+<C c="14" r="7" s="3">
+<Expand/>
+</C>
+<C c="1" r="8" s="3">
+<Expand/>
+</C>
+<C c="2" r="8" s="3">
+<Expand/>
+</C>
+<C c="3" r="8" s="3">
+<Expand/>
+</C>
+<C c="4" r="8" s="3">
+<Expand/>
+</C>
+<C c="5" r="8" s="3">
+<Expand/>
+</C>
+<C c="6" r="8" s="3">
+<Expand/>
+</C>
+<C c="7" r="8" s="3">
+<Expand/>
+</C>
+<C c="8" r="8" s="3">
+<Expand/>
+</C>
+<C c="9" r="8" s="3">
+<Expand/>
+</C>
+<C c="10" r="8" s="3">
+<Expand/>
+</C>
+<C c="11" r="8" s="3">
+<Expand/>
+</C>
+<C c="12" r="8" s="3">
+<Expand/>
+</C>
+<C c="13" r="8" s="3">
+<Expand/>
+</C>
+<C c="14" r="8" s="3">
+<Expand/>
+</C>
+<C c="1" r="9" s="3">
+<Expand/>
+</C>
+<C c="2" r="9" s="3">
+<Expand/>
+</C>
+<C c="3" r="9" s="3">
+<Expand/>
+</C>
+<C c="4" r="9" s="3">
+<Expand/>
+</C>
+<C c="5" r="9" s="3">
+<Expand/>
+</C>
+<C c="6" r="9" s="3">
+<Expand/>
+</C>
+<C c="7" r="9" s="3">
+<Expand/>
+</C>
+<C c="8" r="9" s="3">
+<Expand/>
+</C>
+<C c="9" r="9" s="3">
+<Expand/>
+</C>
+<C c="10" r="9" s="3">
+<Expand/>
+</C>
+<C c="11" r="9" s="3">
+<Expand/>
+</C>
+<C c="12" r="9" s="3">
+<Expand/>
+</C>
+<C c="13" r="9" s="3">
+<Expand/>
+</C>
+<C c="14" r="9" s="3">
+<Expand/>
+</C>
+<C c="1" r="10" s="3">
+<Expand/>
+</C>
+<C c="2" r="10" s="3">
+<Expand/>
+</C>
+<C c="3" r="10" s="3">
+<Expand/>
+</C>
+<C c="4" r="10" s="3">
+<Expand/>
+</C>
+<C c="5" r="10" s="3">
+<Expand/>
+</C>
+<C c="6" r="10" s="3">
+<Expand/>
+</C>
+<C c="7" r="10" s="3">
+<Expand/>
+</C>
+<C c="8" r="10" s="3">
+<Expand/>
+</C>
+<C c="9" r="10" s="3">
+<Expand/>
+</C>
+<C c="10" r="10" s="3">
+<Expand/>
+</C>
+<C c="11" r="10" s="3">
+<Expand/>
+</C>
+<C c="12" r="10" s="3">
+<Expand/>
+</C>
+<C c="13" r="10" s="3">
+<Expand/>
+</C>
+<C c="14" r="10" s="3">
+<Expand/>
+</C>
+<C c="1" r="11" s="3">
+<Expand/>
+</C>
+<C c="2" r="11" s="3">
+<Expand/>
+</C>
+<C c="3" r="11" s="3">
+<Expand/>
+</C>
+<C c="4" r="11" s="3">
+<Expand/>
+</C>
+<C c="5" r="11" s="3">
+<Expand/>
+</C>
+<C c="6" r="11" s="3">
+<Expand/>
+</C>
+<C c="7" r="11" s="3">
+<Expand/>
+</C>
+<C c="8" r="11" s="3">
+<Expand/>
+</C>
+<C c="9" r="11" s="3">
+<Expand/>
+</C>
+<C c="10" r="11" s="3">
+<Expand/>
+</C>
+<C c="11" r="11" s="3">
+<Expand/>
+</C>
+<C c="12" r="11" s="3">
+<Expand/>
+</C>
+<C c="13" r="11" s="3">
+<Expand/>
+</C>
+<C c="14" r="11" s="3">
+<Expand/>
+</C>
+<C c="1" r="12" s="3">
+<Expand/>
+</C>
+<C c="2" r="12" s="3">
+<Expand/>
+</C>
+<C c="3" r="12" s="3">
+<Expand/>
+</C>
+<C c="4" r="12" s="3">
+<Expand/>
+</C>
+<C c="5" r="12" s="3">
+<Expand/>
+</C>
+<C c="6" r="12" s="3">
+<Expand/>
+</C>
+<C c="7" r="12" s="3">
+<Expand/>
+</C>
+<C c="8" r="12" s="3">
+<Expand/>
+</C>
+<C c="9" r="12" s="3">
+<Expand/>
+</C>
+<C c="10" r="12" s="3">
+<Expand/>
+</C>
+<C c="11" r="12" s="3">
+<Expand/>
+</C>
+<C c="12" r="12" s="3">
+<Expand/>
+</C>
+<C c="13" r="12" s="3">
+<Expand/>
+</C>
+<C c="14" r="12" s="3">
+<Expand/>
+</C>
+<C c="1" r="13" s="3">
+<Expand/>
+</C>
+<C c="2" r="13" s="3">
+<Expand/>
+</C>
+<C c="3" r="13" s="3">
+<Expand/>
+</C>
+<C c="4" r="13" s="3">
+<Expand/>
+</C>
+<C c="5" r="13" s="3">
+<Expand/>
+</C>
+<C c="6" r="13" s="3">
+<Expand/>
+</C>
+<C c="7" r="13" s="3">
+<Expand/>
+</C>
+<C c="8" r="13" s="3">
+<Expand/>
+</C>
+<C c="9" r="13" s="3">
+<Expand/>
+</C>
+<C c="10" r="13" s="3">
+<Expand/>
+</C>
+<C c="11" r="13" s="3">
+<Expand/>
+</C>
+<C c="12" r="13" s="3">
+<Expand/>
+</C>
+<C c="13" r="13" s="3">
+<Expand/>
+</C>
+<C c="14" r="13" s="3">
+<Expand/>
+</C>
+<C c="1" r="14" s="3">
+<Expand/>
+</C>
+<C c="2" r="14" s="3">
+<Expand/>
+</C>
+<C c="3" r="14" s="3">
+<Expand/>
+</C>
+<C c="4" r="14" s="3">
+<Expand/>
+</C>
+<C c="5" r="14" s="3">
+<Expand/>
+</C>
+<C c="6" r="14" s="3">
+<Expand/>
+</C>
+<C c="7" r="14" s="3">
+<Expand/>
+</C>
+<C c="8" r="14" s="3">
+<Expand/>
+</C>
+<C c="9" r="14" s="3">
+<Expand/>
+</C>
+<C c="10" r="14" s="3">
+<Expand/>
+</C>
+<C c="11" r="14" s="3">
+<Expand/>
+</C>
+<C c="12" r="14" s="3">
+<Expand/>
+</C>
+<C c="13" r="14" s="3">
+<Expand/>
+</C>
+<C c="14" r="14" s="3">
+<Expand/>
+</C>
+<C c="1" r="15" s="3">
+<Expand/>
+</C>
+<C c="2" r="15" s="3">
+<Expand/>
+</C>
+<C c="3" r="15" s="3">
+<Expand/>
+</C>
+<C c="4" r="15" s="3">
+<Expand/>
+</C>
+<C c="5" r="15" s="3">
+<Expand/>
+</C>
+<C c="6" r="15" s="3">
+<Expand/>
+</C>
+<C c="7" r="15" s="3">
+<Expand/>
+</C>
+<C c="8" r="15" s="3">
+<Expand/>
+</C>
+<C c="9" r="15" s="3">
+<Expand/>
+</C>
+<C c="10" r="15" s="3">
+<Expand/>
+</C>
+<C c="11" r="15" s="3">
+<Expand/>
+</C>
+<C c="12" r="15" s="3">
+<Expand/>
+</C>
+<C c="13" r="15" s="3">
+<Expand/>
+</C>
+<C c="14" r="15" s="3">
+<Expand/>
+</C>
+<C c="1" r="16" s="3">
+<Expand/>
+</C>
+<C c="2" r="16" s="3">
+<Expand/>
+</C>
+<C c="3" r="16" s="3">
+<Expand/>
+</C>
+<C c="4" r="16" s="3">
+<Expand/>
+</C>
+<C c="5" r="16" s="3">
+<Expand/>
+</C>
+<C c="6" r="16" s="3">
+<Expand/>
+</C>
+<C c="7" r="16" s="3">
+<Expand/>
+</C>
+<C c="8" r="16" s="3">
+<Expand/>
+</C>
+<C c="9" r="16" s="3">
+<Expand/>
+</C>
+<C c="10" r="16" s="3">
+<Expand/>
+</C>
+<C c="11" r="16" s="3">
+<Expand/>
+</C>
+<C c="12" r="16" s="3">
+<Expand/>
+</C>
+<C c="13" r="16" s="3">
+<Expand/>
+</C>
+<C c="14" r="16" s="3">
+<Expand/>
+</C>
+<C c="1" r="17" s="3">
+<Expand/>
+</C>
+<C c="2" r="17" s="3">
+<Expand/>
+</C>
+<C c="3" r="17" s="3">
+<Expand/>
+</C>
+<C c="4" r="17" s="3">
+<Expand/>
+</C>
+<C c="5" r="17" s="3">
+<Expand/>
+</C>
+<C c="6" r="17" s="3">
+<Expand/>
+</C>
+<C c="7" r="17" s="3">
+<Expand/>
+</C>
+<C c="8" r="17" s="3">
+<Expand/>
+</C>
+<C c="9" r="17" s="3">
+<Expand/>
+</C>
+<C c="10" r="17" s="3">
+<Expand/>
+</C>
+<C c="11" r="17" s="3">
+<Expand/>
+</C>
+<C c="12" r="17" s="3">
+<Expand/>
+</C>
+<C c="13" r="17" s="3">
+<Expand/>
+</C>
+<C c="14" r="17" s="3">
+<Expand/>
+</C>
+<C c="1" r="18" s="3">
+<Expand/>
+</C>
+<C c="2" r="18" s="3">
+<Expand/>
+</C>
+<C c="3" r="18" s="3">
+<Expand/>
+</C>
+<C c="4" r="18" s="3">
+<Expand/>
+</C>
+<C c="5" r="18" s="3">
+<Expand/>
+</C>
+<C c="6" r="18" s="3">
+<Expand/>
+</C>
+<C c="7" r="18" s="3">
+<Expand/>
+</C>
+<C c="8" r="18" s="3">
+<Expand/>
+</C>
+<C c="9" r="18" s="3">
+<Expand/>
+</C>
+<C c="10" r="18" s="3">
+<Expand/>
+</C>
+<C c="11" r="18" s="3">
+<Expand/>
+</C>
+<C c="12" r="18" s="3">
+<Expand/>
+</C>
+<C c="13" r="18" s="3">
+<Expand/>
+</C>
+<C c="14" r="18" s="3">
+<Expand/>
+</C>
+<C c="1" r="19" s="3">
+<Expand/>
+</C>
+<C c="2" r="19" s="3">
+<Expand/>
+</C>
+<C c="3" r="19" s="3">
+<Expand/>
+</C>
+<C c="4" r="19" s="3">
+<Expand/>
+</C>
+<C c="5" r="19" s="3">
+<Expand/>
+</C>
+<C c="6" r="19" s="3">
+<Expand/>
+</C>
+<C c="7" r="19" s="3">
+<Expand/>
+</C>
+<C c="8" r="19" s="3">
+<Expand/>
+</C>
+<C c="9" r="19" s="3">
+<Expand/>
+</C>
+<C c="10" r="19" s="3">
+<Expand/>
+</C>
+<C c="11" r="19" s="3">
+<Expand/>
+</C>
+<C c="12" r="19" s="3">
+<Expand/>
+</C>
+<C c="13" r="19" s="3">
+<Expand/>
+</C>
+<C c="14" r="19" s="3">
+<Expand/>
+</C>
+<C c="1" r="20" s="3">
+<Expand/>
+</C>
+<C c="2" r="20" s="3">
+<Expand/>
+</C>
+<C c="3" r="20" s="3">
+<Expand/>
+</C>
+<C c="4" r="20" s="3">
+<Expand/>
+</C>
+<C c="5" r="20" s="3">
+<Expand/>
+</C>
+<C c="6" r="20" s="3">
+<Expand/>
+</C>
+<C c="7" r="20" s="3">
+<Expand/>
+</C>
+<C c="8" r="20" s="3">
+<Expand/>
+</C>
+<C c="9" r="20" s="3">
+<Expand/>
+</C>
+<C c="10" r="20" s="3">
+<Expand/>
+</C>
+<C c="11" r="20" s="3">
+<Expand/>
+</C>
+<C c="12" r="20" s="3">
+<Expand/>
+</C>
+<C c="13" r="20" s="3">
+<Expand/>
+</C>
+<C c="14" r="20" s="3">
+<Expand/>
+</C>
+<C c="1" r="21" s="3">
+<Expand/>
+</C>
+<C c="2" r="21" s="3">
+<Expand/>
+</C>
+<C c="3" r="21" s="3">
+<Expand/>
+</C>
+<C c="4" r="21" s="3">
+<Expand/>
+</C>
+<C c="5" r="21" s="3">
+<Expand/>
+</C>
+<C c="6" r="21" s="3">
+<Expand/>
+</C>
+<C c="7" r="21" s="3">
+<Expand/>
+</C>
+<C c="8" r="21" s="3">
+<Expand/>
+</C>
+<C c="9" r="21" s="3">
+<Expand/>
+</C>
+<C c="10" r="21" s="3">
+<Expand/>
+</C>
+<C c="11" r="21" s="3">
+<Expand/>
+</C>
+<C c="12" r="21" s="3">
+<Expand/>
+</C>
+<C c="13" r="21" s="3">
+<Expand/>
+</C>
+<C c="14" r="21" s="3">
+<Expand/>
+</C>
+<C c="1" r="22">
+<Expand/>
+</C>
+<C c="2" r="22">
+<Expand/>
+</C>
+<C c="3" r="22">
+<Expand/>
+</C>
+<C c="4" r="22">
+<Expand/>
+</C>
+<C c="5" r="22">
+<Expand/>
+</C>
+<C c="6" r="22">
+<Expand/>
+</C>
+<C c="7" r="22">
+<Expand/>
+</C>
+<C c="8" r="22">
+<Expand/>
+</C>
+<C c="9" r="22">
+<Expand/>
+</C>
+<C c="10" r="22">
+<Expand/>
+</C>
+<C c="11" r="22">
+<Expand/>
+</C>
+<C c="12" r="22">
+<Expand/>
+</C>
+<C c="13" r="22">
+<Expand/>
+</C>
+<C c="14" r="22">
+<Expand/>
+</C>
+<C c="1" r="23">
+<Expand/>
+</C>
+<C c="2" r="23">
+<Expand/>
+</C>
+<C c="3" r="23">
+<Expand/>
+</C>
+<C c="4" r="23">
+<Expand/>
+</C>
+<C c="5" r="23">
+<Expand/>
+</C>
+<C c="6" r="23">
+<Expand/>
+</C>
+<C c="7" r="23">
+<Expand/>
+</C>
+<C c="8" r="23">
+<Expand/>
+</C>
+<C c="9" r="23">
+<Expand/>
+</C>
+<C c="10" r="23">
+<Expand/>
+</C>
+<C c="11" r="23">
+<Expand/>
+</C>
+<C c="12" r="23">
+<Expand/>
+</C>
+<C c="13" r="23">
+<Expand/>
+</C>
+<C c="14" r="23">
+<Expand/>
+</C>
+</CellElementList>
+</ElementCase>
+</Report>
+<ReportParameterAttr>
+<Attributes showWindow="true" delayPlaying="false" windowPosition="1" align="1"/>
+<PWTitle>
+<![CDATA[参数]]></PWTitle>
+<ParameterUI class="com.fr.report.parameter.CustomParameterUI">
+<ReportSettings headerHeight="0" footerHeight="0">
+<PaperSetting/>
+</ReportSettings>
+<ElementCase class="com.fr.report.SingleBlock">
+<ReportPageAttr>
+<HR/>
+<FR/>
+<HC/>
+<FC/>
+</ReportPageAttr>
+<RowHeight defaultValue="723900">
+<![CDATA[723900,723900,723900,723900,723900,723900,723900,723900,723900,723900,723900]]></RowHeight>
+<ColumnWidth defaultValue="2743200">
+<![CDATA[2743200,2743200,2743200,2743200,5753100,2743200,5600700,2743200,2743200,2743200,2743200]]></ColumnWidth>
+<CellElementList>
+<C c="0" r="0">
+<O>
+<![CDATA[状态：]]></O>
+<Expand/>
+</C>
+<C c="1" r="0" cs="2">
+<O>
+<![CDATA[]]></O>
+<Widget class="com.fr.report.web.ui.ComboBox">
+<WidgetName name="type"/>
+<WidgetAttr/>
+<Dictionary class="com.fr.data.impl.DynamicSQLDict">
+<FormulaDictAttr ki="0" vi="1"/>
+<Formula>
+<![CDATA[SELECT data_no,data_name FROM sys_dic_data where dic_no='SLSTATE' and data_no > 3]]></Formula>
+<Connection class="com.fr.data.impl.NameDatabaseConnection">
+<DatabaseName>
+<![CDATA[msdb]]></DatabaseName>
+</Connection>
+</Dictionary>
+</Widget>
+<Expand/>
+</C>
+<C c="3" r="0">
+<O>
+<![CDATA[起始时间：]]></O>
+<Expand/>
+</C>
+<C c="4" r="0" s="4">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=YEAR(TODAY())+'-'+MONTH(MONTHDELTA(TODAY(),-1))+'-01']]></Attributes>
+</O>
+<Widget class="com.fr.report.web.ui.DateEditor">
+<WidgetName name="startTime"/>
+<WidgetAttr/>
+<DateAttr start="" end=""/>
+</Widget>
+<Expand/>
+</C>
+<C c="5" r="0">
+<O>
+<![CDATA[终止时间：]]></O>
+<Expand/>
+</C>
+<C c="6" r="0" s="4">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=TODAY()]]></Attributes>
+</O>
+<Widget class="com.fr.report.web.ui.DateEditor">
+<WidgetName name="endTime"/>
+<WidgetAttr/>
+<DateAttr start="" end=""/>
+</Widget>
+<Expand/>
+</C>
+<C c="7" r="0">
+<O>
+<![CDATA[查询]]></O>
+<Widget class="com.fr.report.web.ui.impl.form.FormSubmitButton">
+<WidgetAttr/>
+<Hotkeys>
+<![CDATA[enter]]></Hotkeys>
+</Widget>
+<Expand/>
+</C>
+</CellElementList>
+</ElementCase>
+</ParameterUI>
+<Parameter>
+<Attributes name="type"/>
+<O>
+<![CDATA[]]></O>
+</Parameter>
+</ReportParameterAttr>
+<StyleList>
+<Style horizontal_alignment="0">
+<FRFont name="SimSun" style="0" size="72"/>
+<Background name="NullBackground"/>
+<Border/>
+</Style>
+<Style horizontal_alignment="0">
+<FRFont name="SimSun" style="0" size="136"/>
+<Background name="NullBackground"/>
+<Border/>
+</Style>
+<Style horizontal_alignment="0">
+<FRFont name="SimSun" style="0" size="72"/>
+<Background name="NullBackground"/>
+<Border>
+<Top style="1"/>
+<Bottom style="1"/>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style>
+<FRFont name="SimSun" style="0" size="72"/>
+<Background name="NullBackground"/>
+<Border>
+<Top style="1"/>
+<Bottom style="1"/>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style>
+<Format class="java.text.SimpleDateFormat">
+<![CDATA[yyyy-MM-dd]]></Format>
+<FRFont name="SimSun" style="0" size="72"/>
+<Background name="NullBackground"/>
+<Border/>
+</Style>
+</StyleList>
+</WorkBook>

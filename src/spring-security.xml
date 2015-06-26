@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+                        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd"
+    default-autowire="byType" default-lazy-init="false"> 
+		
+    <global-method-security pre-post-annotations="enabled">
+        <!-- <expression-handler ref="expressionHandler"/> -->
+    </global-method-security> 
+     
+     <!-- none  不会使用任何一个过滤器去处理这个请求的 
+             无需登录即可访问资源，但无法利用安全过滤器为我们带来的好处，
+             最简单的，这时SecurityContext内再没有保存任何一个权限主体了，
+             我们也无法从中取得主体名称以及对应的权限信息      
+     <http pattern="/system/flowjquery/flowdesgner.do*" security="none"/> -->
+     <http pattern="/login*" security="none" /> 
+     <http pattern="/resources/**" security="none" /> 
+     <http pattern="/common/**" security="none" /> 
+     <http pattern="/system/security/security!validateCode*" security="none" /> 
+     <http pattern="/system/security/security!imageCode*" security="none" />  
+	 <http pattern="/system/demo/demo!ajaxdemo.do*" security="none" /> 
+     <http auto-config="true" entry-point-ref="authenticationEntryPoint" >
+        <!-- 匿名用户 未登录就可以访问一些资源 IS_AUTHENTICATED_ANONYMOUSLY use-expressions="true"
+         access-denied-page="/common/403.jsp" use-expressions="true">
+         
+         <intercept-url pattern="/**" access="IS_AUTHENTICATED_FULLY" />   
+         -->                                          
+        <intercept-url pattern="/index*" access="IS_AUTHENTICATED_FULLY" /> 
+        <intercept-url pattern="/main*" access="IS_AUTHENTICATED_FULLY" />
+        <!-- 指定登录页面、失败页面、成功页面  
+                   默认 always-use-default-target="false" "true"无论 登录是“跳转过来的”还是用户特定进行登录,在身份验证通过后总是跳转到default-target-url属性指定的URL -->  
+        <form-login login-page="/login.do" authentication-failure-url="/login.do?error=failure"   
+            default-target-url="/" always-use-default-target="true"/>     
+        <!-- 尝试访问没有权限的页面时跳转的页面 --> 
+        <access-denied-handler error-page="/common/403.jsp"/>             
+        <logout logout-success-url="/login.do" logout-url="/j_spring_security_logout" invalidate-session="true" /> 
+         <!-- session-management是针对session的管理,后登录的账号会挤掉第一次登录的账号  error-if-maximum-exceeded="true" 禁止2次登录;   
+              session-fixation-protection 防止Session固定攻击
+                -migrateSession 创建一个新的session,把原来session中所有属性复制到新session中。这是默认值
+                -none 什么也不做   
+                -newSession 创建一个新的"干净的"session,不会复制session中的数据。session 失效后跳转的页面-->
+        <session-management session-fixation-protection="migrateSession" invalid-session-url="/session-login.do?error=invalidsession">                              
+           <!-- 单个用户最大登录数,如果希望阻止后面的这次登录的话  error-if-maximum-exceeded="true"-->
+           <concurrency-control max-sessions="1" expired-url="/session-login.do?error=maxsessions"/>
+        </session-management>    
+        <!-- 默认2周，可自定义 <remember-me  token-validity-seconds="123456789"/>-->
+		<remember-me />  
+        <custom-filter before="FILTER_SECURITY_INTERCEPTOR" ref="resourceSecurityInterceptor" /> 
+        <!--<custom-filter ref = "AuthenticationFilter" before = "BASIC_AUTH_FILTER" />-->
+        <!--<http-basic /> -->                 
+    </http> 
+    <!-- Automatically receives AuthenticationEvent messages -->   
+    <beans:bean id="loggerListener" class="org.springframework.security.authentication.event.LoggerListener"/>
+    
+    <beans:bean id="resourceSecurityInterceptor" class="org.springframework.security.web.access.intercept.FilterSecurityInterceptor">
+        <!-- 认证管理器，实现用户认证的入口 -->  
+        <beans:property name="authenticationManager"   ref="AuthenticationManager" />
+        <!-- 访问决策器，决定某个用户具有的角色，是否有足够的权限去访问某个资源 -->  
+        <beans:property name="accessDecisionManager"   ref="AccessDecisionManager" />
+        <!-- 资源源数据定义，即定义某一资源可以被哪些角色访问 -->
+        <beans:property name="securityMetadataSource"  ref="SecurityMetadataSource" />   
+          
+    </beans:bean>
+    
+    <!-- 实现了UserDetailsService的Bean -->  
+    <!-- erase-credentials默认值为true，会在username和password验证成功后清除掉Authentication中的password信息，
+           而AbstractRememberMeServices 保存cookie的条件则需要从Authentication中同时取得username和password，
+           这就导致默认情况下AbstractRememberMeServices永远不会将username和password存储到cookie中 -->
+    <authentication-manager alias="AuthenticationManager"  erase-credentials="false">  
+        <!-- 认证管理器提供者  【user-service-ref】引用的服务组件，通过securityManager进行对用户信息的认证-->  
+        <authentication-provider user-service-ref="UserDetailService" >  
+        <!-- hash使用sha或md5/plaintext散列密码  -->
+		     <password-encoder hash="sha-256" />   
+        </authentication-provider> 
+    </authentication-manager>   
+    
+    <beans:bean id="UserDetailService" class="com.suun.service.system.springsecurity.UserDetailServiceImpl" />
+    <beans:bean id="SecurityMetadataSource" class="com.suun.service.system.springsecurity.SecurityMetadataSource" />
+   
+    
+    <beans:bean id="AccessDecisionManager" class="org.springframework.security.access.vote.UnanimousBased"><!--AffirmativeBased-->
+            <beans:property name="allowIfAllAbstainDecisions" value="false" />
+	        <beans:property name="decisionVoters">
+	            <beans:list>
+	                <beans:bean class="org.springframework.security.access.vote.RoleVoter">
+	                    <beans:property name="rolePrefix" value="AUTH_" />
+	                </beans:bean>	                
+	                <beans:bean class="org.springframework.security.access.vote.AuthenticatedVoter" />
+	            </beans:list>
+	        </beans:property>
+	</beans:bean>
+	
+	<beans:bean id="authenticationEntryPoint" class="com.suun.service.system.springsecurity.AjaxFrameAuthenticationProcessingFilter">
+    	<beans:property name="loginFormUrl" value="/login.do"/>
+    	<beans:property name="mainframeUrl" value="/main.do"/> 
+    	<beans:property name="sessioninvalidUrl" value="/session-login.do"/>  
+    </beans:bean>	
+</beans:beans>
+ 
+

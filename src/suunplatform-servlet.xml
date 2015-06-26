@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"  
+	xmlns:security="http://www.springframework.org/schema/security"	
+	xmlns:ehcache="http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc 
+	http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring  
+        http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring/ehcache-spring-1.1.xsd
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/security  
+		http://www.springframework.org/schema/security/spring-security-3.0.xsd
+		http://www.springframework.org/schema/util
+  		http://www.springframework.org/schema/util/spring-util-4.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd"
+		default-lazy-init="false">
+	<!-- 注解默认配置-->
+	<context:annotation-config />
+ 	<!-- 默认的注解映射的支持    自动注册DefaultAnnotationHandlerMapping与AnnotationMethodHandlerAdapter
+ 	<mvc:annotation-driven/>-->
+ 	<!-- ControllerClassNameHandlerMapping用于匹配我们的Controller --> 
+    <bean class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping" >     
+        <property name="caseSensitive" value="true" /><!--类名、路径名驼峰式命名支持-->
+        <property name="basePackage" value="com.suun.controller" /> 
+         <!-- 解决JSP引用懒加载对象问题  
+        <property name="interceptors">  
+	        <list>  
+	            <ref bean="openEntityManagerInViewInterceptor" />  
+	        </list>  
+	    </property>-->
+    </bean> 
+ 	 	<!-- 启动spring MVC 注解功能  完成请求和注解POJO映射 -->
+ 	<!-- <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" >  -->
+ 	<bean class="com.suun.publics.spring.SuunAnnotationMethodHandlerAdapter" >
+ 	    <!-- 全局view到model的binding日期格式转换 yyyy-MM-dd-->  
+        <property name="webBindingInitializer">  
+            <bean class="com.suun.publics.spring.DateConverter" />  
+        </property>         
+ 	  <!-- 解决Ajax响应中文乱码  放在component-scan之上-->
+      <property name="messageConverters">   
+         <list>   
+             <bean class = "org.springframework.http.converter.StringHttpMessageConverter">   
+                <property name = "supportedMediaTypes">
+                      <list>
+                          <value>text/html;charset=UTF-8</value>  
+                          <value>text/plain;charset=UTF-8</value>  
+                     </list>   
+                </property>   
+             </bean>   
+             <!-- json转换器 -->
+             <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" > 
+                 <property name="objectMapper">
+                 	  <bean class="com.fasterxml.jackson.databind.ObjectMapper">
+                 	  	  <property name="dateFormat">
+                 	  	  	 <bean class="java.text.SimpleDateFormat">
+                 	  	  	 	<constructor-arg type="java.lang.String" value="yyyy-MM-dd"/>
+                 	  	  	 </bean>	
+                 	  	  </property>
+                 	  </bean>
+                 </property>
+             </bean>
+         </list>   
+      </property>        
+    </bean>   
+      
+ 	<!--  处理httpRequest的Adapter 以.do直接访问prefix下jsp-->
+    <bean id="httpRequestHandlerAdapter" class="com.suun.publics.spring.HttpRequestHandlerAdapter">
+        <property name="prefix"> 
+            <value>/WEB-INF/pages</value>
+        </property>       
+    </bean>
+    <!-- 上传文件 -->
+    <bean id="multipartResolver" name="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">  
+        <property name="defaultEncoding">  
+            <value>utf-8</value>  
+        </property>  
+        <!-- set the max upload size100MB -->  
+        <property name="maxUploadSize">  
+            <value>104857600</value>  
+        </property>  
+        <property name="maxInMemorySize">  
+            <value>4096</value>  
+        </property>  
+    </bean> 
+    
+    <!-- @controller注解类转换为bean -->
+	<context:component-scan base-package="com.suun.controller" > 
+	     <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>  
+    </context:component-scan> 
+	
+ 	<!-- css 、js不过滤 对应 web.xml -->
+ 	<mvc:resources mapping="/resources/**" location="/resources/"/> 
+ 
+	<!-- 模型视图名称解析，即模型视图名称加前后缀 -->
+	<bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+	    <property name="ignoreAcceptHeader" value="true"/>
+		<property name="defaultContentType" value="text/html"/>
+		<property name="mediaTypes">
+		    <map>
+		        <entry key="xml" value="application/xml"/>
+		        <entry key="html" value="text/html"/>
+		    </map>
+		</property>
+		<!-- 用于开启 /userinfo/123?format=json 的支持 -->
+		<property name="favorParameter" value="false"/>
+		<property name="viewResolvers">
+		    <list>
+		        <!-- 使用用户指定的 bean 名称定义一个视图解析器 -->
+		        <bean id="bviewResolver" class="org.springframework.web.servlet.view.BeanNameViewResolver"/>
+		        <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+					<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+					<property name="prefix" value="/WEB-INF/pages/"/>
+					<property name="suffix" value=".jsp"/>
+				</bean>
+		    </list>
+		</property>
+	</bean>
+ 
+	<!-- 拦截器 mvc:interceptors  bean class -->   	 
+	  
+    <!-- 对静态资源文件的访问   --> 
+    <mvc:default-servlet-handler/>  
+
+</beans>
+

@@ -1,0 +1,75 @@
+@CHARSET "UTF-8";
+body,table,textarea,span,input,select{
+	font-size:12px  !important;
+}
+form td{padding: 2px;	}
+
+.excel {
+	background-image:url('./../../resources/images/button/xlss.png') !important;
+}   
+.pdf {
+	background-image:url('./../../resources/images/button/pdfs.png') !important;
+}
+.word {
+	background-image:url('./../../resources/images/button/docs.png') !important;
+}
+.xml {
+	background-image:url('./../../resources/images/button/xmls.png') !important;
+}
+.csv {
+	background-image:url('./../../resources/images/button/csvs.png') !important;
+}
+.add {
+	background-image:url(./../../resources/images/button/add.gif) !important;
+}
+.edit {
+	background-image:url('./../../resources/images/button/edit.gif') !important;
+}
+.remove {
+	background-image:url('./../../resources/images/button/delete.gif') !important;
+}
+.submitflow {
+	background-image:url('./../../resources/images/button/submit.png') !important;
+}
+.select {
+	background-image:url('./../../resources/images/button/select.png') !important;
+}
+.refresh {
+   background-image:url('./../../resources/images/button/refresh.gif') !important;
+}
+.search {
+   background-image:url('./../../resources/images/button/query.png') !important;
+}
+.searchc {
+   background-image:url('./../../resources/images/button/queryc.png') !important;
+}
+.searchm {
+   background-image:url('./../../resources/images/button/querym.png') !important;
+}
+.searchmc {
+   background-image:url('./../../resources/images/button/querymc.png') !important;
+}
+.reset {
+   background-image:url('./../../resources/images/button/clear.gif') !important;
+}
+.collapse {
+   background-image:url('./../../resources/images/button/collapse.gif') !important;
+}
+
+.navigation {
+	background-image:url('./../../resources/images/system/navigation.png') !important;    
+}
+
+.group {
+	background-image:url('./../../resources/images/system/group.png') !important;    
+}
+
+.btn-close {
+    background-image: url("./../../resources/images/extjs/cancel.png") !important;
+}
+
+        
+        
+        
+        
+        
