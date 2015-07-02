@@ -163,19 +163,17 @@ public class DepartmentController extends TreeGridCRUDController<Department,Depe
 	}
 
 	@Override
-	protected String saveGridRecordSet(HttpServletRequest request,
-			Depemployees operatebean) {
+	protected String saveGridRecordSet(HttpServletRequest request,Depemployees operatebean) {
 		try{
 			depManager.saveDepemployees(operatebean);
 			return "";
 		}catch (Exception e){
 			return e.getMessage();
-		}		
+		}
 	}
 
 	@Override
-	protected Page<Depemployees> getGridPageRecords(HttpServletRequest request,
-			String treeid, Page<Depemployees> page) {
+	protected Page<Depemployees> getGridPageRecords(HttpServletRequest request, String treeid, Page<Depemployees> page) {
 		return depManager.getAllDepemployee(treeid,page);
 	}
 
