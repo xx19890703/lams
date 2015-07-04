@@ -28,6 +28,12 @@ form td{padding: 2px;	}
 .remove {
 	background-image:url('./../../resources/images/button/delete.gif') !important;
 }
+.down {
+	background-image:url(./../../resources/images/button/down.png) !important;
+}
+.upload {
+	background-image:url(./../../resources/images/button/upload.png) !important;
+}
 .submitflow {
 	background-image:url('./../../resources/images/button/submit.png') !important;
 }
