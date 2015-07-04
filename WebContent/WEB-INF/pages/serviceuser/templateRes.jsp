@@ -13,7 +13,7 @@
 			allowEdit:true,
 			inputFormWidth:340,
 			inputFormHeight:260,
-			operation:{add:{auth:'AUTH_TEMPLATERES_ADD'},edit:{auth:'AUTH_TEMPLATERES_EDIT'},del:{auth:'AUTH_TEMPLATERES_DEL'},down:{auth:'AUTH_TEMPLATERES_DOWN'}
+			operation:{add:{auth:'AUTH_TEMPLATERES_ADD'},edit:{auth:'AUTH_TEMPLATERES_EDIT'},del:{auth:'AUTH_TEMPLATERES_DEL'}
 		    }
         },
         grid:{

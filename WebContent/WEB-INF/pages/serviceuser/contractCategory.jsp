@@ -13,7 +13,7 @@
 			allowEdit:true,
 			inputFormWidth:340,
 			inputFormHeight:260,
-			operation:{add:{auth:'AUTH_CONTRACT_ADD'},edit:{auth:'AUTH_CONTRACT_EDIT'},del:{auth:'AUTH_CONTRACT_DEL'},down:{auth:'AUTH_CONTRACT_DOWN'}
+			operation:{add:{auth:'AUTH_CONTRACT_ADD'},edit:{auth:'AUTH_CONTRACT_EDIT'},del:{auth:'AUTH_CONTRACT_DEL'},down:{auth:'AUTH_CONTRACT_DOWN'},upload:{auth:'AUTH_CONTRACT_UPLOAD'}
 		    }
         },
         grid:{
