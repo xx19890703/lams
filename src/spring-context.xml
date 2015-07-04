@@ -133,4 +133,12 @@
         </property>  
     </bean>  
    -->
+   
+	<bean id="dataminingMysqlStrategy" class="com.suun.publics.data.impl.DataminingMysqlStrategy">
+	 	<property name="dataSource" ref="dataSource"/>
+	</bean>
+    
+	<bean id="dataminingFactory" class="com.suun.publics.data.DataminingFactory">
+		<property name="strategy" ref="dataminingMysqlStrategy"/>
+	</bean>
 </beans>

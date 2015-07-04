@@ -1,16 +1,31 @@
 package com.suun.controller.serviceuser;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fr.base.FRContext;
@@ -234,20 +249,137 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 	
 	@RequestMapping
 	@ResponseBody
-	public void downDataZip(String treeid, String id, final HttpServletResponse response){
+	public void griddown(String treeid, String id, HttpServletRequest request, HttpServletResponse response){
+		response.reset();
+		//获取路径
 		String envPath = FRContext.getCurrentEnv().getPath();  
-        FRContext.setCurrentEnv(new LocalEnv(envPath)); 
-        ContractDetail contract = mainManager.getContractDetail("2","1");
-        GetDataBaseSql sql = new TestGetDataBaseSql();
-        String str = sql.getDataSqlByContractId(contract.getDid());
-        
-        //遍历所有模板
-        for(ContractTemplateRes s : contract.getRescontent()){
-        	TemplateResDetail temple = s.getTemplate();
-        	//遍历所有数据库表
-        	for(TemplateResContent tt : temple.getRescontent()){
-        		System.out.println(tt.getCsqlpath());
-        	}
-        }
+		FRContext.setCurrentEnv(new LocalEnv(envPath)); 
+		ZipOutputStream zos = null;
+		String sbuffer = new String();
+		try {
+	        ContractDetail contract = mainManager.getContractDetail(treeid, id);
+	        String tempPath = request.getSession().getServletContext().getRealPath(File.separator + "tempfile" + File.separator +"down_" + System.currentTimeMillis() + ".zip");
+	        zos = new ZipOutputStream(new FileOutputStream(tempPath));
+	        GetDataBaseSql sql = new TestGetDataBaseSql();
+	        int readLength = 0;
+	        String filePath = "";
+	        
+	        //遍历所有模板
+	        for(ContractTemplateRes s : contract.getRescontent()){
+	        	TemplateResDetail temple = s.getTemplate();
+	        	//添加模板到zip包
+	        	filePath = envPath + temple.getPath();
+	        	File tfile = new File(filePath);  
+    			if (!tfile.exists()) {
+    				continue;
+    			}
+	        	ZipEntry tentry = new ZipEntry(temple.getPath());
+        		zos.putNextEntry(tentry);
+        		InputStream tis = new BufferedInputStream(new FileInputStream(tfile));
+    			while ((readLength = tis.read()) != -1) {
+    				zos.write(readLength);
+    			}
+    			tis.close();
+    			
+	        	//遍历所有数据库表
+	        	for(TemplateResContent tt : temple.getRescontent()){
+	        		sbuffer = sbuffer + sql.getDataSqlByContractId(contract.getDid(),tt.getName());
+	        		filePath = envPath + tt.getCsqlpath();
+	        		File file = new File(filePath);  
+	    			if (!file.exists()) {   
+	    				continue;
+	    			}
+	    			ZipEntry entry = new ZipEntry(tt.getCsqlpath());
+	        		zos.putNextEntry(entry);
+	        		InputStream is = new BufferedInputStream(new FileInputStream(file));
+	    			while ((readLength = is.read()) != -1) {
+	    				zos.write(readLength);
+	    			}
+	    			is.close();
+	        	}
+	        }
+	        //创建insert.sql(报表数据文件)文件
+	        if (sbuffer != null && !sbuffer.trim().equals("")){
+	        	ZipEntry entry = new ZipEntry("insert.sql");
+	        	zos.putNextEntry(entry);
+	        	ByteArrayInputStream in = new ByteArrayInputStream(sbuffer.getBytes());
+				while ((readLength = in.read()) != -1) {
+					zos.write(readLength);
+				}
+				in.close();
+	        }
+	        
+	        OutputStream outputStream = new BufferedOutputStream(response.getOutputStream());
+	        InputStream input = new FileInputStream(tempPath);
+	        byte[] buffer = new byte[4096];
+	        int n = 0;
+	        while ((n = input.read(buffer)) != -1) {
+	        	outputStream.write(buffer, 0, n);
+	        }
+	        response.setHeader("Content-Disposition", "attachment; filename=\"" + contract.getName() + System.currentTimeMillis() + ".zip\"");  
+	        response.setHeader("Content-Length",String.valueOf(input.read()));
+	        response.setContentType("application/octet-stream; charset=utf-8");
+	        input.close();
+	        outputStream.flush();  
+	        outputStream.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (zos != null) {
+				try {
+					zos.close();
+				} catch (Exception ex) {
+					System.out.println("zip流关闭错误:" + ex.toString());
+				}
+			}
+		}  
+	}
+	
+	@RequestMapping
+	@ResponseBody
+	public Map<String,Object> gridupload(@RequestParam("file") MultipartFile file, HttpServletRequest request, HttpServletResponse response){
+		Map<String,Object> map=new HashMap<String,Object>();
+		if (!file.isEmpty()){
+			//文件上传路径
+			String path = request.getSession().getServletContext().getRealPath(File.separator + "tempfile" + File.separator + "upload_" + file.getOriginalFilename());
+			File destFile = new File(path);
+			try {
+				String envPath = FRContext.getCurrentEnv().getPath();
+				FileUtils.copyInputStreamToFile(file.getInputStream(), destFile);
+				ZipInputStream zip = new ZipInputStream(new FileInputStream(path));
+				BufferedInputStream bin=new BufferedInputStream(zip);
+				ZipEntry entry;
+				//逐个读取压缩包的文件
+				while((entry = zip.getNextEntry())!=null && !entry.isDirectory()){
+					//处理以.cpt结尾的文件  及 .sql结尾的文件
+					String fileName = entry.getName();
+					if(fileName.endsWith(".cpt")){
+						destFile=new File(envPath,entry.getName());  
+						if(!destFile.exists()){  
+							(new File(destFile.getParent())).mkdirs();  
+						}  
+						FileOutputStream out=new FileOutputStream(destFile);  
+						BufferedOutputStream Bout=new BufferedOutputStream(out);  
+						int b;  
+						while((b=bin.read())!=-1){  
+							Bout.write(b);  
+						}  
+						Bout.close();  
+						out.close();
+					}else if(fileName.endsWith(".sql")){
+						
+					}
+				}  
+				bin.close();  
+				zip.close();
+				map.put("msg", "true");
+			} catch (IOException e) {
+				e.printStackTrace();
+				map.put("msg", "false");
+			}
+		}else{
+			map.put("msg", "false");
+		}
+		return map;
 	}
 }

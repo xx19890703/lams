@@ -19,6 +19,7 @@ import com.suun.publics.hibernate.Condition;
 import com.suun.publics.hibernate.Page;
 import com.suun.publics.jCaptcha.CaptchaService;
 import com.suun.publics.system.DicService;
+import com.suun.service.data.DataminingManager;
 import com.suun.service.system.workflow.WorkflowManager;
 
 
@@ -34,6 +35,10 @@ public class DemoController extends BaseCRUDController<Demo>{
 
 	@Autowired
 	com.suun.service.system.demo.DemoManager demoManager; 
+	
+	@Autowired
+	DataminingManager dataminingManager;
+	
 	@RequestMapping
 	public ModelAndView index(HttpServletRequest request,HttpServletResponse response) {	
 		ModelAndView modelandview=new ModelAndView();
@@ -138,6 +143,30 @@ public class DemoController extends BaseCRUDController<Demo>{
 		erequest.get("ss");
 		return renderText(response,"true"); 
 	}
+	
+	@RequestMapping
+	@ResponseBody
+	public Map<String, Object> datatest(HttpServletRequest request,
+			HttpServletResponse response){
+		Map<String, Object> modelMap = new HashMap<String, Object>();
+		
+		String contractId=request.getParameter("contractId");
+		//List<String> result = dataminingManager.findTableData(contractId,"contract_info");
+		List<String> result2 = dataminingManager.findTableData(contractId,"contract_mode");
+		List<String> tables = dataminingManager.findModeTables(contractId);
+		for(String tableName:tables){
+			List<String> tabledatas = dataminingManager.findTableData(contractId,tableName);
+			for(String tt:tabledatas){
+				System.out.println(tt);
+			}
+		}
+		//modelMap.put("list", result);
+		modelMap.put("list2", result2);
+		
+		//dataminingManager.insertData("insert into table1 ( contractId ,col1 ,col2 ,col3  ) values (  'tttaaaaa'  ,'tt123'  ,'tt2'  ,'tt'  );");
+		return modelMap;
+	}
+	
 	
 	@Override
 	public boolean isJbpm() {
