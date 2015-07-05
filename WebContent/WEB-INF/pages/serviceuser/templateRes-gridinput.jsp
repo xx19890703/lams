@@ -48,10 +48,6 @@
         		 }	
 			}
 		}); */
-		//明细编辑
-        $(top.document).ready(function(){
-            $.SuunRept({jsonbean:${jsonbean},beanname:"rescontent",detailnames:"did,name,csqlpath",required:true});
-        });
         </script>
 	</head>
 	<body>
@@ -99,7 +95,6 @@
 	  	<div style="position:relative;overflow:auto; width:750px;">
 	  		<table class="suunRept" width="100%" border="0" border="0" cellpadding="0" cellspacing="0">
 		      <tr>     
-		      	  <td align="center">SN</td>
 		          <td align="center">编号</td>    
 				  <td align="center">数据库表名</td>
 				  <td align="center">表创建语句</td>
@@ -108,7 +103,6 @@
 		      </tr>
 		      <c:forEach var="item" items="${templateresdetail.rescontent}" varStatus="status">
 			      <tr class="items">
-			      		<td align="center"><input type="text" class="sysindex"/> </td>        
 					    <td align="center"><input type="text" name="rescontent[${status.index }].did" value="${item.did}"/></td>    
 						<td align="center"><input type="text" name="rescontent[${status.index }].name" value="${item.name}"/></td>
 						<td align="center"><input type="text" name="rescontent[${status.index }].csqlpath" value="${item.csqlpath}"/></td>

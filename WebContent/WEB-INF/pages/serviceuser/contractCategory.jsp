@@ -11,7 +11,7 @@
       	 tree:{
 		    title:'合同分类',
 			allowEdit:true,
-			inputFormWidth:340,
+			inputFormWidth:300,
 			inputFormHeight:260,
 			operation:{add:{auth:'AUTH_CONTRACT_ADD'},edit:{auth:'AUTH_CONTRACT_EDIT'},del:{auth:'AUTH_CONTRACT_DEL'},down:{auth:'AUTH_CONTRACT_DOWN'},upload:{auth:'AUTH_CONTRACT_UPLOAD'}
 		    }
@@ -26,7 +26,7 @@
 	             {columnid:'orderinfo',columnname:'所属订单',colwidth:60},
 	             {columnid:'importTime',columnname:'导出时间',colwidth:60},
 	             {columnid:'issuedTime',columnname:'下发时间',colwidth:60},
-	             {columnid:'rescontent.name',columnname:'合同分类名称',colwidth:60} ],
+	             {columnid:'conmain.name',columnname:'合同分类名称',colwidth:60} ],
 			inputFormWidth:800,
             inputFormHeight:400
      	 }

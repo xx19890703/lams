@@ -12,16 +12,16 @@
     	 rules: { 
     		 did: { 
     			required: true, 
-    			remote: {url:'${ctx}/serviceuser/contractCategory!validateDid',
+    			remote: {url:'${ctx}/serviceuser/contractcategory!validateDid',
     				     type:'post',
-    				     data:{olddid:'${contractCategory.did}'}
+    				     data:{olddid:'${contractcategory.did}'}
     			}
 			},
 			name:{
 				required:true, 
-    			remote: {url:'${ctx}/serviceuser/contractCategory!validateName',
+    			remote: {url:'${ctx}/serviceuser/contractcategory!validateName',
 				     type:'post',
-				     data:{oldname:'${contractCategory.name}',id:'${suunplatformTreePid}'}
+				     data:{oldname:'${contractcategory.name}',id:'${suunplatformTreePid}'}
 			    }
 			}             	
 		},
@@ -53,8 +53,8 @@
 		<td width="180">
             <c:choose>		  
 		      <c:when test="${isEdit}">
-		         ${contractCategory.did}
-		         <input type="hidden" name="did"  value="${contractCategory.did}"/> 
+		         ${contractcategory.did}
+		         <input type="hidden" name="did"  value="${contractcategory.did}"/> 
 		      </c:when>		  
            <c:otherwise>
                  <input style="width:100%;" type="text" name="did"/>
@@ -65,13 +65,13 @@
 	<tr>
 		<td width="80" align="right">合同分类名称: </td>
 		<td width="180">            
-		    <input style="width:100%;" type="text" name="name" value="${contractCategory.name}"/>		    
+		    <input style="width:100%;" type="text" name="name" value="${contractcategory.name}"/>		    
         </td>
 	</tr>
 	<tr>
 		<td width="80" align="right">合同分类描述: </td>
 		<td width="180">
-		  <textarea style="width:100%;" name="description" rows=4>${contractCategory.description}</textarea>
+		  <textarea style="width:100%;" name="description" rows=4>${contractcategory.description}</textarea>
 		</td>
 	</tr>	
 	<tr>
@@ -81,7 +81,7 @@
         <select name="state.key.data_no" style="width:100%;">
 		<c:forEach var="mystatus" items="${status}">
 			<c:choose >
-				<c:when test="${isEdit&&mystatus.key.data_no==contractCategory.state.key.data_no}">
+				<c:when test="${isEdit&&mystatus.key.data_no==contractcategory.state.key.data_no}">
 					<option selected value="${mystatus.key.data_no}">${mystatus.data_name}</option>
 				</c:when>	  
               	<c:otherwise>
