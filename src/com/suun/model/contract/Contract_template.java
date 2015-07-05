@@ -2,12 +2,11 @@ package com.suun.model.contract;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import com.suun.model.IdEntity;
 
 /**
  * 合同对应模板配置表
@@ -16,29 +15,19 @@ import com.suun.model.IdEntity;
 @Entity
 @Table(name = "contract_template")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class Contract_template extends IdEntity{
+public class Contract_template {
 
-	//合同编号
-	private String contractId;
-	//数据库表名称
-	private String tableName;
+	//联合主键
+	private ContractTemplatePK id;
 	//模板URL
 	private String templateUrl;
 	
-	@Column(length=30)
-	public String getContractId() {
-		return contractId;
+	@Id
+	public ContractTemplatePK getId() {
+		return id;
 	}
-	public void setContractId(String contractId) {
-		this.contractId = contractId;
-	}
-	
-	@Column(length=30)
-	public String getTableName() {
-		return tableName;
-	}
-	public void setTableName(String tableName) {
-		this.tableName = tableName;
+	public void setId(ContractTemplatePK id) {
+		this.id = id;
 	}
 	
 	@Column(length=30)
@@ -48,5 +37,4 @@ public class Contract_template extends IdEntity{
 	public void setTemplateUrl(String templateUrl) {
 		this.templateUrl = templateUrl;
 	}
-	
 }
