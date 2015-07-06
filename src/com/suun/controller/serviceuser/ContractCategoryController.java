@@ -36,9 +36,9 @@ import com.suun.model.serviceuser.ContractTemplateRes;
 import com.suun.model.serviceuser.TemplateResContent;
 import com.suun.model.serviceuser.TemplateResDetail;
 import com.suun.model.system.Constant;
-import com.suun.model.utils.GetDataBaseSql;
-import com.suun.model.utils.TestGetDataBaseSql;
 import com.suun.publics.controller.TreeGridCRUDController;
+import com.suun.publics.data.DataminingFactory;
+import com.suun.publics.data.DataminingStrategy;
 import com.suun.publics.hibernate.Condition;
 import com.suun.publics.hibernate.Page;
 import com.suun.service.serviceuser.ContractCategoryManager;
@@ -60,6 +60,8 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 	ContractDetailManager subManager;
 	@Autowired 
 	DicManager dicManager;
+	@Autowired
+	private DataminingFactory factory;
 	
 	@RequestMapping
 	@ResponseBody
@@ -260,7 +262,7 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 	        ContractDetail contract = mainManager.getContractDetail(treeid, id);
 	        String tempPath = request.getSession().getServletContext().getRealPath(File.separator + "tempfile" + File.separator +"down_" + System.currentTimeMillis() + ".zip");
 	        zos = new ZipOutputStream(new FileOutputStream(tempPath));
-	        GetDataBaseSql sql = new TestGetDataBaseSql();
+	        DataminingStrategy strategy = factory.getStrategy();
 	        int readLength = 0;
 	        String filePath = "";
 	        
@@ -281,12 +283,22 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
     			}
     			tis.close();
     			
+    			//返回合同-数据库表的数据
+    			for(String temp : strategy.findTableData(contract.getDid(),"contract_mode"))
+    				sbuffer = sbuffer + temp;
+    			//返回合同-模板url的数据
+    			for(String temp : strategy.findTableData(contract.getDid(),"contract_template"))
+    				sbuffer = sbuffer + temp;
+    			
 	        	//遍历所有数据库表
 	        	for(TemplateResContent tt : temple.getRescontent()){
-	        		sbuffer = sbuffer + sql.getDataSqlByContractId(contract.getDid(),tt.getName());
+	        		//sbuffer = sbuffer + sql.getDataSqlByContractId(contract.getDid(),tt.getName());
+	        		//返回表数据查询语句
+	        		for(String temp : strategy.findTableData(contract.getDid(), tt.getName()))
+	        			sbuffer = sbuffer + temp;
 	        		filePath = envPath + tt.getCsqlpath();
 	        		File file = new File(filePath);  
-	    			if (!file.exists()) {   
+	    			if (!file.exists()) {
 	    				continue;
 	    			}
 	    			ZipEntry entry = new ZipEntry(tt.getCsqlpath());

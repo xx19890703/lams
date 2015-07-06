@@ -9,9 +9,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.suun.model.contract.ContractModePK;
+import com.suun.model.contract.ContractTemplatePK;
+import com.suun.model.contract.Contract_mode;
+import com.suun.model.contract.Contract_template;
 import com.suun.model.serviceuser.ContractCategory;
 import com.suun.model.serviceuser.ContractDetail;
 import com.suun.model.serviceuser.ContractTemplateRes;
+import com.suun.model.serviceuser.TemplateResContent;
+import com.suun.model.serviceuser.TemplateResDetail;
 import com.suun.publics.hibernate.Condition;
 import com.suun.publics.hibernate.FilterInfo;
 import com.suun.publics.hibernate.FilterInfo.Logic;
@@ -30,12 +36,22 @@ public class ContractCategoryManager {
 	private SimpleHibernateTemplate<ContractCategory, String> manager;
 	private SimpleHibernateTemplate<ContractDetail, String> submanager;
 	private SimpleHibernateTemplate<ContractTemplateRes, Long> conmanager;
+	private SimpleHibernateTemplate<Contract_mode, ContractModePK> contractmode;
+	private SimpleHibernateTemplate<Contract_template, ContractTemplatePK> contracttemplate;
+	
+	private SimpleHibernateTemplate<TemplateResDetail, String> templatemanager;
+	private SimpleHibernateTemplate<TemplateResContent, String> templatecmanager;
 	
 	@Autowired
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		manager = new SimpleHibernateTemplate<ContractCategory, String>(sessionFactory, ContractCategory.class);
 		submanager = new SimpleHibernateTemplate<ContractDetail, String>(sessionFactory, ContractDetail.class);
 		conmanager = new SimpleHibernateTemplate<ContractTemplateRes, Long>(sessionFactory, ContractTemplateRes.class);
+		contractmode = new SimpleHibernateTemplate<Contract_mode, ContractModePK>(sessionFactory, Contract_mode.class);
+		contracttemplate = new SimpleHibernateTemplate<Contract_template, ContractTemplatePK>(sessionFactory, Contract_template.class);
+		
+		templatemanager = new SimpleHibernateTemplate<TemplateResDetail, String>(sessionFactory, TemplateResDetail.class);
+		templatecmanager = new SimpleHibernateTemplate<TemplateResContent, String>(sessionFactory, TemplateResContent.class);
 	}
 	
 	@Transactional(readOnly = true)
@@ -110,18 +126,35 @@ public class ContractCategoryManager {
 	}
 	
 	public void saveContractDetail(ContractDetail sub) {
-//		List<TemplateResContent> auths=conmanager.findByProperty("resdetail.did", sub.getDid());
-//	    for(TemplateResContent auth:auths){
-//	    	conmanager.delete(auth);
+		//submanager.delete(sub.getDid());
+		//List<ContractTemplateRes> tempRes = conmanager.findByProperty("condetail.did", sub.getDid());
+//		sub.setRescontent(null);
+//	    for(ContractTemplateRes temp : tempRes){
+//	    	conmanager.delete(temp);
 //		}
 //	    conmanager.getSession().flush();
-		//一样的，因为Authority ManyToOne authgroups CascadeType.ALL
-		//authgroupsDao.delete(authgroups.getAuthGroupId());
-		//authgroupsDao.getSession().flush();		
-		for(ContractTemplateRes auth : sub.getRescontent()){
-			auth.setCondetail(sub);
-			conmanager.save(auth);
-		}	
+	    
+	    // 保存子表
+		for(ContractTemplateRes temp : sub.getRescontent()){
+			List<TemplateResContent> ress = templatecmanager.findByProperty("resdetail.did", temp.getTemplate().getDid());
+			for(TemplateResContent res : ress){
+				ContractModePK modepk = new ContractModePK();
+				modepk.setContractId(sub.getDid());
+				modepk.setTableName(res.getName());
+				Contract_mode mode = new Contract_mode();
+				mode.setId(modepk);
+				contractmode.getSession().merge(mode);
+			}
+			ContractTemplatePK templatepk = new ContractTemplatePK();
+			templatepk.setContractId(sub.getDid());
+			templatepk.setTemplateUrl(templatemanager.get(temp.getTemplate().getDid()).getPath());
+			Contract_template template = new Contract_template();
+			template.setId(templatepk);
+			contracttemplate.getSession().merge(template);
+			
+			temp.setCondetail(sub);
+			conmanager.save(temp);
+		}
 		submanager.save(sub);
 	}
 	

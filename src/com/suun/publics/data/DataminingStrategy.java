@@ -10,8 +10,5 @@ public interface DataminingStrategy {
 	//根据合同id、tablename，获取所有的表数据
 	List<String> findTableData(String contractId, String tableName);
 	
-	//根据合同id，获取所有的模板insert语句
-	List<String> findTemplateData(String contractId);
-
 	boolean insertData(String sql);
 }
