@@ -1696,13 +1696,15 @@ var suunCore = {
 				if (!options.tree.newurl) options.tree.newurl='';
 				if (!options.tree.editurl) options.tree.editurl='';
 				if (!options.tree.saveurl) options.tree.saveurl='';
+				if (!options.tree.downurl) options.tree.downurl='';
+				if (!options.tree.uploadurl) options.tree.uploadurl='';
 				if (!options.tree.deleteurl) options.tree.deleteurl='';
 			}
 			if (!options.tree.baseurl&&!options.grid.baseurl) {
 				if (!options.baseurl){
 					if (!options.authurl&&
-						(!options.tree.baseurl&&(!options.tree.listurl||!options.tree.newurl||!options.tree.editurl||!options.tree.saveurl||!options.tree.deleteurl))||
-						(!options.grid.baseurl&&(!options.grid.listurl||!options.grid.newurl||!options.grid.editurl||!options.grid.saveurl||!options.grid.deleteurl||!options.grid.exporturl))){
+						(!options.tree.baseurl&&(!options.tree.listurl||!options.tree.newurl||!options.tree.editurl||!options.tree.saveurl||!options.tree.deleteurl||!options.tree.downurl||!options.tree.uploadurl))||
+						(!options.grid.baseurl&&(!options.grid.listurl||!options.grid.newurl||!options.grid.editurl||!options.grid.saveurl||!options.grid.deleteurl||!options.grid.exporturl||!options.grid.downurl||!options.grid.uploadurl))){
 						alert("url is null")
 						return false;
 					}		    
@@ -1721,7 +1723,10 @@ var suunCore = {
 			if (!options.grid.newurl) options.grid.newurl=options.grid.baseurl+'!grid_new.do';
 			if (!options.grid.editurl) options.grid.editurl=options.grid.baseurl+'!gridedit.do';
 			if (!options.grid.saveurl) options.grid.saveurl=options.grid.baseurl+'!gridsave';
-			if (!options.grid.deleteurl) options.grid.deleteurl=options.grid.baseurl+'!griddelete';	
+			if (!options.grid.deleteurl) options.grid.deleteurl=options.grid.baseurl+'!griddelete';
+			//下载、上传按钮
+			if (!options.grid.downurl) options.grid.downurl=options.grid.baseurl+'!griddown';
+			if (!options.grid.uploadurl) options.grid.uploadurl=options.grid.baseurl+'!gridupload';
 			if (!options.grid.exporturl) options.grid.exporturl=options.grid.baseurl+'!gridexportlist';
 			
 			if (!options.tree.listurl) options.tree.listurl=options.tree.baseurl+'!treelists';

@@ -13,7 +13,7 @@ function createtreegrid(option) {
 	}	
 	if (!suunCore.CheckUrl("treegrid",option)) return;
 	
-	if (!option.tree.width) option.tree.width='40%';
+	if (!option.tree.width) option.tree.width='25%';
 	if (!option.tree.inputFormWidth) option.tree.inputFormWidth=200;
 	if (!option.tree.inputFormHeight) option.tree.inputFormHeight=150;
 	option.tree.operation = option.tree.operation || {};
@@ -32,12 +32,16 @@ function createtreegrid(option) {
 	option.grid.operation.add=option.grid.operation.add || {};
 	option.grid.operation.edit=option.grid.operation.edit || {};
 	option.grid.operation.del=option.grid.operation.del || {};
+	option.grid.operation.down=option.grid.operation.down || {};
+	option.grid.operation.upload=option.grid.operation.upload || {};
 	option.grid.operation.exp=option.grid.operation.exp || {};
 	option.grid.operation.check=option.grid.operation.check || {};
 	option.grid.operation.extend=option.grid.operation.extend || [];
 	Ext.applyIf(option.grid.operation.add,{hidden:false,iconCls:'add',text:"添加",tooltip:'增加一条信息'});
 	Ext.applyIf(option.grid.operation.edit,{hidden:false,iconCls:'edit',text:"修改",tooltip:'修改一条信息'});
-	Ext.applyIf(option.grid.operation.del,{hidden:false,iconCls:'remove',text:"删除",tooltip:'删除信息'});	
+	Ext.applyIf(option.grid.operation.del,{hidden:false,iconCls:'remove',text:"删除",tooltip:'删除信息'});
+	Ext.applyIf(option.grid.operation.down,{hidden:false,iconCls:'down',text:"下载",tooltip:'下载数据包'});
+	Ext.applyIf(option.grid.operation.upload,{hidden:false,iconCls:'upload',text:"上传",tooltip:'上载数据包'});
 	Ext.applyIf(option.grid.operation.exp,{hidden:false,btns:[]});
 	Ext.applyIf(option.grid.operation.exp.btns,[
 	    {iconCls:'pdf',handler:function(btn,pressed){suunExport('pdf');}}, 
@@ -215,6 +219,41 @@ function createtreegrid(option) {
 	                	griddeleterecord();
 	                } else {
 	                	option.grid.operation.del.onClick(tree,suungrid);
+	                }
+	            }
+	       });
+		}	
+	}
+	//下载
+	if (suunCore.HaveAuths(option.authurl,option.grid.operation.down.auth)) {		
+    	if (!option.grid.operation.down.hidden){
+			gridtopbar.push({
+				iconCls:option.grid.operation.down.iconCls,
+				text:option.grid.operation.down.text,
+				tooltip:option.grid.operation.down.tooltip,
+	            handler:function(){ 
+	                if (!option.grid.operation.down.onClick) {
+	                	griddownrecord();
+	                } else {
+	                	option.grid.operation.down.onClick(tree,suungrid);
+	                }
+	            }
+	       });
+		}	
+	}
+	
+	//上传
+	if (suunCore.HaveAuths(option.authurl,option.grid.operation.upload.auth)) {		
+    	if (!option.grid.operation.upload.hidden){
+			gridtopbar.push({
+				iconCls:option.grid.operation.upload.iconCls,
+				text:option.grid.operation.upload.text,
+				tooltip:option.grid.operation.upload.tooltip,
+	            handler:function(){ 
+	                if (!option.grid.operation.upload.onClick) {
+	                	griduploadrecord();
+	                } else {
+	                	option.grid.operation.upload.onClick(tree,suungrid);
 	                }
 	            }
 	       });
@@ -525,6 +564,82 @@ function createtreegrid(option) {
 			});       	    					
 		}
 	}
+	//下载
+	function griddownrecord() {
+		var record =suungrid.getSelectionModel().getSelections(); 
+		if (record.length == 0) {
+			Ext.MessageBox.show({
+				title : "提示",
+				msg : "请先选择您要下载的数据行！",
+				icon : Ext.MessageBox.INFO,
+				buttons : Ext.Msg.OK
+			})
+			return;
+		} else if (record.length > 1) {
+			Ext.MessageBox.show({
+				title : "提示",
+				msg : "只能下载一行数据！",
+				icon : Ext.MessageBox.WARNING,
+				buttons : Ext.Msg.OK
+			});
+			return;
+		}
+		window.open(option.grid.downurl+'?id='+record[0].get(option.grid.keyid)+'&treeid='+tree.selModel.selNode.id);
+	}
+	
+	//上传
+	function griduploadrecord() {
+		
+		var form = new Ext.form.FormPanel({  
+		     baseCls : 'x-plain',  
+		     labelWidth : 150,  
+		     labelHeight: 150,  
+		     fileUpload : true,  
+		     defaultType : 'textfield',  
+		     items : [{  
+		        xtype : 'textfield',  
+		        fieldLabel : '选择文件',  
+		        name : 'file',  
+		        id : 'file',  
+		        inputType : 'file',  
+		        anchor : '95%'  
+		       }]  
+		});
+		
+		var formWin =new Ext.Window({
+        	resizable: false,
+            modal: true,
+            id:"suunFormWindow",
+            fileUpload:true,   
+            defaultType: 'textfield',
+            autoScroll:true,
+        	width: 400,
+	        height: 250,
+            title: '<center style="curor:hand">上传</center>',
+            items: form,
+            buttons: [{
+            	id:"BtnSave",
+                text: "保存",
+                handler:function(){
+                	form.getForm().submit({  
+                        url : option.grid.uploadurl,  
+                        method : 'POST',  
+                        success : function(form, action) {  
+                        	Ext.Msg.alert('成功','恭喜！文件上传成功！'+action.result.success);
+                        	formWin.close();
+                        }
+                	})
+                }
+            }, {
+                text: "取 消",handler:function(){
+                	suunCore.showMask();
+                	formWin.close();
+                	suunCore.hideMask();
+                }
+            }]
+        }).show();
+	}
+	
 	//查看
 	function viewrecord(g, o, q) {
 		suunCore.createWinView({winWidth:option.grid.inputFormWidth,
