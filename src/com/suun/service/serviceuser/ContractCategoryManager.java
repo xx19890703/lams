@@ -180,4 +180,32 @@ public class ContractCategoryManager {
 		}
 	}
 
+	/**
+	 *  根据 模版url 查询合同
+	 * @param url
+	 * @return
+	 */
+	public Contract_template findContract_templateByTemplateUrl(String url){
+		List<Contract_template> list=new ArrayList<Contract_template>();
+		String hql="from Contract_template o where o.id.templateUrl=? order by o.id.contractId desc";
+		list=contracttemplate.find(hql,url);
+		if (list.size()>0){
+		    return list.get(0);
+		}else{
+			return null;
+		}
+	}
+	
+	/**
+	 * 根据合同id 查询所有模版名
+	 * @param cid
+	 * @return
+	 */
+	public List<Contract_template> findContract_templateByContractId(String cid){
+		List<Contract_template> list=new ArrayList<Contract_template>();
+		String hql="from Contract_template o where o.id.contractId=?";
+		list=contracttemplate.find(hql,cid);
+		return list;
+	}
+	
 }
