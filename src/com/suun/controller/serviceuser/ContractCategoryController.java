@@ -41,8 +41,10 @@ import com.suun.model.utils.TestGetDataBaseSql;
 import com.suun.publics.controller.TreeGridCRUDController;
 import com.suun.publics.hibernate.Condition;
 import com.suun.publics.hibernate.Page;
+import com.suun.publics.utils.ReadFile;
 import com.suun.service.serviceuser.ContractCategoryManager;
 import com.suun.service.serviceuser.ContractDetailManager;
+import com.suun.service.data.DataminingManager;
 import com.suun.service.system.DicManager;
 
 /**
@@ -58,6 +60,8 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 	ContractCategoryManager mainManager;
 	@Autowired
 	ContractDetailManager subManager;
+	@Autowired
+	DataminingManager dataminingManager;
 	@Autowired 
 	DicManager dicManager;
 	
@@ -353,6 +357,7 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 				while((entry = zip.getNextEntry())!=null && !entry.isDirectory()){
 					//处理以.cpt结尾的文件  及 .sql结尾的文件
 					String fileName = entry.getName();
+					System.out.println(fileName);
 					if(fileName.endsWith(".cpt")){
 						destFile=new File(envPath,entry.getName());  
 						if(!destFile.exists()){  
@@ -367,7 +372,22 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 						Bout.close();  
 						out.close();
 					}else if(fileName.endsWith(".sql")){
+						destFile=new File(envPath,entry.getName());  
+						if(!destFile.exists()){  
+							(new File(destFile.getParent())).mkdirs();  
+						}  
+						FileOutputStream out=new FileOutputStream(destFile);  
+						BufferedOutputStream Bout=new BufferedOutputStream(out);  
+						int b;  
+						while((b=bin.read())!=-1){  
+							Bout.write(b);  
+						}  
+						Bout.close();  
+						out.close();
 						
+						String sql = ReadFile.readFileByChars(destFile.getAbsolutePath());
+						System.out.print(sql);
+						//dataminingManager.insertData(sql);
 					}
 				}  
 				bin.close();  
