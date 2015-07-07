@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,22 +31,25 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.fr.base.FRContext;
 import com.fr.base.dav.LocalEnv;
+import com.suun.model.contract.Contract_template;
 import com.suun.model.serviceuser.ContractCategory;
 import com.suun.model.serviceuser.ContractDetail;
 import com.suun.model.serviceuser.ContractTemplateRes;
 import com.suun.model.serviceuser.TemplateResContent;
 import com.suun.model.serviceuser.TemplateResDetail;
 import com.suun.model.system.Constant;
+import com.suun.model.system.developer.Menu;
 import com.suun.publics.controller.TreeGridCRUDController;
 import com.suun.publics.data.DataminingFactory;
 import com.suun.publics.data.DataminingStrategy;
 import com.suun.publics.hibernate.Condition;
 import com.suun.publics.hibernate.Page;
 import com.suun.publics.utils.ReadFile;
+import com.suun.service.data.DataminingManager;
 import com.suun.service.serviceuser.ContractCategoryManager;
 import com.suun.service.serviceuser.ContractDetailManager;
-import com.suun.service.data.DataminingManager;
 import com.suun.service.system.DicManager;
+import com.suun.service.system.developer.MenuManager;
 
 /**
  * ContractCategoryController
@@ -66,6 +70,8 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 	DicManager dicManager;
 	@Autowired
 	private DataminingFactory factory;
+	@Autowired
+	MenuManager menuManager;	
 	
 	@RequestMapping
 	@ResponseBody
@@ -355,6 +361,7 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 	@ResponseBody
 	public Map<String,Object> gridupload(@RequestParam("file") MultipartFile file, HttpServletRequest request, HttpServletResponse response){
 		Map<String,Object> map=new HashMap<String,Object>();
+		String modelName =null;
 		if (!file.isEmpty()){
 			//文件上传路径
 			String path = request.getSession().getServletContext().getRealPath(File.separator + "tempfile" + File.separator + "upload_" + file.getOriginalFilename());
@@ -369,8 +376,8 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 				while((entry = zip.getNextEntry())!=null && !entry.isDirectory()){
 					//处理以.cpt结尾的文件  及 .sql结尾的文件
 					String fileName = entry.getName();
-					System.out.println(fileName);
 					if(fileName.endsWith(".cpt")){
+						modelName=fileName;
 						destFile=new File(envPath,entry.getName());  
 						if(!destFile.exists()){  
 							(new File(destFile.getParent())).mkdirs();  
@@ -404,13 +411,35 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 				}  
 				bin.close();  
 				zip.close();
-				map.put("msg", "true");
+				map.put("success", true);
 			} catch (IOException e) {
 				e.printStackTrace();
-				map.put("msg", "false");
+				map.put("success", false);
 			}
 		}else{
-			map.put("msg", "false");
+			map.put("success", false);
+		}
+		
+		//根据一个上传的模板文件，查询 合同id
+		if(modelName!=null){
+			modelName = modelName.substring(11);
+			modelName=modelName.replaceAll("\\\\", "/");
+			Contract_template ct = mainManager.findContract_templateByTemplateUrl(modelName);
+			String id = ct.getId().getContractId();
+			List<Contract_template> list = mainManager.findContract_templateByContractId(id);
+			for(Contract_template cts:list){
+				Menu m = new Menu();
+				m.setMenuId(new Date().toString());
+				m.setMenuName("测试");
+				m.setMenuType(3);
+				m.setMenuImg("/resources/images/system/group.png");
+				m.setMenuParid("0102");
+				m.setItemOrder(999);
+				m.setMenuUrl("/ReportServer?reportlet="+cts.getId().getTemplateUrl());
+				m.setIsadmin(1);
+				m.setIsframe(1);
+				menuManager.saveMenu(m);
+			}
 		}
 		return map;
 	}
