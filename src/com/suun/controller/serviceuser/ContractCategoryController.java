@@ -29,7 +29,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fr.base.FRContext;
-import com.fr.base.dav.LocalEnv;
 import com.suun.model.serviceuser.ContractCategory;
 import com.suun.model.serviceuser.ContractDetail;
 import com.suun.model.serviceuser.ContractTemplateRes;
@@ -254,23 +253,37 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 	public void griddown(String treeid, String id, HttpServletRequest request, HttpServletResponse response){
 		response.reset();
 		//获取路径
-		String envPath = FRContext.getCurrentEnv().getPath();  
-		FRContext.setCurrentEnv(new LocalEnv(envPath)); 
+		String reportPath = FRContext.getCurrentEnv().getPath();
+		
+		//创建临时文件夹
+		String envPath = request.getSession().getServletContext().getRealPath(File.separator + "tempfile");
+		File filePaths = new File(envPath);
+		if(!filePaths.exists() && !filePaths.isDirectory()){
+			filePaths.mkdir();    
+		} 
+		
 		ZipOutputStream zos = null;
 		String sbuffer = new String();
 		try {
 	        ContractDetail contract = mainManager.getContractDetail(treeid, id);
-	        String tempPath = request.getSession().getServletContext().getRealPath(File.separator + "tempfile" + File.separator +"down_" + System.currentTimeMillis() + ".zip");
+	        String tempPath = envPath + File.separator +"down_" + System.currentTimeMillis() + ".zip";
 	        zos = new ZipOutputStream(new FileOutputStream(tempPath));
 	        DataminingStrategy strategy = factory.getStrategy();
 	        int readLength = 0;
 	        String filePath = "";
 	        
+	        //返回合同-数据库表的数据
+	        for(String temp : strategy.findTableData(contract.getDid(),"contract_mode"))
+	        	sbuffer = sbuffer + temp;
+	        //返回合同-模板url的数据
+	        for(String temp : strategy.findTableData(contract.getDid(),"contract_template"))
+	        	sbuffer = sbuffer + temp;
+	        
 	        //遍历所有模板
 	        for(ContractTemplateRes s : contract.getRescontent()){
 	        	TemplateResDetail temple = s.getTemplate();
 	        	//添加模板到zip包
-	        	filePath = envPath + temple.getPath();
+	        	filePath = reportPath + temple.getPath();
 	        	File tfile = new File(filePath);  
     			if (!tfile.exists()) {
     				continue;
@@ -283,20 +296,13 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
     			}
     			tis.close();
     			
-    			//返回合同-数据库表的数据
-    			for(String temp : strategy.findTableData(contract.getDid(),"contract_mode"))
-    				sbuffer = sbuffer + temp;
-    			//返回合同-模板url的数据
-    			for(String temp : strategy.findTableData(contract.getDid(),"contract_template"))
-    				sbuffer = sbuffer + temp;
-    			
 	        	//遍历所有数据库表
 	        	for(TemplateResContent tt : temple.getRescontent()){
 	        		//sbuffer = sbuffer + sql.getDataSqlByContractId(contract.getDid(),tt.getName());
 	        		//返回表数据查询语句
 	        		for(String temp : strategy.findTableData(contract.getDid(), tt.getName()))
 	        			sbuffer = sbuffer + temp;
-	        		filePath = envPath + tt.getCsqlpath();
+	        		filePath = reportPath + tt.getCsqlpath();
 	        		File file = new File(filePath);  
 	    			if (!file.exists()) {
 	    				continue;

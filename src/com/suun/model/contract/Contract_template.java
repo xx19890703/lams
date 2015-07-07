@@ -1,5 +1,6 @@
 package com.suun.model.contract;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -18,6 +19,8 @@ public class Contract_template {
 
 	//联合主键
 	private ContractTemplatePK id;
+	//模板(菜单)名称
+	private String templateName;
 	
 	@Id
 	public ContractTemplatePK getId() {
@@ -25,5 +28,13 @@ public class Contract_template {
 	}
 	public void setId(ContractTemplatePK id) {
 		this.id = id;
+	}
+	
+	@Column(length=30)
+	public String getTemplateName() {
+		return templateName;
+	}
+	public void setTemplateName(String templateName) {
+		this.templateName = templateName;
 	}
 }
