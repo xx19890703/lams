@@ -11,13 +11,13 @@ import javax.persistence.Embeddable;
  */
 
 @Embeddable
-public class ContractTemplatePK implements Serializable{
+public class ContractTemplatePK implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	//合同编号
 	private String contractId;
-	//数据库表名称
-	private String tableName;
+	//模板URL
+	private String templateUrl;
 	
 	@Column(length=30)
 	public String getContractId() {
@@ -28,12 +28,13 @@ public class ContractTemplatePK implements Serializable{
 	}
 	
 	@Column(length=30)
-	public String getTableName() {
-		return tableName;
+	public String getTemplateUrl() {
+		return templateUrl;
 	}
-	public void setTableName(String tableName) {
-		this.tableName = tableName;
+	public void setTemplateUrl(String templateUrl) {
+		this.templateUrl = templateUrl;
 	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -41,7 +42,7 @@ public class ContractTemplatePK implements Serializable{
 		result = prime * result
 				+ ((contractId == null) ? 0 : contractId.hashCode());
 		result = prime * result
-				+ ((tableName == null) ? 0 : tableName.hashCode());
+				+ ((templateUrl == null) ? 0 : templateUrl.hashCode());
 		return result;
 	}
 	@Override
@@ -58,11 +59,13 @@ public class ContractTemplatePK implements Serializable{
 				return false;
 		} else if (!contractId.equals(other.contractId))
 			return false;
-		if (tableName == null) {
-			if (other.tableName != null)
+		if (templateUrl == null) {
+			if (other.templateUrl != null)
 				return false;
-		} else if (!tableName.equals(other.tableName))
+		} else if (!templateUrl.equals(other.templateUrl))
 			return false;
 		return true;
 	}
+	
+	
 }

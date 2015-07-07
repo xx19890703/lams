@@ -94,7 +94,7 @@
 			</tr>
 		</table>
 		<br>
-	  <div style="position:relative;overflow:auto; width:750px;">
+	  <div style="position:relative;overflow:auto; width:550px;">
 	  <table class="suunRept" width="100%" border="1" cellpadding="0" cellspacing="0"> 
 	      <tr>     
 	          <td align="center">编号</td>    

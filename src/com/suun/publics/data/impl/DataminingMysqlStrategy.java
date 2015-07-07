@@ -180,9 +180,4 @@ public class DataminingMysqlStrategy implements DataminingStrategy {
 		}
 		return result;
 	}
-
-	@Override
-	public List<String> findTemplateData(String contractId) {
-		return null;
-	}
 }
