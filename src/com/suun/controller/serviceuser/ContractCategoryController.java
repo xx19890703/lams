@@ -9,7 +9,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -293,7 +292,8 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 	        for(ContractTemplateRes s : contract.getRescontent()){
 	        	TemplateResDetail temple = s.getTemplate();
 	        	//添加模板到zip包
-	        	filePath = reportPath + temple.getPath();
+	        	filePath = reportPath + "reportlets" + File.separator + temple.getPath();
+	        	System.out.println(filePath);
 	        	File tfile = new File(filePath);  
     			if (!tfile.exists()) {
     				continue;
@@ -336,6 +336,7 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 				}
 				in.close();
 	        }
+	        zos.close();
 	        
 	        OutputStream outputStream = new BufferedOutputStream(response.getOutputStream());
 	        InputStream input = new FileInputStream(tempPath);
@@ -384,34 +385,34 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 					String fileName = entry.getName();
 					if(fileName.endsWith(".cpt")){
 						modelName=fileName;
-						destFile=new File(envPath,entry.getName());  
-						if(!destFile.exists()){  
-							(new File(destFile.getParent())).mkdirs();  
-						}  
-						FileOutputStream out=new FileOutputStream(destFile);  
-						BufferedOutputStream Bout=new BufferedOutputStream(out);  
-						int b;  
-						while((b=bin.read())!=-1){  
-							Bout.write(b);  
-						}  
-						Bout.close();  
+						destFile=new File(envPath,entry.getName());
+						if(!destFile.exists()){
+							(new File(destFile.getParent())).mkdirs();
+						}
+						FileOutputStream out=new FileOutputStream(destFile);
+						BufferedOutputStream Bout=new BufferedOutputStream(out);
+						int b;
+						while((b=bin.read())!=-1){
+							Bout.write(b);
+						}
+						Bout.close();
 						out.close();
 					}else if(fileName.endsWith(".sql")){
-						destFile=new File(envPath,entry.getName());  
-						if(!destFile.exists()){  
-							(new File(destFile.getParent())).mkdirs();  
-						}  
-						FileOutputStream out=new FileOutputStream(destFile);  
-						BufferedOutputStream Bout=new BufferedOutputStream(out);  
-						int b;  
-						while((b=bin.read())!=-1){  
-							Bout.write(b);  
-						}  
-						Bout.close();  
+						destFile=new File(envPath,entry.getName());
+						if(!destFile.exists()){
+							(new File(destFile.getParent())).mkdirs();
+						}
+						FileOutputStream out=new FileOutputStream(destFile);
+						BufferedOutputStream Bout=new BufferedOutputStream(out);
+						int b;
+						while((b=bin.read())!=-1){
+							Bout.write(b);
+						}
+						Bout.close();
 						out.close();
 						
 						String sql = ReadFile.readFileByChars(destFile.getAbsolutePath());
-						System.out.print(sql);
+						System.out.println(sql);
 						//dataminingManager.insertData(sql);
 					}
 				}  
@@ -428,20 +429,20 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 		
 		//根据一个上传的模板文件，查询 合同id
 		if(modelName!=null){
-			modelName = modelName.substring(11);
-			modelName=modelName.replaceAll("\\\\", "/");
+			//modelName = modelName.substring(11);
+			//modelName=modelName.replaceAll("\\\\", "/");
 			Contract_template ct = mainManager.findContract_templateByTemplateUrl(modelName);
 			String id = ct.getId().getContractId();
 			List<Contract_template> list = mainManager.findContract_templateByContractId(id);
 			for(Contract_template cts:list){
 				Menu m = new Menu();
-				m.setMenuId(new Date().toString());
-				m.setMenuName("测试");
+				m.setMenuId(""+System.currentTimeMillis());
+				m.setMenuName(cts.getTemplateName());
 				m.setMenuType(3);
 				m.setMenuImg("/resources/images/system/group.png");
 				m.setMenuParid("0102");
 				m.setItemOrder(999);
-				m.setMenuUrl("/ReportServer?reportlet="+cts.getId().getTemplateUrl());
+				m.setMenuUrl("/ReportServer?reportlet="+cts.getId().getTemplateUrl().replaceAll("\\\\", "/"));
 				m.setIsadmin(1);
 				m.setIsframe(1);
 				menuManager.saveMenu(m);

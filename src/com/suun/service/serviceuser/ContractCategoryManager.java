@@ -150,6 +150,7 @@ public class ContractCategoryManager {
 			templatepk.setTemplateUrl(templatemanager.get(temp.getTemplate().getDid()).getPath());
 			Contract_template template = new Contract_template();
 			template.setId(templatepk);
+			template.setTemplateName(templatemanager.get(temp.getTemplate().getDid()).getName());
 			contracttemplate.getSession().merge(template);
 			
 			temp.setCondetail(sub);
