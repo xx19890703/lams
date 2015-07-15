@@ -275,7 +275,7 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 		String sbuffer = new String();
 		try {
 	        ContractDetail contract = mainManager.getContractDetail(treeid, id);
-	        String tempPath = envPath + File.separator +"down_" + System.currentTimeMillis() + ".zip";
+	        String tempPath = envPath + File.separator +"down_" + id + "_" + System.currentTimeMillis() + ".zip";
 	        zos = new ZipOutputStream(new FileOutputStream(tempPath));
 	        DataminingStrategy strategy = factory.getStrategy();
 	        int readLength = 0;
@@ -336,6 +336,17 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 				}
 				in.close();
 	        }
+	        
+	        //创建合同id.txt文件
+	        if (id != null && !id.trim().equals("")){
+	        	ZipEntry entry = new ZipEntry(id + ".txt");
+	        	zos.putNextEntry(entry);
+	        	ByteArrayInputStream in = new ByteArrayInputStream(id.getBytes());
+				while ((readLength = in.read()) != -1) {
+					zos.write(readLength);
+				}
+				in.close();
+	        }
 	        zos.close();
 	        
 	        OutputStream outputStream = new BufferedOutputStream(response.getOutputStream());
@@ -345,7 +356,7 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 	        while ((n = input.read(buffer)) != -1) {
 	        	outputStream.write(buffer, 0, n);
 	        }
-	        response.setHeader("Content-Disposition", "attachment; filename=\"" + contract.getName() + System.currentTimeMillis() + ".zip\"");  
+	        response.setHeader("Content-Disposition", "attachment; filename=\"" + id + "_" + System.currentTimeMillis() + ".zip\"");  
 	        response.setHeader("Content-Length",String.valueOf(input.read()));
 	        response.setContentType("application/octet-stream; charset=utf-8");
 	        input.close();
@@ -368,7 +379,7 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 	@ResponseBody
 	public Map<String,Object> gridupload(@RequestParam("file") MultipartFile file, HttpServletRequest request, HttpServletResponse response){
 		Map<String,Object> map=new HashMap<String,Object>();
-		String modelName =null;
+		String contractid =null;
 		if (!file.isEmpty()){
 			//文件上传路径
 			String path = request.getSession().getServletContext().getRealPath(File.separator + "tempfile" + File.separator + "upload_" + file.getOriginalFilename());
@@ -384,7 +395,6 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 					//处理以.cpt结尾的文件  及 .sql结尾的文件
 					String fileName = entry.getName();
 					if(fileName.endsWith(".cpt")){
-						modelName=fileName;
 						destFile=new File(envPath,entry.getName());
 						if(!destFile.exists()){
 							(new File(destFile.getParent())).mkdirs();
@@ -414,26 +424,27 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 						String sql = ReadFile.readFileByChars(destFile.getAbsolutePath());
 						System.out.println(sql);
 						//dataminingManager.insertData(sql);
+					}else if(fileName.endsWith(".txt")){
+						contractid = entry.getName().substring(0, entry.getName().lastIndexOf("."));
 					}
 				}  
 				bin.close();  
 				zip.close();
 				map.put("success", true);
+				map.put("msg", "上传成功!");
 			} catch (IOException e) {
 				e.printStackTrace();
 				map.put("success", false);
+				map.put("msg", "解析上传文件出错!");
 			}
 		}else{
 			map.put("success", false);
+			map.put("msg", "上传文件为空!");
 		}
 		
 		//根据一个上传的模板文件，查询 合同id
-		if(modelName!=null){
-			//modelName = modelName.substring(11);
-			//modelName=modelName.replaceAll("\\\\", "/");
-			Contract_template ct = mainManager.findContract_templateByTemplateUrl(modelName);
-			String id = ct.getId().getContractId();
-			List<Contract_template> list = mainManager.findContract_templateByContractId(id);
+		if(contractid!=null){
+			List<Contract_template> list = mainManager.findContract_templateByContractId(contractid);
 			for(Contract_template cts:list){
 				Menu m = new Menu();
 				m.setMenuId(""+System.currentTimeMillis());
@@ -442,7 +453,12 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 				m.setMenuImg("/resources/images/system/group.png");
 				m.setMenuParid("0102");
 				m.setItemOrder(999);
-				m.setMenuUrl("/ReportServer?reportlet="+cts.getId().getTemplateUrl().replaceAll("\\\\", "/"));
+				//判断报表是否有打开参数
+				if(null==cts.getOpenType() || "".endsWith(cts.getOpenType())){
+					m.setMenuUrl("/ReportServer?reportlet="+cts.getId().getTemplateUrl().replaceAll("\\\\", "/"));
+				}else{
+					m.setMenuUrl("/ReportServer?reportlet="+cts.getId().getTemplateUrl().replaceAll("\\\\", "/")+"&op="+cts.getOpenType());
+				}
 				m.setIsadmin(1);
 				m.setIsframe(1);
 				menuManager.saveMenu(m);

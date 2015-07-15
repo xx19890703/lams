@@ -9,9 +9,13 @@
 <![CDATA[msdb]]></DatabaseName>
 </Connection>
 <Query>
-<![CDATA[SELECT * FROM `t_test_report_copy`]]></Query>
+<![CDATA[SELECT * FROM t_test_report_zz]]></Query>
 </TableData>
 </TableDataMap>
+<ReportExportAttr>
+<ExcelExportAttr/>
+<HTMLExportAttr/>
+</ReportExportAttr>
 <Report class="com.fr.report.WorkSheet" name="sheet1">
 <ReportSettings headerHeight="0" footerHeight="0">
 <PaperSetting/>
@@ -24,73 +28,117 @@
 <FC/>
 </ReportPageAttr>
 <RowHeight defaultValue="723900">
-<![CDATA[723900,723900,1371600,723900,723900,723900,723900,723900,723900,723900,723900,723900]]></RowHeight>
+<![CDATA[1371600,723900,723900,723900,723900,723900,723900,723900,723900,723900,723900]]></RowHeight>
 <ColumnWidth defaultValue="2743200">
-<![CDATA[2743200,4191000,4191000,4191000,4191000,2743200,2743200,2743200,2743200,2743200,2743200]]></ColumnWidth>
+<![CDATA[4191000,4191000,4191000,4191000,114300,2743200,2743200,2743200,2743200,2743200,2743200]]></ColumnWidth>
 <CellElementList>
-<C c="1" r="2" cs="4" s="0">
+<C c="0" r="0" cs="4" s="0">
 <O>
-<![CDATA[日报2]]></O>
+<![CDATA[冲压报表日报2]]></O>
 <Expand/>
 </C>
-<C c="1" r="3" s="1">
+<C c="0" r="1" s="1">
 <O>
 <![CDATA[合同id]]></O>
 <Expand/>
 </C>
-<C c="2" r="3" s="1">
+<C c="1" r="1" s="1">
 <O>
 <![CDATA[col1]]></O>
 <Expand/>
 </C>
-<C c="3" r="3" s="1">
+<C c="2" r="1" s="1">
 <O>
 <![CDATA[col2]]></O>
 <Expand/>
 </C>
-<C c="4" r="3" s="1">
+<C c="3" r="1" s="1">
 <O>
 <![CDATA[col3]]></O>
 <Expand/>
 </C>
-<C c="1" r="4" s="1">
+<C c="0" r="2" s="2">
 <O t="DSColumn">
 <Attributes dsName="ds1" columnName="contractid"/>
 <Complex/>
 <RG class="com.fr.report.cellElement.core.FunctionGrouper"/>
 <Parameters/>
 </O>
+<Widget class="com.fr.report.web.ui.TextEditor">
+<WidgetAttr/>
+<TextAttr/>
+<Reg class="com.fr.report.web.ui.reg.NoneReg"/>
+</Widget>
 <Expand dir="0"/>
 </C>
-<C c="2" r="4" s="1">
+<C c="1" r="2" s="2">
 <O t="DSColumn">
 <Attributes dsName="ds1" columnName="sys1"/>
 <Complex/>
 <RG class="com.fr.report.cellElement.core.FunctionGrouper"/>
 <Parameters/>
 </O>
+<Widget class="com.fr.report.web.ui.TextEditor">
+<WidgetAttr/>
+<TextAttr/>
+<Reg class="com.fr.report.web.ui.reg.NoneReg"/>
+</Widget>
 <Expand dir="0"/>
 </C>
-<C c="3" r="4" s="1">
+<C c="2" r="2" s="2">
 <O t="DSColumn">
 <Attributes dsName="ds1" columnName="sys2"/>
 <Complex/>
 <RG class="com.fr.report.cellElement.core.FunctionGrouper"/>
 <Parameters/>
 </O>
+<Widget class="com.fr.report.web.ui.TextEditor">
+<WidgetAttr/>
+<TextAttr/>
+<Reg class="com.fr.report.web.ui.reg.NoneReg"/>
+</Widget>
 <Expand dir="0"/>
 </C>
-<C c="4" r="4" s="1">
+<C c="3" r="2" s="2">
 <O t="DSColumn">
 <Attributes dsName="ds1" columnName="sys3"/>
 <Complex/>
 <RG class="com.fr.report.cellElement.core.FunctionGrouper"/>
 <Parameters/>
 </O>
+<Widget class="com.fr.report.web.ui.TextEditor">
+<WidgetAttr/>
+<TextAttr/>
+<Reg class="com.fr.report.web.ui.reg.NoneReg"/>
+</Widget>
 <Expand dir="0"/>
+</C>
+<C c="4" r="2" s="3">
+<Expand/>
 </C>
 </CellElementList>
 </ElementCase>
+<ReportWriteAttr>
+<Submiter class="com.fr.report.write.BuiltInSQLSubmiter" name="内置SQL1">
+<Attributes dsName="msdb"/>
+<DMLConfig class="com.fr.report.write.config.IntelliDMLConfig">
+<Table schema="" name="t_test_report_zz"/>
+<ColumnConfig name="contractid" isKey="true" skipUnmodified="false">
+<ColumnRow column="0" row="2"/>
+</ColumnConfig>
+<ColumnConfig name="sys1" isKey="true" skipUnmodified="false">
+<ColumnRow column="1" row="2"/>
+</ColumnConfig>
+<ColumnConfig name="sys2" isKey="false" skipUnmodified="false">
+<ColumnRow column="2" row="2"/>
+</ColumnConfig>
+<ColumnConfig name="sys3" isKey="false" skipUnmodified="false">
+<ColumnRow column="3" row="2"/>
+</ColumnConfig>
+</DMLConfig>
+</Submiter>
+</ReportWriteAttr>
+<LayerReportAttr isPageQuery="false" countPerPage="30"/>
 </Report>
 <StyleList>
 <Style horizontal_alignment="0">
@@ -99,13 +147,30 @@
 <Border/>
 </Style>
 <Style horizontal_alignment="0">
+<FRFont name="SimSun" style="1" size="72"/>
+<Background name="ColorBackground" color="-1577999"/>
+<Border>
+<Top style="1" color="-6697729"/>
+<Bottom style="1" color="-6697729"/>
+<Left style="1" color="-6697729"/>
+<Right style="1" color="-6697729"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0">
 <FRFont name="SimSun" style="0" size="72"/>
 <Background name="NullBackground"/>
 <Border>
-<Top style="1"/>
-<Bottom style="1"/>
+<Top style="1" color="-6697729"/>
+<Bottom style="1" color="-6697729"/>
+<Left style="1" color="-6697729"/>
+<Right style="1" color="-6697729"/>
+</Border>
+</Style>
+<Style>
+<FRFont name="SimSun" style="0" size="72"/>
+<Background name="NullBackground"/>
+<Border>
 <Left style="1"/>
-<Right style="1"/>
 </Border>
 </Style>
 </StyleList>

@@ -589,58 +589,64 @@ function createtreegrid(option) {
 	
 	//上传
 	function griduploadrecord() {
-		
-		var form = new Ext.form.FormPanel({  
-		     baseCls : 'x-plain',  
-		     labelWidth : 150,  
-		     labelHeight: 150,  
-		     fileUpload : true,  
-		     defaultType : 'textfield',  
-		     items : [{  
-		        xtype : 'textfield',  
-		        fieldLabel : '选择文件',  
-		        name : 'file',  
-		        id : 'file',  
-		        inputType : 'file',  
-		        anchor : '95%'  
-		       }]  
+		var formUpload = new Ext.form.FormPanel({
+			baseCls : 'x-plain',
+			labelWidth : 80,
+			fileUpload : true,
+			defaultType : 'textfield',
+			items : [{
+				xtype : 'textfield',
+				fieldLabel : '文 件',
+				name : 'file',
+				inputType : 'file',
+				allowBlank : false,
+				blankText : '请上传文件',
+				anchor : '90%'
+			}]
 		});
-		
-		var formWin =new Ext.Window({
-        	resizable: false,
-            modal: true,
-            id:"suunFormWindow",
-            fileUpload:true,   
-            defaultType: 'textfield',
-            autoScroll:true,
-        	width: 400,
-	        height: 250,
-            title: '<center style="curor:hand">上传</center>',
-            items: form,
-            buttons: [{
-            	id:"BtnSave",
-                text: "保存",
-                handler:function(){
-                	form.getForm().submit({  
-                        url : option.grid.uploadurl,  
-                        method : 'POST',  
-                        success : function(form, action) {  
-                        	Ext.Msg.alert('成功','恭喜！文件上传成功！'+action.result.success);
-                        	formWin.close();
-                        }
-                	})
-                }
-            }, {
-                text: "取 消",handler:function(){
-                	suunCore.showMask();
-                	formWin.close();
-                	suunCore.hideMask();
-                }
-            }]
-        }).show();
+
+		var winUpload = new Ext.Window({
+			title : '资源上传',
+			width : 400,
+			height : 200,
+			minWidth : 300,
+			minHeight : 100,
+			layout : 'fit',
+			plain : true,
+			bodyStyle : 'padding:5px;',
+			buttonAlign : 'center',
+			items : formUpload,
+			buttons : [{
+				text : '上 传',
+				handler : function() {
+					if (formUpload.form.isValid()) {
+						formUpload.getForm().submit({
+							url : option.grid.uploadurl,
+							waitMsg: '正在处理',  
+				            waitTitle: '请等待',
+				            success : function(form, action) {
+				            	var flag=action.result.msg;
+								Ext.Msg.alert('成功', flag);
+								winUpload.hide();
+							},
+							failure : function(form,action) {
+								console.log(action.result);
+								var flag=action.result.msg;
+								Ext.Msg.alert('错误', flag);
+							}
+						})
+					}
+				}
+			}, {
+				text : '取 消',
+				handler : function() {
+					winUpload.hide();
+				}
+			} ]
+		}).show(); 
 	}
 	
-	//查看
+	// 查看
 	function viewrecord(g, o, q) {
 		suunCore.createWinView({winWidth:option.grid.inputFormWidth,
 			winHeight:option.grid.inputFormHeight,
@@ -648,7 +654,7 @@ function createtreegrid(option) {
 			postparam:{suunplatformeoperateid:g.getSelectionModel().getSelected().get(option.grid.keyid),treeid:tree.selModel.selNode.id}
 		});
 	}
-	//导出
+	// 导出
 	function suunExport(exporttype){	
 		var suunGridcolumnstr='';
 		var cols=suungrid.colModel.config;

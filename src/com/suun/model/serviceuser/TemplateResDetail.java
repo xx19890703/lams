@@ -37,7 +37,7 @@ public class TemplateResDetail {
 	// 模板所在路径
 	private String path;
 	// 模板对应sql基本文件路径
-	private String sqlpath;
+	// private String sqlpath;
 	// 关联主表
 	private TemplateRes resmain;
 	// 模板对应数据库表
@@ -105,11 +105,11 @@ public class TemplateResDetail {
 		this.path = path;
 	}
 	
-	@Column(length=50)
-	public String getSqlpath() {
-		return sqlpath;
-	}
-	public void setSqlpath(String sqlpath) {
-		this.sqlpath = sqlpath;
-	}
+//	@Column(length=50)
+//	public String getSqlpath() {
+//		return sqlpath;
+//	}
+//	public void setSqlpath(String sqlpath) {
+//		this.sqlpath = sqlpath;
+//	}
 }

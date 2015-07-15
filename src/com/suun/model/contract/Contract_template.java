@@ -21,6 +21,8 @@ public class Contract_template {
 	private ContractTemplatePK id;
 	//模板(菜单)名称
 	private String templateName;
+	//模板打开方式
+	private String openType;
 	
 	@Id
 	public ContractTemplatePK getId() {
@@ -36,5 +38,13 @@ public class Contract_template {
 	}
 	public void setTemplateName(String templateName) {
 		this.templateName = templateName;
+	}
+	
+	@Column(length=30)
+	public String getOpenType() {
+		return openType;
+	}
+	public void setOpenType(String openType) {
+		this.openType = openType;
 	}
 }
