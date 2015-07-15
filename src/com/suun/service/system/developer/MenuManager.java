@@ -171,4 +171,18 @@ public class MenuManager {
 	public void deleteFun(String id) {
 		funDao.delete(id);		
 	}
+	
+	public void deleteMenuByName(String id){
+		List<Menu> menuList=menuDao.findByProperty("menuName", id);
+		if(menuList.size()!=0){
+			List<Menu> funList=menuDao.findByProperty("menuParid", menuList.get(0).getMenuId());
+			for(Menu menu2:funList){
+				menuDao.delete(menu2);
+			}
+			for(Menu menu:menuList){
+				menuDao.delete(menu);
+			}
+		}
+	}
+	
 }

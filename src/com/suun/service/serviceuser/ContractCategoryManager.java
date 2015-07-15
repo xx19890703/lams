@@ -143,7 +143,7 @@ public class ContractCategoryManager {
 				modepk.setTableName(res.getName());
 				Contract_mode mode = new Contract_mode();
 				mode.setId(modepk);
-				contractmode.getSession().merge(mode);
+				contractmode.save((Contract_mode)contractmode.getSession().merge(mode));
 			}
 			ContractTemplatePK templatepk = new ContractTemplatePK();
 			templatepk.setContractId(sub.getDid());
@@ -151,7 +151,8 @@ public class ContractCategoryManager {
 			Contract_template template = new Contract_template();
 			template.setId(templatepk);
 			template.setTemplateName(templatemanager.get(temp.getTemplate().getDid()).getName());
-			contracttemplate.getSession().merge(template);
+			template.setOpenType(temp.getOpenType());
+			contracttemplate.save((Contract_template)contracttemplate.getSession().merge(template));
 			
 			temp.setCondetail(sub);
 			conmanager.save(temp);

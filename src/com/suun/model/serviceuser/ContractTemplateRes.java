@@ -30,6 +30,8 @@ public class ContractTemplateRes extends IdEntity{
 	private String name;
 	// 关联报表模板
 	private TemplateResDetail template;
+	// 模板打开类型
+	private String openType;
 	// 描述
 	private String description;
 	// 报表模板父资源编号
@@ -85,5 +87,13 @@ public class ContractTemplateRes extends IdEntity{
 	}
 	public void setCondetail(ContractDetail condetail) {
 		this.condetail = condetail;
+	}
+	
+	@Column(length=255)
+	public String getOpenType() {
+		return openType;
+	}
+	public void setOpenType(String openType) {
+		this.openType = openType;
 	}
 }

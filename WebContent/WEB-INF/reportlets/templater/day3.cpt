@@ -9,7 +9,7 @@
 <![CDATA[msdb]]></DatabaseName>
 </Connection>
 <Query>
-<![CDATA[SELECT * FROM `t_test_report`]]></Query>
+<![CDATA[SELECT * FROM t_test_report_copy]]></Query>
 </TableData>
 </TableDataMap>
 <ReportExportAttr>
@@ -30,11 +30,11 @@
 <RowHeight defaultValue="723900">
 <![CDATA[1371600,723900,723900,723900,723900,723900,723900,723900,723900,723900,723900]]></RowHeight>
 <ColumnWidth defaultValue="2743200">
-<![CDATA[4191000,4191000,4191000,4191000,114300,2743200,2743200,2743200,2743200,2743200,2743200]]></ColumnWidth>
+<![CDATA[4191000,4191000,4191000,4191000,4000500,114300,2743200,2743200,2743200,2743200,2743200]]></ColumnWidth>
 <CellElementList>
-<C c="0" r="0" cs="4" s="0">
+<C c="0" r="0" cs="5" s="0">
 <O>
-<![CDATA[冲压报表日报1]]></O>
+<![CDATA[铣床报表日报]]></O>
 <Expand/>
 </C>
 <C c="0" r="1" s="1">
@@ -55,6 +55,11 @@
 <C c="3" r="1" s="1">
 <O>
 <![CDATA[col3]]></O>
+<Expand/>
+</C>
+<C c="4" r="1" s="1">
+<O>
+<![CDATA[col4]]></O>
 <Expand/>
 </C>
 <C c="0" r="2" s="2">
@@ -113,7 +118,21 @@
 </Widget>
 <Expand dir="0"/>
 </C>
-<C c="4" r="2" s="3">
+<C c="4" r="2" s="2">
+<O t="DSColumn">
+<Attributes dsName="ds1" columnName="sys4"/>
+<Complex/>
+<RG class="com.fr.report.cellElement.core.FunctionGrouper"/>
+<Parameters/>
+</O>
+<Widget class="com.fr.report.web.ui.TextEditor">
+<WidgetAttr/>
+<TextAttr/>
+<Reg class="com.fr.report.web.ui.reg.NoneReg"/>
+</Widget>
+<Expand dir="0"/>
+</C>
+<C c="5" r="2" s="3">
 <Expand/>
 </C>
 </CellElementList>
@@ -122,7 +141,7 @@
 <Submiter class="com.fr.report.write.BuiltInSQLSubmiter" name="内置SQL1">
 <Attributes dsName="msdb"/>
 <DMLConfig class="com.fr.report.write.config.IntelliDMLConfig">
-<Table schema="" name="t_test_report"/>
+<Table schema="" name="t_test_report_copy"/>
 <ColumnConfig name="contractid" isKey="true" skipUnmodified="false">
 <ColumnRow column="0" row="2"/>
 </ColumnConfig>
@@ -142,7 +161,7 @@
 </Report>
 <StyleList>
 <Style horizontal_alignment="0">
-<FRFont name="SimSun" style="1" size="96"/>
+<FRFont name="SimSun" style="1" size="112"/>
 <Background name="NullBackground"/>
 <Border/>
 </Style>

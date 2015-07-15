@@ -49,4 +49,16 @@ public class DataminingManager {
 		boolean result=strategy.insertData(sql);
 		return result;
 	}
+	
+	/**
+	 * 根据表名和contractId删除数据
+	 * @param contractId
+	 * @param tableName
+	 * @return
+	 */
+	public boolean deleteData(String contractId,String tableName){
+		DataminingStrategy strategy = factory.getStrategy();
+		boolean result=strategy.deleteData(contractId, tableName);
+		return result;
+	}
 }

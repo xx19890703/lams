@@ -11,4 +11,7 @@ public interface DataminingStrategy {
 	List<String> findTableData(String contractId, String tableName);
 	
 	boolean insertData(String sql);
+
+	//删除 tableName表中 所有 contractId为 contractId的内容 
+	boolean deleteData(String contractId, String tableName);
 }

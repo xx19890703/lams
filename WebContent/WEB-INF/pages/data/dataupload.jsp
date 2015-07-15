@@ -42,6 +42,7 @@
             	id:"BtnSave",
                 text: "保存",
                 handler:function(){
+                	Ext.MessageBox.wait('请等待','数据上传中……');
                 	form.getForm().submit({  
                         url : $ctx+'/serviceuser/contractCategory!gridupload',  
                         method : 'POST',  
@@ -51,14 +52,14 @@
                         },
                         failure : function(data,form){
                         	alert('上传成功！');
+                        	parent.location.href="${ctx}/j_spring_security_logout";
                         }
                 	})
+                	
                 }
             }, {
                 text: "取 消",handler:function(){
-                	suunCore.showMask();
-                	formWin.close();
-                	suunCore.hideMask();
+                	
                 }
             }]
         }).show();

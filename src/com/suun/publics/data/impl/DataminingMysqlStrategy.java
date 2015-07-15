@@ -2,6 +2,7 @@ package com.suun.publics.data.impl;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -66,7 +67,13 @@ public class DataminingMysqlStrategy implements DataminingStrategy {
 		Statement statement = null;
 		boolean rs = false;
 		statement = conn.createStatement();
-		rs = statement.execute(sql);
+		String[] sqls = sql.split(";");
+		
+		for(String sq:sqls){
+			sq = sq.replaceAll("\\\\", "/");
+			statement.addBatch(sq);
+		}
+		statement.executeBatch();
 		return rs;
 	}
 
@@ -179,5 +186,31 @@ public class DataminingMysqlStrategy implements DataminingStrategy {
 				statement.close();
 		}
 		return result;
+	}
+	
+	@Override
+	public boolean deleteData(String contractId,String tableName){
+		Connection conn = null;
+		boolean rs = false;
+		Statement statement = null;
+		try {
+			conn = dataSource.getConnection();
+			String sql = "delete from "+tableName+" where contractId='"+contractId+"' ;";
+			statement = conn.createStatement();
+			rs = statement.execute(sql);
+			return rs;
+		} catch (Exception ex) {
+			System.out.println(ex);
+			
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (final SQLException ex) {
+					System.out.println(ex);
+				}
+			}
+		}
+		return rs;
 	}
 }

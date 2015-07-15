@@ -230,7 +230,7 @@ public class ReadFile {
 //    }
     
     public static void main(String[] args){
-    	String sa="reportlets/asdasd/asdasdas.asdas/asdasd.cpt";
-    	System.out.println(sa.substring(11));
+    	String sa="reportlets/asdasd/asdasdasasdas/asdasd.cpt";
+    	System.out.println(sa.split("\\.")[0]);
     }
 }

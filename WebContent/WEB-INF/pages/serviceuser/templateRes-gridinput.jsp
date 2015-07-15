@@ -69,13 +69,9 @@
 			<tr>
 				<td width="100" align="right">模板路径</td>
 				<td width="240"><input  type="text" name="path"  value="${templateresdetail.path}" style="width:174px;"/></td>
-				<td width="100" align="right">模板对应sql文件</td>
-				<td width="240"><input  type="text" name="sqlpath"  value="${templateresdetail.sqlpath}" style="width:174px;"/></td>
-			</tr>
-			<tr>
 			    <td  align="right">状态</td>
-				<td >     
-				 <input type="hidden" name="state.key.dic_no" value="STATE"/>
+				<td>     
+					<input type="hidden" name="state.key.dic_no" value="STATE"/>
 		        <select name="state.key.data_no" style="width:170;">
 				<c:forEach var="mystatus" items="${status}">
 					<c:choose >
@@ -98,16 +94,14 @@
 		          <td align="center">编号</td>    
 				  <td align="center">数据库表名</td>
 				  <td align="center">表创建语句</td>
-				  <td align="center">表插入语句</td>
 				  <td align="center">描述</td>
 		      </tr>
 		      <c:forEach var="item" items="${templateresdetail.rescontent}" varStatus="status">
 			      <tr class="items">
-					    <td align="center"><input type="text" name="rescontent[${status.index }].did" value="${item.did}"/></td>    
-						<td align="center"><input type="text" name="rescontent[${status.index }].name" value="${item.name}"/></td>
-						<td align="center"><input type="text" name="rescontent[${status.index }].csqlpath" value="${item.csqlpath}"/></td>
-						<td align="center"><input type="text" name="rescontent[${status.index }].isqlpath" value="${item.isqlpath}"/></td>
-						<td align="center"><input type="text" name="rescontent[${status.index }].description" value="${item.description}"/></td>
+					    <td align="center"><input type="text" style="width:40px;" name="rescontent[${status.index }].did" value="${item.did}"/></td>    
+						<td align="center"><input type="text" style="width:200px;" name="rescontent[${status.index }].name" value="${item.name}"/></td>
+						<td align="center"><input type="text" style="width:200px;" name="rescontent[${status.index }].csqlpath" value="${item.csqlpath}"/></td>
+						<td align="center"><input type="text" style="width:200px;" name="rescontent[${status.index }].description" value="${item.description}"/></td>
 			      </tr>
 		      </c:forEach>
 		  </table>
