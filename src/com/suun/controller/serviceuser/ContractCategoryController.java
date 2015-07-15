@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +30,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fr.base.FRContext;
+import com.fr.report.core.A.S;
+import com.suun.model.contract.Contract_mode;
 import com.suun.model.contract.Contract_template;
 import com.suun.model.serviceuser.ContractCategory;
 import com.suun.model.serviceuser.ContractDetail;
@@ -369,6 +372,8 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 	public Map<String,Object> gridupload(@RequestParam("file") MultipartFile file, HttpServletRequest request, HttpServletResponse response){
 		Map<String,Object> map=new HashMap<String,Object>();
 		String modelName =null;
+		String contractId = null;
+		List<String> sqls = new ArrayList<String>();
 		if (!file.isEmpty()){
 			//文件上传路径
 			String path = request.getSession().getServletContext().getRealPath(File.separator + "tempfile" + File.separator + "upload_" + file.getOriginalFilename());
@@ -397,6 +402,10 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 						}
 						Bout.close();
 						out.close();
+					}else if(fileName.endsWith(".txt")){
+						String[] names = fileName.split(".");
+						contractId = names[0];
+						System.out.println("******************contractId:----"+contractId);
 					}else if(fileName.endsWith(".sql")){
 						destFile=new File(envPath,entry.getName());
 						if(!destFile.exists()){
@@ -412,6 +421,7 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 						out.close();
 						
 						String sql = ReadFile.readFileByChars(destFile.getAbsolutePath());
+						sqls.add(sql);
 						System.out.println(sql);
 						//dataminingManager.insertData(sql);
 					}
@@ -427,26 +437,31 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 			map.put("success", false);
 		}
 		
+		//判断该 contractId 是否已经存在
+		List<Contract_mode> modeLists = mainManager.findContract_modeByContractId(contractId);
+		if(modeLists.size()!=0){
+			//如果存在 需要先清除数据
+			
+		}
+		for(String sql:sqls){
+			dataminingManager.insertData(sql);
+		}
+		
+		
+		List<Contract_template> list = mainManager.findContract_templateByContractId(contractId);
 		//根据一个上传的模板文件，查询 合同id
-		if(modelName!=null){
-			//modelName = modelName.substring(11);
-			//modelName=modelName.replaceAll("\\\\", "/");
-			Contract_template ct = mainManager.findContract_templateByTemplateUrl(modelName);
-			String id = ct.getId().getContractId();
-			List<Contract_template> list = mainManager.findContract_templateByContractId(id);
-			for(Contract_template cts:list){
-				Menu m = new Menu();
-				m.setMenuId(""+System.currentTimeMillis());
-				m.setMenuName(cts.getTemplateName());
-				m.setMenuType(3);
-				m.setMenuImg("/resources/images/system/group.png");
-				m.setMenuParid("0102");
-				m.setItemOrder(999);
-				m.setMenuUrl("/ReportServer?reportlet="+cts.getId().getTemplateUrl().replaceAll("\\\\", "/"));
-				m.setIsadmin(1);
-				m.setIsframe(1);
-				menuManager.saveMenu(m);
-			}
+		for(Contract_template cts:list){
+			Menu m = new Menu();
+			m.setMenuId(""+System.currentTimeMillis());
+			m.setMenuName(cts.getTemplateName());
+			m.setMenuType(3);
+			m.setMenuImg("/resources/images/system/group.png");
+			m.setMenuParid("0102");
+			m.setItemOrder(999);
+			m.setMenuUrl("/ReportServer?reportlet="+cts.getId().getTemplateUrl().replaceAll("\\\\", "/"));
+			m.setIsadmin(1);
+			m.setIsframe(1);
+			menuManager.saveMenu(m);
 		}
 		return map;
 	}

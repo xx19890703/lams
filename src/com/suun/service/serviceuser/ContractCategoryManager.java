@@ -209,4 +209,15 @@ public class ContractCategoryManager {
 		return list;
 	}
 	
+	/**
+	 * 根据合同id 查询所有相关表名
+	 * @param cid
+	 * @return
+	 */
+	public List<Contract_mode> findContract_modeByContractId(String cid){
+		List<Contract_mode> list=new ArrayList<Contract_mode>();
+		String hql="from Contract_mode o where o.id.contractId=?";
+		list=contractmode.find(hql,cid);
+		return list;
+	}
 }
