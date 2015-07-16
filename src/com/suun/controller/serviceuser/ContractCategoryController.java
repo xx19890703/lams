@@ -30,7 +30,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fr.base.FRContext;
-import com.fr.report.core.A.S;
 import com.suun.model.contract.Contract_mode;
 import com.suun.model.contract.Contract_template;
 import com.suun.model.serviceuser.ContractCategory;
@@ -382,7 +381,6 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 	@ResponseBody
 	public Map<String,Object> gridupload(@RequestParam("file") MultipartFile file, HttpServletRequest request, HttpServletResponse response){
 		Map<String,Object> map=new HashMap<String,Object>();
-		String modelName =null;
 		String contractId = null;
 		List<String> sqls = new ArrayList<String>();
 		if (!file.isEmpty()){
@@ -433,7 +431,6 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 						String sql = ReadFile.readFileByChars(destFile.getAbsolutePath());
 						sqls.add(sql);
 						System.out.println(sql);
-						//dataminingManager.insertData(sql);
 					}
 				}  
 				bin.close();  
@@ -501,6 +498,87 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 				m.setIsframe(1);
 				menuManager.saveMenu(m);
 			}
+		}
+		return map;
+	}
+	
+	/**
+	 * 服务端解析客户端报表数据
+	 * @param file
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping
+	@ResponseBody
+	public Map<String,Object> serverupload(@RequestParam("file") MultipartFile file, HttpServletRequest request, HttpServletResponse response){
+		Map<String,Object> map=new HashMap<String,Object>();
+		String contractId = null;
+		List<String> sqls = new ArrayList<String>();
+		if (!file.isEmpty()){
+			//文件上传路径
+			String path = request.getSession().getServletContext().getRealPath(File.separator + "tempfile" + File.separator + "server_" + file.getOriginalFilename());
+			File destFile = new File(path);
+			try {
+				String envPath = FRContext.getCurrentEnv().getPath();
+				FileUtils.copyInputStreamToFile(file.getInputStream(), destFile);
+				ZipInputStream zip = new ZipInputStream(new FileInputStream(path));
+				BufferedInputStream bin=new BufferedInputStream(zip);
+				ZipEntry entry;
+				//逐个读取压缩包的文件
+				while((entry = zip.getNextEntry())!=null && !entry.isDirectory()){
+					//处理以.cpt结尾的文件  及 .sql结尾的文件
+					String fileName = entry.getName();
+					if(fileName.endsWith(".txt")){
+						String[] names = fileName.split("\\.");
+						contractId = names[0];
+					}else if(fileName.endsWith(".sql")){
+						destFile=new File(envPath,entry.getName());
+						if(!destFile.exists()){
+							(new File(destFile.getParent())).mkdirs();
+						}
+						FileOutputStream out=new FileOutputStream(destFile);
+						BufferedOutputStream Bout=new BufferedOutputStream(out);
+						int b;
+						while((b=bin.read())!=-1){
+							Bout.write(b);
+						}
+						Bout.close();
+						out.close();
+						
+						String sql = ReadFile.readFileByChars(destFile.getAbsolutePath());
+						sqls.add(sql);
+						System.out.println(sql);
+					}
+				}  
+				bin.close();  
+				zip.close();
+				
+				//判断该 contractId 是否已经存在
+				if(contractId != null){
+					List<Contract_mode> modeLists = mainManager.findContract_modeByContractId(contractId);
+					if(modeLists.size()!=0){
+						//如果存在 需要先清除数据
+						for(Contract_mode cm :modeLists){
+							dataminingManager.deleteData(contractId, cm.getId().getTableName());
+						}
+					}
+					for(String sql:sqls){
+						dataminingManager.insertData(sql);
+					}
+					map.put("success", true);
+					map.put("msg", "上传成功!");
+				}else{
+					map.put("success", false);
+					map.put("msg", "上传文件中未找到合同id!");
+				}
+			} catch (IOException e) {
+				map.put("success", false);
+				map.put("msg", "解析上传文件出错!");
+			}
+		}else{
+			map.put("success", false);
+			map.put("msg", "上传文件为空!");
 		}
 		return map;
 	}

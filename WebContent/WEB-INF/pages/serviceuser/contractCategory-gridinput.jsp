@@ -30,7 +30,7 @@
         	SuunCalendar.show(me,{showsTime: true,ifFormat: "%Y-%m-%d %H:%M:%S"});
         }
         
-        function showReport(url){
+        function showReport(url,type){
         	new Ext.Window({
     			title : '报表展现',
     			width : 800,
@@ -39,9 +39,9 @@
     			plain : true,
     			closeAction : 'close',
     			modal: true,
-    			bodyStyle : 'padding:0px;',
+    			bodyStyle : 'background-color:white;padding:0px;',
     			buttonAlign : 'center',
-    			html: '<iframe style="overflow:auto;width:100%; height:100%;" src="" frameborder="0"></iframe>',
+    			html: '<iframe style="background-color:white;overflow:auto;width:100%; height:100%;" src="${ctx}/ReportServer?reportlet='+url+'&op='+type+'" frameborder="0"></iframe>',
     		}).show(); 
         }
         </script>
@@ -123,7 +123,7 @@
 					<td align="center"><input type="text" name="rescontent[${status.index }].name" value="${item.name}"/></td>
 		      		<td align="center"><input type="text" name="rescontent[${status.index }].openType" value="${item.openType}"/></td>
 					<td align="center"><input type="text" name="rescontent[${status.index }].template.did" value="${item.template.did}"/></td>
-		      		<td align="center"><input type="button" value="预览" onclick="showReport('${item.template.did}')"></td>
+		      		<td align="center"><input type="button" value="预览" onclick="showReport('${fn:replace(item.template.path,"\\", "/")}','${item.openType}')"></td>
 		      </tr>
 	      </c:forEach>
 	  </table>
