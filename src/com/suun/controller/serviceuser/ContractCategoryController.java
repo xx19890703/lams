@@ -30,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fr.base.FRContext;
+import com.fr.base.StringUtils;
 import com.suun.model.contract.Contract_mode;
 import com.suun.model.contract.Contract_template;
 import com.suun.model.serviceuser.ContractCategory;
@@ -257,6 +258,16 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 		ModelAndView mav = new ModelAndView();
 		mav.addObject(mainManager.getAllContractCategory("01",null));
 		return mav;
+	}
+	
+	@RequestMapping
+	@ResponseBody
+	public Map<String, Object> findContract(HttpServletRequest request,HttpServletResponse response) {	
+		Map<String, Object> modelMap = new HashMap<String, Object>();
+		List<String> data=mainManager.findContract();
+		modelMap.put("success", "true"); 
+		modelMap.put("list", data);
+		return modelMap;	
 	}
 	
 	@RequestMapping

@@ -1,7 +1,9 @@
 package com.suun.service.serviceuser;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.SessionFactory;
@@ -220,5 +222,18 @@ public class ContractCategoryManager {
 		String hql="from Contract_mode o where o.id.contractId=?";
 		list=contractmode.find(hql,cid);
 		return list;
+	}
+	
+	/**
+	 * 查询所有的合同id
+	 * @return
+	 */
+	public List<String> findContract(){
+		List<Contract_mode> cms = contractmode.findAll();
+		Set<String> sets = new HashSet<String>();
+		for(Contract_mode cm:cms){
+			sets.add(cm.getId().getContractId());
+		}
+		return new ArrayList<String>(sets);
 	}
 }
