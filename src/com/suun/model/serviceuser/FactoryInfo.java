@@ -38,6 +38,7 @@ public class FactoryInfo {
 	private Dic_data fstandard;//资质标准
 	private String fattachment;//附件
 	private String remark;     //备注
+	private String contractId;// 合同id
 	
 	@Id
     @Column(length=30,nullable=false)
@@ -178,6 +179,14 @@ public class FactoryInfo {
 	}
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+	
+	@Column(length=30)
+	public String getContractId() {
+		return contractId;
+	}
+	public void setContractId(String contractId) {
+		this.contractId = contractId;
 	}
 	
 }

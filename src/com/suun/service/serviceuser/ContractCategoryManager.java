@@ -184,6 +184,19 @@ public class ContractCategoryManager {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
+	@Transactional(readOnly = true)
+	public ContractDetail getContractDetailByContractId(String subId){
+		List<ContractDetail> list=new ArrayList<ContractDetail>();
+		String hql="from ContractDetail o where  o.did=?";
+		list=submanager.find(hql,subId);
+		if (list.size()>0){
+		    return list.get(0);
+		}else{
+			return null;
+		}
+	}
+	
 	/**
 	 *  根据 模版url 查询合同
 	 * @param url

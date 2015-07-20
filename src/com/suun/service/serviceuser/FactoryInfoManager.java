@@ -61,4 +61,5 @@ public class FactoryInfoManager {
 	public boolean isFactoryInfoUnique(String value, String oldvalue) {
 		return manager.isUnique("fno", value, oldvalue);
 	}
+	
 }
