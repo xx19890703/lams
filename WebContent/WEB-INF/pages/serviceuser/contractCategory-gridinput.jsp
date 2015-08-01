@@ -12,6 +12,7 @@
 	    <script type="text/javascript" src="${ctx}/resources/js/thrid/calendar/calendar-cn-utf8.js"></script>
 		<script type="text/javascript" src="${ctx}/resources/js/system/core/detail.js"></script>
 		<script type="text/javascript" src="${ctx}/resources/js/system/core/gridsel.js"></script>
+		<script type="text/javascript" src="${ctx}/resources/js/system/core/treegridsel.js"></script>
 		<script>
 			function selectfactory(me){		
 				gridselect({listurl:$ctx+'/serviceuser/factoryInfo!lists',//基本url
@@ -43,25 +44,40 @@
     			buttonAlign : 'center',
     			html: '<iframe style="background-color:white;overflow:auto;width:100%; height:100%;" src="${ctx}/ReportServer?reportlet='+url+'&op='+type+'" frameborder="0"></iframe>',
     		}).show(); 
-        	
-        	
-        	
         }
         
-        function addsel(){
-    		alert($("suunRept"))
-    	}
+        function selecttemp(me){		
+        	treegridselect({baseurl:$ctx+"/serviceuser/templateRes",//基本url
+				tree:{
+					width:'30%'//默认40%
+				},
+				grid:{
+					pagenum:10,//页记录数 默认20
+					suuncolumns:[{columnid:'did',columnname:'编号',colwidth:20,defaultsort:true},
+						 {columnid:'name',columnname:'名称',colwidth:40},
+						 {columnid:'path',columnname:'模版文件',colwidth:40}  ]
+				},
+				winWidth:650,
+				winHeight:350,
+				callback:function(records){
+					me.value=records[0].get('name');
+					$(me).parent().next().val(records[0].get('did'));
+				}
+			});
+		}
+        
+        $.SuunRept({jsonbean:${jsonbean},beanname:"rescontent",detailnames:"name,template.name,template.did,openType,description,condetail.did,state.key.data_no",required:true});
+        
         </script>
 	</head>
 	<body>
-	    <input type="hidden" name="resmain.did" value="${treeid}" />
+	    <input type="hidden" name="conmain.did" value="${treeid}" />
 		<table align="center">
 		<br/>
 			<tr>
 				<td width="100" align="right">合同编号</td>					
 				<td width="240">
 				    <c:choose><c:when test="${isEdit}">
-				    	 <input  type="hidden" name="conmain.did"  value="${contractdetail.conmain.did}" style="width:174px;"/>
 		                <input  type="text" name="did"  value="${contractdetail.did}" style="width:174px;"/>
 		            </c:when><c:otherwise>
 		                <input  type="text" name="did"  value="" style="width:174px;"/>
@@ -115,25 +131,21 @@
 			</tr>
 		</table>
 		<br>
-	  <div style="position:relative;overflow:auto; width:650px;">
-	  <input type="button" value="add" onclick="addsel();"/>
+	  <div style="position:relative;overflow:auto; width:750px;">
 	  <table class="suunRept" width="100%" border="1" cellpadding="0" cellspacing="0"> 
 	      <tr>     
 	          <td align="center">编号</td>    
 			  <td align="center">报表名称</td>
 			  <td align="center">报表浏览方式</td>
-			  <td align="center">报表模板</td>
 			  <td>预览</td>
 	      </tr>
-	      <c:forEach var="item" items="${contractdetail.rescontent}" varStatus="status">
 		      <tr class="items">         
-				    <td align="center"><input type="text" name="rescontent[${status.index }].id" value="${item.id}"/></td>    
-					<td align="center"><input type="text" name="rescontent[${status.index }].name" value="${item.name}"/></td>
-		      		<td align="center"><input type="text" name="rescontent[${status.index }].openType" value="${item.openType}"/></td>
-					<td align="center"><input type="text" name="rescontent[${status.index }].template.did" value="${item.template.did}"/></td>
+		      	<input type="hidden" name="resdetail.did" value="${condetail.did}"/>
+				   	<td align="center"><input type="text" class="sysindex" style="width:40px;"/></td>    
+					<td align="center"><input type="text" class="dataa" onclick="selecttemp(this);" name="name" /><input type="hidden" name="template.did" /></td>
+		      		<td align="center"><input type="text" name="openType" /></td>
 		      		<td align="center"><input type="button" value="预览" onclick="showReport('${fn:replace(item.template.path,"\\", "/")}','${item.openType}')"></td>
 		      </tr>
-	      </c:forEach>
 	  </table>
 	  </div>
 	</body>

@@ -255,6 +255,8 @@ public abstract class TreeGridCRUDController<TTree,TGrid> extends BaseController
 		if (model!=null){
 			modelandview.getModel().putAll(model);
 		}		
+		TGrid operatebean=getGridClass();
+		modelandview.getModel().put("jsonbean", Utils.Object2Json(operatebean));
 		request.getSession().setAttribute("OperateState", "New");
 		return modelandview;	
 	}
@@ -287,6 +289,7 @@ public abstract class TreeGridCRUDController<TTree,TGrid> extends BaseController
 		ModelAndView modelandview=new ModelAndView("gridinput",className/*ClassUtils.getShortName(((T)operatebean).getClass().getName()).toLowerCase().replaceAll("[_]", "")*/,operatebean);
 		modelandview.getModel().put("isEdit", "true");  
 		modelandview.getModel().put("treeid", treeid);
+		modelandview.getModel().put("jsonbean", Utils.Object2Json(operatebean));
 		Map<String,Object> model=doGridEditbefore(request,treeid,operatebean);
 		if (model!=null){
 			modelandview.getModel().putAll(model);
@@ -394,6 +397,9 @@ public abstract class TreeGridCRUDController<TTree,TGrid> extends BaseController
 	
 	protected abstract TGrid getGridRecordSet(HttpServletRequest request,String treeid,String operateid);
 	
+	protected TGrid getGridClass(){
+		return null;
+	}
 	protected Map<String,Object> doGridNewbefore(HttpServletRequest request,String treeid) {
 		return null;
 	}

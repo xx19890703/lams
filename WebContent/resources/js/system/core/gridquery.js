@@ -232,7 +232,7 @@ function createsuungrids(option){
 	option.operation.exp=option.operation.exp || {};
 	option.operation.extend=option.operation.extend || [];
 	Ext.applyIf(option.operation.exp,{hidden:false,btns:[]});
-	Ext.applyIf(option.operation.add,{hidden:false,iconCls:'add',text:"添加",tooltip:'增加一条信息'});
+	Ext.applyIf(option.operation.add,{hidden:false,text:"查询",tooltip:'选择查询条件'});
 	Ext.applyIf(option.operation.exp.btns,[
 	    {iconCls:'pdf',handler:function(btn,pressed){suunExport('pdf');}}, 
 	    {iconCls:'excel',handler:function(btn,pressed){suunExport('xls');}},

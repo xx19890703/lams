@@ -16,6 +16,7 @@ import org.hibernate.annotations.JoinFormula;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.suun.model.system.Dic_data;
 
 /**
@@ -83,6 +84,7 @@ public class TemplateResContent {
 	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, targetEntity = TemplateResDetail.class)
 	@JoinColumn(name="resdetail")
 	@NotFound(action = NotFoundAction.IGNORE)
+	@JsonBackReference//子JSON转换时不做主关联，避免造成死循
 	public TemplateResDetail getResdetail() {
 		return resdetail;
 	}

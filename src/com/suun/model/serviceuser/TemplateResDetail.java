@@ -21,6 +21,7 @@ import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 /**
  * 报表模板列表
@@ -86,9 +87,9 @@ public class TemplateResDetail {
 		this.resmain = resmain;
 	}
 	
-	@JsonBackReference
 	@OneToMany(cascade = { CascadeType.REFRESH, CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REMOVE },mappedBy ="resdetail",orphanRemoval=true)
 	@NotFound(action = NotFoundAction.IGNORE)
+	@JsonManagedReference//主需要子的数据JSON转换
 	public List<TemplateResContent> getRescontent() {
 		return rescontent;
 	}

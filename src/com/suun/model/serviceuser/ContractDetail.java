@@ -24,6 +24,7 @@ import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 /**
  * 合同信息
@@ -55,7 +56,7 @@ public class ContractDetail {
 	private com.suun.model.system.Dic_data state;
 	
 	@Id
-    @Column(length=30)
+    @Column(length=30,name="contractId")
 	public String getDid() {
 		return did;
 	}
@@ -95,9 +96,9 @@ public class ContractDetail {
 		this.conmain = conmain;
 	}
 	
-	@JsonBackReference
-	@OneToMany(cascade = { CascadeType.REFRESH, CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REMOVE },mappedBy ="condetail",orphanRemoval=true)
+	@OneToMany(cascade = { CascadeType.REFRESH, CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REMOVE },mappedBy ="condetail")
 	@NotFound(action = NotFoundAction.IGNORE)
+	@JsonManagedReference//主需要子的数据JSON转换
 	public List<ContractTemplateRes> getRescontent() {
 		return rescontent;
 	}

@@ -2,12 +2,13 @@ package com.suun.publics.data.impl;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -24,10 +25,8 @@ public class DataminingMysqlStrategy implements DataminingStrategy {
 
 	public static DataminingStrategy getDataHandle() {
 		if (dataHandle == null) {
-			ApplicationContext ctx = ContextLoader
-					.getCurrentWebApplicationContext();
-			dataHandle = (DataminingStrategy) ctx
-					.getBean("dataminingMysqlStrategy");
+			ApplicationContext ctx = ContextLoader.getCurrentWebApplicationContext();
+			dataHandle = (DataminingStrategy) ctx.getBean("dataminingMysqlStrategy");
 		}
 		return dataHandle;
 	}
@@ -40,7 +39,6 @@ public class DataminingMysqlStrategy implements DataminingStrategy {
 		this.dataSource = dataSource;
 	}
 
-	
 	@Override
 	public boolean insertData(String sql) {
 		Connection conn = null;
@@ -68,8 +66,8 @@ public class DataminingMysqlStrategy implements DataminingStrategy {
 		boolean rs = false;
 		statement = conn.createStatement();
 		String[] sqls = sql.split(";");
-		
-		for(String sq:sqls){
+
+		for (String sq : sqls) {
 			sq = sq.replaceAll("\\\\", "/");
 			statement.addBatch(sq);
 		}
@@ -83,8 +81,7 @@ public class DataminingMysqlStrategy implements DataminingStrategy {
 		Statement statement = null;
 		ResultSet rs = null;
 		List<String> result = new ArrayList<String>();
-		String sql = "select * from contract_mode where contractId='"
-				+ contractId + "'";
+		String sql = "select * from contract_mode where contractId='" + contractId + "'";
 		try {
 			conn = dataSource.getConnection();
 			statement = conn.createStatement();
@@ -108,16 +105,15 @@ public class DataminingMysqlStrategy implements DataminingStrategy {
 		}
 		return result;
 	}
-	
-	
+
 	@Override
-	public List<String> findTableData(String contractId,String tableName) {
+	public List<String> findTableData(String contractId, String tableName) {
 		Connection conn = null;
 		List<String> result = new ArrayList<String>();
 		try {
 			conn = dataSource.getConnection();
-			result = getTableInsertSql(conn, tableName,
-					" where contractId='" + contractId + "'");
+			result = getTableInsertSql(conn, tableName, " where contractId='" + contractId + "'");
+
 		} catch (Exception ex) {
 			System.out.println(ex);
 			return result;
@@ -134,12 +130,12 @@ public class DataminingMysqlStrategy implements DataminingStrategy {
 	}
 
 	@SuppressWarnings("resource")
-	private List<String> getTableInsertSql(Connection conn, String tableName,
-			String where) throws Exception {
+	private List<String> getTableInsertSql(Connection conn, String tableName, String where) throws Exception {
 		ResultSet rs = null;
 		Statement statement = null;
 		List<String> list = new ArrayList<String>();
 		List<String> result = new ArrayList<String>();
+		Map<String, String> map = new HashMap<String, String>();
 		try {
 			DatabaseMetaData metadata = conn.getMetaData();
 			rs = metadata.getColumns(null, null, tableName, "%"); // 得到表的字段列表
@@ -149,11 +145,15 @@ public class DataminingMysqlStrategy implements DataminingStrategy {
 			// 获得列的总数
 			while (rs.next()) {
 				String colName = rs.getString("column_name");
+				String dataType = rs.getString("TYPE_NAME");
 				list.add(colName);
-				if (count == 0) {
-					sql += colName + " ";
-				} else {
-					sql += "," + colName + " ";
+				map.put(colName, dataType);
+				if (!"DATE".equalsIgnoreCase(dataType)) {
+					if (count == 0) {
+						sql += colName + " ";
+					} else {
+						sql += "," + colName + " ";
+					}
 				}
 				count++;
 			}
@@ -167,12 +167,25 @@ public class DataminingMysqlStrategy implements DataminingStrategy {
 				sql = halfSql;
 				boolean isFirst = true;
 				for (String names : list) {
-					Object value = rs.getObject(names);
-					if (isFirst) {
-						sql += " '" + value + "' ";
-						isFirst = false;
+					String type = map.get(names);
+					if ("DATE".equalsIgnoreCase(type)) {
+
+					} else if ("LONG".equalsIgnoreCase(type) || "INT".equalsIgnoreCase(type)) {
+						Object value = rs.getObject(names);
+						if (isFirst) {
+							sql += " " + value + " ";
+							isFirst = false;
+						} else {
+							sql += " ," + value + " ";
+						}
 					} else {
-						sql += " ,'" + value + "' ";
+						Object value = rs.getObject(names);
+						if (isFirst) {
+							sql += " '" + value + "' ";
+							isFirst = false;
+						} else {
+							sql += " ,'" + value + "' ";
+						}
 					}
 				}
 				sql += " );";
@@ -187,21 +200,21 @@ public class DataminingMysqlStrategy implements DataminingStrategy {
 		}
 		return result;
 	}
-	
+
 	@Override
-	public boolean deleteData(String contractId,String tableName){
+	public boolean deleteData(String contractId, String tableName) {
 		Connection conn = null;
 		boolean rs = false;
 		Statement statement = null;
 		try {
 			conn = dataSource.getConnection();
-			String sql = "delete from "+tableName+" where contractId='"+contractId+"' ;";
+			String sql = "delete from " + tableName + " where contractId='" + contractId + "' ;";
 			statement = conn.createStatement();
 			rs = statement.execute(sql);
 			return rs;
 		} catch (Exception ex) {
 			System.out.println(ex);
-			
+
 		} finally {
 			if (conn != null) {
 				try {

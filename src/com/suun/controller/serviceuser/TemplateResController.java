@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.OutputStream;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -189,7 +190,9 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 	@Override
 	protected String deleteGridRecordSet(HttpServletRequest request,String treeid, String[] ids) {
 		try{
+			
         	for (int i=0;i<ids.length;i++){			
+        		mainManager.deleteTemplateResContent(ids[i]);
         		mainManager.deleteTemplateResDetail(treeid,ids[i]);//传入的是employee id
     		}
     		return "";
@@ -202,6 +205,9 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 	protected String saveGridRecordSet(HttpServletRequest request,TemplateResDetail operatebean) {
 		mainManager.deleteTemplateResContent(operatebean.getDid());
 		try{
+			for(TemplateResContent trc:operatebean.getRescontent()){
+				trc.setDid(operatebean.getDid()+trc.getDid());
+			}
 			mainManager.saveTemplateResDetail(operatebean);
 			return "";
 		}catch (Exception e){
@@ -222,6 +228,13 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 	@Override
 	protected TemplateResDetail getGridRecordSet(HttpServletRequest request,String treeid, String operateid) {
 		return mainManager.getTemplateResDetail(treeid, operateid);
+	}
+	
+	protected TemplateResDetail getGridClass(){
+		TemplateResDetail trd = new TemplateResDetail();
+		List<TemplateResContent> rescontent=new ArrayList<TemplateResContent>();
+		trd.setRescontent(rescontent);
+		return trd;
 	}
 	
 	@RequestMapping

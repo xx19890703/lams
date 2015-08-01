@@ -15,6 +15,7 @@ import org.hibernate.annotations.JoinFormula;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.suun.model.IdEntity;
 import com.suun.model.system.Dic_data;
 
@@ -82,6 +83,7 @@ public class ContractTemplateRes extends IdEntity{
 	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, targetEntity = ContractDetail.class)
 	@JoinColumn(name="condetail")
 	@NotFound(action = NotFoundAction.IGNORE)
+	@JsonBackReference
 	public ContractDetail getCondetail() {
 		return condetail;
 	}

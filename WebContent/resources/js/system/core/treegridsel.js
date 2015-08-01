@@ -91,7 +91,7 @@ function treegridselect(selOption) {
 		handler : selectRecord
 	}));
 	Ext.getCmp('Q_SearchId-'+suungrid.getSuunid()).width=100;
-	Ext.getCmp('Q_value-'+suungrid.getSuunid()).width=50; 
+	//Ext.getCmp('Q_value-'+suungrid.getSuunid()).width=50; 
 	Ext.getCmp('Q_svalue-'+suungrid.getSuunid()).width=50; 
 	Ext.getCmp('Q_nvalue-'+suungrid.getSuunid()).width=50;
 	Ext.getCmp('Q_dvalue-'+suungrid.getSuunid()).width=50;

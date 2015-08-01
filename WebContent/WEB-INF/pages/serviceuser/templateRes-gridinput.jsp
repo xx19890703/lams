@@ -48,11 +48,10 @@
         		 }	
 			}
 		}); */
-		$.SuunRept({jsonbean:{"did":null,"name":null,"csqlpath":null,"description":null},beanname:"rescontent",detailnames:"did,name,csqlpath,description,state.key.data_no",required:true});
+		$.SuunRept({jsonbean:${jsonbean},beanname:"rescontent",detailnames:"resdetail.did,did,name,csqlpath,description,state.key.data_no",required:true});
         </script>
 	</head>
 	<body>
-		${jsonbean}
 	    <input type="hidden" name="resmain.did" value="${treeid}" />
 		<table align="center">
 		<br/>
@@ -98,14 +97,13 @@
 				  <td align="center">表创建语句</td>
 				  <td align="center">描述</td>
 		      </tr>
-		      <c:forEach var="item" items="${templateresdetail.rescontent}" varStatus="status">
 			      <tr class="items">
-					    <td align="center"><input type="text" class="sysindex" style="width:40px;" name="did" value="${item.did}"/></td>    
-						<td align="center"><input type="text" style="width:200px;" name="name" value="${item.name}"/></td>
-						<td align="center"><input type="text" style="width:200px;" name="csqlpath" value="${item.csqlpath}"/></td>
-						<td align="center"><input type="text" style="width:200px;" name="description" value="${item.description}"/></td>
+			     	 	<input type="hidden" name="resdetail.did" value="${resdetail.did}"/> 
+					    <td align="center"><input type="text" class="sysindex" style="width:40px;" name="did" /></td>    
+						<td align="center"><input type="text" style="width:200px;" name="name" /></td>
+						<td align="center"><input type="text" style="width:200px;" name="csqlpath"/></td>
+						<td align="center"><input type="text" style="width:200px;" name="description"/></td>
 			      </tr>
-		      </c:forEach>
 		  </table>
 		</div>
 	</body>

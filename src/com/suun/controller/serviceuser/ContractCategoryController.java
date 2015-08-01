@@ -89,6 +89,12 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 		}
 	}
 	
+	protected ContractDetail getGridClass(){
+		ContractDetail cd = new ContractDetail();
+		cd.setRescontent(new ArrayList<ContractTemplateRes>());
+		return cd;
+	}
+	
 	@RequestMapping
 	@ResponseBody
 	public Map<String,Object> getTest(){
@@ -223,7 +229,8 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 	protected String deleteGridRecordSet(HttpServletRequest request,String treeid, String[] ids) {
 		try{
         	for (int i=0;i<ids.length;i++){			
-        		mainManager.deleteContractDetail(treeid,ids[i]);//传入的是employee id
+        		mainManager.deleteContractTemplateRes(ids[i]);
+        		mainManager.deleteContractDetails(ids[i]);//传入的是employee id
     		}
     		return "";
 		}catch (Exception e){
@@ -234,6 +241,7 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 	@Override
 	protected String saveGridRecordSet(HttpServletRequest request,ContractDetail operatebean) {
 		try{
+			mainManager.deleteContractTemplateRes(operatebean.getDid());
 			mainManager.saveContractDetail(operatebean);
 			return "";
 		}catch (Exception e){
@@ -301,12 +309,17 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 	        int readLength = 0;
 	        String filePath = "";
 	        
+	        
+	        //返回合同的数据
+	        for(String temp : strategy.findTableData(contract.getDid(),"app_contract_detail"))
+	        	sbuffer = sbuffer + temp;
 	        //返回合同-数据库表的数据
 	        for(String temp : strategy.findTableData(contract.getDid(),"contract_mode"))
 	        	sbuffer = sbuffer + temp;
 	        //返回合同-模板url的数据
 	        for(String temp : strategy.findTableData(contract.getDid(),"contract_template"))
 	        	sbuffer = sbuffer + temp;
+	     
 	        
 	        //遍历所有模板
 	        for(ContractTemplateRes s : contract.getRescontent()){
@@ -523,7 +536,7 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 //				if(null==cts.getOpenType() || "".endsWith(cts.getOpenType())){
 //					m.setMenuUrl("/ReportServer?reportlet="+cts.getId().getTemplateUrl().replaceAll("\\\\", "/"));
 //				}else{
-				m.setMenuUrl("/ReportServer?reportlet="+cts.getId().getTemplateUrl().replaceAll("\\\\", "/")+"&op=true");//+cts.getOpenType());
+				m.setMenuUrl("/ReportServer?reportlet="+cts.getId().getTemplateUrl().replaceAll("\\\\", "/")+"&op=write");//+cts.getOpenType());
 //				}
 				m.setIsadmin(1);
 				m.setIsframe(1);

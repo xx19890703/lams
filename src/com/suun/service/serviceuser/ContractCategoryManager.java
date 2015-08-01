@@ -121,6 +121,16 @@ public class ContractCategoryManager {
 		manager.save(dep);
 	}
 	
+	public void deleteContractTemplateRes(String pid) {
+		String hql="delete ContractTemplateRes o where o.condetail.did=? ";
+		conmanager.executeHql(hql,pid);
+	}
+	
+	public void deleteContractDetails(String did) {
+		String hql="delete ContractDetail o where o.did=? ";
+		submanager.executeHql(hql,did);
+	}
+	
 	@Transactional(readOnly = true)
 	public Page<ContractDetail> getAllContractDetail(String treeid,Page<ContractDetail> page) {
 		Condition condition=page.getCondition();
