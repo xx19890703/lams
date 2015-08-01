@@ -26,6 +26,7 @@ import com.fr.report.WorkBook;
 import com.fr.report.io.TemplateImporter;
 import com.fr.report.io.core.EmbeddedTableDataExporter;
 import com.suun.model.serviceuser.TemplateRes;
+import com.suun.model.serviceuser.TemplateResContent;
 import com.suun.model.serviceuser.TemplateResDetail;
 import com.suun.model.system.Constant;
 import com.suun.publics.controller.TreeGridCRUDController;
@@ -47,7 +48,7 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 	@Autowired
 	TemplateResManager mainManager;
 	@Autowired
-	TemplateResDeatilManager subManager;
+	TemplateResDeatilManager gridManager;
 	@Autowired 
 	DicManager dicManager;
 	
@@ -199,6 +200,7 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 
 	@Override
 	protected String saveGridRecordSet(HttpServletRequest request,TemplateResDetail operatebean) {
+		mainManager.deleteTemplateResContent(operatebean.getDid());
 		try{
 			mainManager.saveTemplateResDetail(operatebean);
 			return "";
@@ -315,5 +317,4 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
         }
         
 	}
-	 
 }

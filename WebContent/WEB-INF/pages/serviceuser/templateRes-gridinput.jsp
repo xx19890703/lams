@@ -48,9 +48,11 @@
         		 }	
 			}
 		}); */
+		$.SuunRept({jsonbean:{"did":null,"name":null,"csqlpath":null,"description":null},beanname:"rescontent",detailnames:"did,name,csqlpath,description,state.key.data_no",required:true});
         </script>
 	</head>
 	<body>
+		${jsonbean}
 	    <input type="hidden" name="resmain.did" value="${treeid}" />
 		<table align="center">
 		<br/>
@@ -98,10 +100,10 @@
 		      </tr>
 		      <c:forEach var="item" items="${templateresdetail.rescontent}" varStatus="status">
 			      <tr class="items">
-					    <td align="center"><input type="text" style="width:40px;" name="rescontent[${status.index }].did" value="${item.did}"/></td>    
-						<td align="center"><input type="text" style="width:200px;" name="rescontent[${status.index }].name" value="${item.name}"/></td>
-						<td align="center"><input type="text" style="width:200px;" name="rescontent[${status.index }].csqlpath" value="${item.csqlpath}"/></td>
-						<td align="center"><input type="text" style="width:200px;" name="rescontent[${status.index }].description" value="${item.description}"/></td>
+					    <td align="center"><input type="text" class="sysindex" style="width:40px;" name="did" value="${item.did}"/></td>    
+						<td align="center"><input type="text" style="width:200px;" name="name" value="${item.name}"/></td>
+						<td align="center"><input type="text" style="width:200px;" name="csqlpath" value="${item.csqlpath}"/></td>
+						<td align="center"><input type="text" style="width:200px;" name="description" value="${item.description}"/></td>
 			      </tr>
 		      </c:forEach>
 		  </table>

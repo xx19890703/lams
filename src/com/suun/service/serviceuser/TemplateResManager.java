@@ -132,9 +132,16 @@ public class TemplateResManager {
 		submanager.save(sub);
 	}
 	
+	//删除所有模板
 	public void deleteTemplateResDetail(String mid,String did) {
 		String hql="delete TemplateResDetail o where o.resmain.did=? and o.did=?";
 		submanager.executeHql(hql,mid,did);
+	}
+	
+	//删除所有下的数据表
+	public void deleteTemplateResContent(String did) {
+		String hql="delete TemplateResContent o where o.resdetail.did=?";
+		submanager.executeHql(hql,did);
 	}
 	
 	public void deleteTemplateResDetail(String id) {

@@ -73,17 +73,8 @@
 								alert("请选择合同！")
 							} else {
 								alert(contractId);
-								Ext.Ajax.request({
-											url : $ctx
-													+ '/serviceuser/contractCategory!findContract',
-											method : 'POST',
-											params : {
-												contractId : contractId
-											},
-											success : function(resp, opts) {
-
-											}
-										})
+								window.open($ctx+ '/serviceuser/contractCategory!clientupload?contractId='+contractId);
+								
 							}
 						}
 					} ]

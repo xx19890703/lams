@@ -43,7 +43,14 @@
     			buttonAlign : 'center',
     			html: '<iframe style="background-color:white;overflow:auto;width:100%; height:100%;" src="${ctx}/ReportServer?reportlet='+url+'&op='+type+'" frameborder="0"></iframe>',
     		}).show(); 
+        	
+        	
+        	
         }
+        
+        function addsel(){
+    		alert($("suunRept"))
+    	}
         </script>
 	</head>
 	<body>
@@ -109,6 +116,7 @@
 		</table>
 		<br>
 	  <div style="position:relative;overflow:auto; width:650px;">
+	  <input type="button" value="add" onclick="addsel();"/>
 	  <table class="suunRept" width="100%" border="1" cellpadding="0" cellspacing="0"> 
 	      <tr>     
 	          <td align="center">编号</td>    

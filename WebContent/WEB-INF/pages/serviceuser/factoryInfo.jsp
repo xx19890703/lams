@@ -24,8 +24,8 @@
 					 {columnid:'fattachment',columnname:'附件',type:'D',colwidth:80},
 					 {columnid:'state.data_name',columnname:'状态',type:'C',colwidth:80},
 					],
-			inputFormWidth:700,
-			inputFormHeight:400,
+			inputFormWidth:720,
+			inputFormHeight:300,
 			operation:{check:{hidden:false}}
 		});
     </script>

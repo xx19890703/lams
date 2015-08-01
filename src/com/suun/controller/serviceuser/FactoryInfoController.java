@@ -1,6 +1,8 @@
 package com.suun.controller.serviceuser;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -11,6 +13,7 @@ import com.suun.model.serviceuser.FactoryInfo;
 import com.suun.publics.controller.BaseCRUDController;
 import com.suun.publics.hibernate.Condition;
 import com.suun.publics.hibernate.Page;
+import com.suun.publics.system.DicService;
 import com.suun.service.serviceuser.FactoryInfoManager;
 
 
@@ -69,5 +72,21 @@ public class FactoryInfoController extends BaseCRUDController<FactoryInfo>{
 			logger.error(message);
 			return message;
 		}
+	}
+	
+	@Override
+	protected Map<String, Object> doNewbefore(HttpServletRequest request) {
+		Map<String,Object> rmap=new HashMap<String,Object>();
+		rmap.put("allObjects1", DicService.GetDicByDicNo("FTYPE"));
+		rmap.put("allObjects2", DicService.GetDicByDicNo("FLEVEL"));
+		rmap.put("allObjects3", DicService.GetDicByDicNo("FSTANDARD"));
+		rmap.put("allObjects4", DicService.GetDicByDicNo("FDOMAIN"));
+		return rmap;
+	}
+
+	@Override
+	protected Map<String, Object> doEditbefore(HttpServletRequest request,FactoryInfo operatebean) {
+		Map<String,Object> rmap = doNewbefore(request);
+		return rmap;
 	}
 }

@@ -40,32 +40,97 @@
       
 </head>    
 <body>
-	<table>
+	<br>
+	<table border="0" cellspacing="0" align="center">
 		<tr>
-			<td>制造厂编号  </td>
+			<td style="width: 80px;" align="right">制造厂编号  </td>
 			<td>
 			   <c:choose>		  
 			     <c:when test="${isEdit}">
-			         ${factoryinfo.fno}<input type="hidden" name="fno" style="width:174px;" value="${factoryinfo.fno}" />
+			         <input type="text" name="fno" style="width: 180px;" value="${factoryinfo.fno}" />
 			      </c:when>		  
 	              <c:otherwise>
-	                 <input type="text" name="fno" style="width:174px" value="${factoryinfo.fno}" />                     
+	                 <input type="text" name="fno" style="width: 180px;" readonly="readonly" value="${factoryinfo.fno}" />                     
 	              </c:otherwise>
 	          </c:choose>        
 	        </td>
-	        <td>制造厂注册码 </td>
+	        <td style="width: 80px;" align="right">制造厂注册码 </td>
 			<td>
-	        	<input type="text" name="fregister" size="10" value="${factoryinfo.fregister}"/>
+	        	<input type="text" name="fregister" style="width: 180px;" value="${factoryinfo.fregister}"/>
 	        </td>
 		</tr>
 		<tr>
-			<td>名称  </td>
+			<td style="width: 80px;" align="right">制造厂名称  </td>
 			<td>
-				<input type="text" name="fname" size="10" value="${factoryinfo.fname}"/>
+				<input type="text" name="fname" style="width: 180px;" value="${factoryinfo.fname}"/>
 	        </td>
-	        <td>地址 </td>
+	        <td style="width: 80px;" align="right">地址 </td>
 			<td>
-				<input type="text" name="faddress" size="10" value="${factoryinfo.faddress}"/>
+				<input type="text" name="faddress" style="width: 180px;" value="${factoryinfo.faddress}"/>
+	        </td>
+		</tr>
+		<tr>
+			<td style="width: 80px;" align="right">电话（传真） </td>
+			<td>
+				<input type="text" name="ftel" style="width: 180px;" value="${factoryinfo.ftel}"/>
+	        </td>
+	        <td style="width: 80px;" align="right">法人 </td>
+			<td>
+				<input type="text" name="fower" style="width: 180px;" value="${factoryinfo.fower}"/>
+	        </td>
+		</tr>
+		<tr>
+			<td style="width: 80px;" align="right">联系人  </td>
+			<td>
+				<input type="text" name="fcontect" style="width: 180px;" value="${factoryinfo.fcontect}"/>
+	        </td>
+	        <td style="width: 80px;" align="right">联系人电话 </td>
+			<td>
+				<input type="text" name="fcontecttel" style="width: 180px;" value="${factoryinfo.fcontecttel}"/>
+	        </td>
+		</tr>
+		<tr>
+			<td align="right">类别</td>
+			<td>
+	            <ui:selectlist cssStyle="width:180px;" name="ftype.key.data_no" lists="${allObjects1}" listValue="key.data_no" listTitle="data_name" 
+	            	checkValue="${factoryinfo.ftype.key.data_no}" defaultCheckValue="1"/>
+			</td>
+			<td align="right">等级</td>
+			<td>
+	            <ui:selectlist cssStyle="width:180px;" name="flevel.key.data_no" lists="${allObjects2}" listValue="key.data_no" listTitle="data_name" 
+	            	checkValue="${factoryinfo.flevel.key.data_no}" defaultCheckValue="1"/>
+			</td>
+		</tr>
+		<tr>
+			<td align="right">加工领域</td>
+			<td>
+	            <ui:selectlist cssStyle="width:180px;" name="fdomain.key.data_no" lists="${allObjects3}" listValue="key.data_no" listTitle="data_name" 
+	            	checkValue="${factoryinfo.fdomain.key.data_no}" defaultCheckValue="1"/>
+			</td>
+			<td align="right">资质标准</td>
+			<td>
+	            <ui:selectlist cssStyle="width:180px;" name="fstandard.key.data_no" lists="${allObjects4}" listValue="key.data_no" listTitle="data_name" 
+	            	checkValue="${factoryinfo.fstandard.key.data_no}" defaultCheckValue="1"/>
+			</td>
+		</tr>
+		<tr>
+			<td style="width: 80px;" align="right">登记时间  </td>
+			<td>
+				<input type="text" name="ftime" style="width: 180px;" value="${factoryinfo.ftime}"/>
+	        </td>
+	        <td style="width: 80px;" align="right">附件 </td>
+			<td>
+				<input type="text" name="fattachment" style="width: 180px;" value="${factoryinfo.fattachment}"/>
+	        </td>
+		</tr>
+		<tr>
+			<td style="width: 80px;" align="right">备注  </td>
+			<td>
+				<input type="text" name="remark" style="width: 180px;" value="${factoryinfo.remark}"/>
+	        </td>
+	        <td style="width: 80px;" align="right">合同id </td>
+			<td>
+				<input type="text" name="contractId" style="width: 180px;" value="${factoryinfo.contractId}"/>
 	        </td>
 		</tr>
 	</table>
