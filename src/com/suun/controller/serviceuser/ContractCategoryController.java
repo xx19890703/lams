@@ -498,6 +498,19 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 			mm.setIsframe(0);
 			menuManager.saveMenu(mm);
 			
+			//合同id为父 菜单
+			String pid2 =""+System.currentTimeMillis();
+			Menu mm2 = new Menu();
+			mm2.setMenuId(pid2);
+			mm2.setMenuName(contractId+"(预览)");
+			mm2.setMenuType(2);
+			mm2.setMenuImg("/resources/images/system/group.png");
+			mm2.setMenuParid("0102");
+			mm2.setItemOrder(999);
+			mm2.setIsadmin(1);
+			mm2.setIsframe(0);
+			menuManager.saveMenu(mm2);
+			
 			for(Contract_template cts:list){
 				Menu m = new Menu();
 				m.setMenuId(""+System.currentTimeMillis());
@@ -507,11 +520,30 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 				m.setMenuParid(pid);
 				m.setItemOrder(999);
 				//判断报表是否有打开参数
-				if(null==cts.getOpenType() || "".endsWith(cts.getOpenType())){
-					m.setMenuUrl("/ReportServer?reportlet="+cts.getId().getTemplateUrl().replaceAll("\\\\", "/"));
-				}else{
-					m.setMenuUrl("/ReportServer?reportlet="+cts.getId().getTemplateUrl().replaceAll("\\\\", "/")+"&op="+cts.getOpenType());
-				}
+//				if(null==cts.getOpenType() || "".endsWith(cts.getOpenType())){
+//					m.setMenuUrl("/ReportServer?reportlet="+cts.getId().getTemplateUrl().replaceAll("\\\\", "/"));
+//				}else{
+				m.setMenuUrl("/ReportServer?reportlet="+cts.getId().getTemplateUrl().replaceAll("\\\\", "/")+"&op=true");//+cts.getOpenType());
+//				}
+				m.setIsadmin(1);
+				m.setIsframe(1);
+				menuManager.saveMenu(m);
+			}
+			
+			for(Contract_template cts:list){
+				Menu m = new Menu();
+				m.setMenuId(""+System.currentTimeMillis());
+				m.setMenuName(cts.getTemplateName());
+				m.setMenuType(3);
+				m.setMenuImg("/resources/images/system/group.png");
+				m.setMenuParid(pid2);
+				m.setItemOrder(999);
+				//判断报表是否有打开参数
+//				if(null==cts.getOpenType() || "".endsWith(cts.getOpenType())){
+				m.setMenuUrl("/ReportServer?reportlet="+cts.getId().getTemplateUrl().replaceAll("\\\\", "/"));
+//				}else{
+				//m.setMenuUrl("/ReportServer?reportlet="+cts.getId().getTemplateUrl().replaceAll("\\\\", "/")+"&op=true");//+cts.getOpenType());
+//				}
 				m.setIsadmin(1);
 				m.setIsframe(1);
 				menuManager.saveMenu(m);

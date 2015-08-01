@@ -111,6 +111,12 @@ public class ContractCategoryManager {
 		return submanager.findAll(condition);
 	}
 	
+	public List<ContractDetail> getAllContractDetails(String zzcid,String htmc,String htbh,String ssdd){
+		String hql="from ContractDetail o where o.name like ? and o.did like ? and o.orderinfo like ? and o.finfo.fno like ?";
+		List<ContractDetail> list=submanager.find(hql,"%"+htmc+"%","%"+htbh+"%","%"+ssdd+"%" ,"%"+zzcid+"%");
+		return list;
+	}
+	
 	public void saveContractCategory(ContractCategory dep) {
 		manager.save(dep);
 	}
