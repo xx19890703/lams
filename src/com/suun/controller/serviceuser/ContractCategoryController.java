@@ -540,7 +540,7 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 //				}
 				m.setIsadmin(1);
 				m.setIsframe(1);
-				menuManager.saveMenu(m);
+				menuManager.saveMenuAndFunction(m);
 			}
 			
 			for(Contract_template cts:list){
@@ -559,7 +559,7 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 //				}
 				m.setIsadmin(1);
 				m.setIsframe(1);
-				menuManager.saveMenu(m);
+				menuManager.saveMenuAndFunction(m);
 			}
 		}
 		return map;
