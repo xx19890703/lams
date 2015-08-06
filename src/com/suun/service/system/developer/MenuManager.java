@@ -1,7 +1,9 @@
 package com.suun.service.system.developer;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.hibernate.SessionFactory;
@@ -90,6 +92,16 @@ public class MenuManager {
 	
 	public void saveMenu(Menu menu){
 		menuDao.save(menu);
+	}
+	
+	public void saveMenuAndFunction(Menu menu){
+		menuDao.save(menu);
+		Function function = new Function();
+		function.setFunId("AUTH_"+(new Date()).getTime());
+		function.setMenuId(menu.getMenuId());
+		function.setFunName(menu.getMenuName());
+		function.setUrl(menu.getMenuUrl());
+		funDao.save(function);
 	}
 	
 	@SuppressWarnings("unchecked")
