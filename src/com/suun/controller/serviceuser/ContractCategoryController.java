@@ -648,4 +648,129 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 		}
 		return map;
 	}
+	
+	/**
+	 * 客户端生成数据包，给服务端提交数据
+	 * @param file
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping
+	@ResponseBody
+	public void clientupload(HttpServletRequest request, HttpServletResponse response){
+		String id = request.getParameter("contractId");
+		response.reset();
+		//获取路径
+		String reportPath = FRContext.getCurrentEnv().getPath();
+		
+		//创建临时文件夹
+		String envPath = request.getSession().getServletContext().getRealPath(File.separator + "tempfile");
+		File filePaths = new File(envPath);
+		if(!filePaths.exists() && !filePaths.isDirectory()){
+			filePaths.mkdir();    
+		} 
+		
+		ZipOutputStream zos = null;
+		String sbuffer = new String();
+		try {
+	        ContractDetail contract = mainManager.getContractDetailByContractId(id);
+	        String tempPath = envPath + File.separator +"down_" + id + "_" + System.currentTimeMillis() + ".zip";
+	        zos = new ZipOutputStream(new FileOutputStream(tempPath));
+	        DataminingStrategy strategy = factory.getStrategy();
+	        int readLength = 0;
+	        String filePath = "";
+	        
+	        //返回合同-数据库表的数据
+	        for(String temp : strategy.findTableData(contract.getDid(),"contract_mode"))
+	        	sbuffer = sbuffer + temp;
+	        //返回合同-模板url的数据
+	        for(String temp : strategy.findTableData(contract.getDid(),"contract_template"))
+	        	sbuffer = sbuffer + temp;
+	        
+	        //遍历所有模板
+	        for(ContractTemplateRes s : contract.getRescontent()){
+	        	TemplateResDetail temple = s.getTemplate();
+	        	//添加模板到zip包
+	        	filePath = reportPath + "reportlets" + File.separator + temple.getPath();
+	        	System.out.println(filePath);
+	        	File tfile = new File(filePath);  
+    			if (!tfile.exists()) {
+    				continue;
+    			}
+	        	ZipEntry tentry = new ZipEntry(temple.getPath());
+        		zos.putNextEntry(tentry);
+        		InputStream tis = new BufferedInputStream(new FileInputStream(tfile));
+    			while ((readLength = tis.read()) != -1) {
+    				zos.write(readLength);
+    			}
+    			tis.close();
+    			
+	        	//遍历所有数据库表
+	        	for(TemplateResContent tt : temple.getRescontent()){
+	        		//返回表数据查询语句
+	        		for(String temp : strategy.findTableData(contract.getDid(), tt.getName()))
+	        			sbuffer = sbuffer + temp;
+	        		filePath = reportPath + tt.getCsqlpath();
+	        		File file = new File(filePath);  
+	    			if (!file.exists()) {
+	    				continue;
+	    			}
+	    			ZipEntry entry = new ZipEntry(tt.getCsqlpath());
+	        		zos.putNextEntry(entry);
+	        		InputStream is = new BufferedInputStream(new FileInputStream(file));
+	    			while ((readLength = is.read()) != -1) {
+	    				zos.write(readLength);
+	    			}
+	    			is.close();
+	        	}
+	        }
+	        //创建insert.sql(报表数据文件)文件
+	        if (sbuffer != null && !sbuffer.trim().equals("")){
+	        	ZipEntry entry = new ZipEntry("insert.sql");
+	        	zos.putNextEntry(entry);
+	        	ByteArrayInputStream in = new ByteArrayInputStream(sbuffer.getBytes());
+				while ((readLength = in.read()) != -1) {
+					zos.write(readLength);
+				}
+				in.close();
+	        }
+	        
+	        //创建合同id.txt文件
+	        if (id != null && !id.trim().equals("")){
+	        	ZipEntry entry = new ZipEntry(id + ".txt");
+	        	zos.putNextEntry(entry);
+	        	ByteArrayInputStream in = new ByteArrayInputStream(id.getBytes());
+				while ((readLength = in.read()) != -1) {
+					zos.write(readLength);
+				}
+				in.close();
+	        }
+	        zos.close();
+	        
+	        OutputStream outputStream = new BufferedOutputStream(response.getOutputStream());
+	        InputStream input = new FileInputStream(tempPath);
+	        byte[] buffer = new byte[4096];
+	        int n = 0;
+	        while ((n = input.read(buffer)) != -1) {
+	        	outputStream.write(buffer, 0, n);
+	        }
+	        response.setHeader("Content-Disposition", "attachment; filename=\"" + id + "_" + System.currentTimeMillis() + ".zip\"");  
+	        response.setHeader("Content-Length",String.valueOf(input.read()));
+	        response.setContentType("application/octet-stream; charset=utf-8");
+	        input.close();
+	        outputStream.flush();  
+	        outputStream.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (zos != null) {
+				try {
+					zos.close();
+				} catch (Exception ex) {
+					System.out.println("zip流关闭错误:" + ex.toString());
+				}
+			}
+		}  
+	}
 }

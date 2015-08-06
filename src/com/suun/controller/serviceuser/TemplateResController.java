@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -282,8 +283,9 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 		if (!file.isEmpty()){
 			//文件上传路径
 			String path = request.getSession().getServletContext().getRealPath(File.separator + "tempfile" + File.separator + "config_" + file.getOriginalFilename());
-			//解包后xls临时路径
+			//解包后xls临时路径前缀
 			String xlspath = request.getSession().getServletContext().getRealPath(File.separator + "tempfile" + File.separator + "config_");
+			//解包后xls路径
 			String xls = "";
 			File destFile = new File(path);
 			try {
@@ -297,7 +299,7 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 					//处理以.cpt结尾的文件  及 .sql结尾的文件  .xls文件
 					String fileName = entry.getName();
 					if(fileName.endsWith(".cpt")){
-						destFile=new File(envPath,entry.getName());
+						destFile=new File(envPath + "reportlets",entry.getName());
 						if(!destFile.exists()){
 							(new File(destFile.getParent())).mkdirs();
 						}
@@ -359,6 +361,8 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 	 * @return
 	 */
 	public String readExcel(String path){
+		String cptpath = FRContext.getCurrentEnv().getPath()+ "reportlets" + File.separator + "";
+		String sqlpath = FRContext.getCurrentEnv().getPath();
 		//定义sheet名称
 		String [] sheets = {"templateres", "templateres_detail", "templateres_content"};
 		// 构造 Workbook 对象，strPath 传入文件路径  
@@ -412,7 +416,11 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 				   TemplateResDetail tempdetail = new TemplateResDetail();
 				   tempdetail.setDid(row.getCell(0).toString());
 				   tempdetail.setName(row.getCell(1).toString());
-				   tempdetail.setPath(row.getCell(2).toString());
+				   String str = cptpath+row.getCell(2).toString().replaceAll("\\\\", Matcher.quoteReplacement(File.separator));
+				   if(new File(str).exists())
+					   tempdetail.setPath(row.getCell(2).toString());
+				   else
+					   return sheets[1]+"中"+row.getCell(2).toString()+"文件不存在！";
 				   tempdetail.setResmain(tempres);
 				   tempdetail.setState(dicManager.getByKey("STATE", "1"));
 				   mainManager.saveTemplateResDetail(tempdetail);
@@ -435,7 +443,10 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 					TemplateResContent tempcontent = new TemplateResContent();
 					tempcontent.setDid(row.getCell(0).toString());
 					tempcontent.setName(row.getCell(1).toString());
-					tempcontent.setCsqlpath(row.getCell(2).toString());
+					if(new File(sqlpath+row.getCell(2).toString().replaceAll("\\\\", Matcher.quoteReplacement(File.separator))).exists())
+						tempcontent.setCsqlpath(row.getCell(2).toString());
+				   else
+					   return sheets[2]+"中"+row.getCell(2).toString()+"文件不存在！";
 					tempcontent.setIsqlpath(row.getCell(3).toString());
 					tempcontent.setResdetail(resdetail);
 					tempcontent.setState(dicManager.getByKey("STATE", "1"));
