@@ -144,14 +144,6 @@ public class ContractCategoryManager {
 	}
 	
 	public void saveContractDetail(ContractDetail sub) {
-		//submanager.delete(sub.getDid());
-		//List<ContractTemplateRes> tempRes = conmanager.findByProperty("condetail.did", sub.getDid());
-//		sub.setRescontent(null);
-//	    for(ContractTemplateRes temp : tempRes){
-//	    	conmanager.delete(temp);
-//		}
-//	    conmanager.getSession().flush();
-	    
 	    // 保存子表
 		for(ContractTemplateRes temp : sub.getRescontent()){
 			List<TemplateResContent> ress = templatecmanager.findByProperty("resdetail.did", temp.getTemplate().getDid());

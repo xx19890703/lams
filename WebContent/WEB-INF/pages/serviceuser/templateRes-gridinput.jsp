@@ -13,42 +13,39 @@
 	    <script type="text/javascript" src="${ctx}/resources/js/thrid/validate/jquery.metadata.js"></script>
 	    <script type="text/javascript" src="${ctx}/resources/js/system/core/ux/FileUploadField.js"></script>
 		<script>
-		/* $("form:first").validate({
-			rules: { 
-				funId: { 
-        			required: true, 
-        			beginauth: true,
-        			maxlength: 30,
-        			remote: {url:'${ctx}/system/developer/menu!validateFunId',
+			$("form:first").validate({
+				rules: { 
+					did: { 
+		    			required: true, 
+		    			maxlength: 30,
+		    			remote: {url:'${ctx}/serviceuser/templateRes!checkdgridid',
+							     type:'post',
+							     data:{oldid:'${templateresdetail.did}'}
+				        }
+		    		 } ,
+		     		name:  { 
+		    			 required: true,
+		    			 maxlength: 60,
+		    			 remote: {url:'${ctx}/serviceuser/templateRes!checkgridname',
 						     type:'post',
-						     data:{oldid:'${function.funId}',menuid:'${treeid}'}
+						     data:{oldid:'${templateresdetail.name}'}
 			        }
-        		 } ,
-        		 funName: { 
-         			required: true,
-         			maxlength: 20
-         		 } ,
-        		 url:  { 
-        			 beginurl:true,
-        			 maxlength: 200
-        		 }	
-		    },
-		 	messages: {
-		 		funId: { 
-        			required: "功能编号不能为空！", 
-        			maxlength: "功能编号的长度不能超过30！",
-        			remote: '功能编号已存在！'
-        		 } ,
-        		 funName: { 
-         			required:  "功能名称不能为空！", 
-        			maxlength: "功能名称的长度不能超过20！"
-         		 } ,
-        		 url:  { 
-        			maxlength:  "URL的长度不能超过200！"
-        		 }	
-			}
-		}); */
-		$.SuunRept({jsonbean:${jsonbean},beanname:"rescontent",detailnames:"resdetail.did,did,name,csqlpath,description,state.key.data_no",required:true});
+		    		 }	
+			    },
+			 	messages: {
+			 		did: { 
+		    			required: "模板编号不能为空！", 
+		    			maxlength: "模板编号长度不能超过30！",
+		    			remote: "模板编号已存在！"
+		    		 } ,
+		     		 name:  { 
+		    			 required:  "模板名称不能为空！",
+		    			 maxlength: "模板名称长度不能超过60！",
+		    			 remote: "模板名称已存在！"
+		    		 }	
+				}
+			});
+			$.SuunRept({jsonbean:${jsonbean},beanname:"rescontent",detailnames:"resdetail.did,did,name,csqlpath,description,state.key.data_no",required:true});
         </script>
 	</head>
 	<body>
@@ -73,10 +70,10 @@
 			    <td  align="right">状态</td>
 				<td>     
 					<input type="hidden" name="state.key.dic_no" value="STATE"/>
-		        <select name="state.key.data_no" style="width:170;">
+		        <select name="state.key.data_no" style="width:174px;">
 				<c:forEach var="mystatus" items="${status}">
 					<c:choose >
-						<c:when test="${isEdit&&mystatus.key.data_no==templateres.state.key.data_no}">
+						<c:when test="${isEdit && mystatus.key.data_no==templateresdetail.state.key.data_no}">
 							<option selected value="${mystatus.key.data_no}">${mystatus.data_name}</option>
 						</c:when>	  
 		              	<c:otherwise>
@@ -100,8 +97,8 @@
 			      <tr class="items">
 			     	 	<input type="hidden" name="resdetail.did" value="${resdetail.did}"/> 
 					    <td align="center"><input type="text" class="sysindex" style="width:40px;" name="did" /></td>    
-						<td align="center"><input type="text" style="width:200px;" name="name" /></td>
-						<td align="center"><input type="text" style="width:200px;" name="csqlpath"/></td>
+						<td align="center"><input type="text" style="width:200px;" class="{required:true,messages:{required:'第【】行数据库表不能为空！'}}" name="name" /></td>
+						<td align="center"><input type="text" style="width:200px;" class="{required:true,messages:{required:'第【】行表创建语句不能为空！'}}" name="csqlpath"/></td>
 						<td align="center"><input type="text" style="width:200px;" name="description"/></td>
 			      </tr>
 		  </table>

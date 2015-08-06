@@ -1,11 +1,16 @@
 package com.suun.service.serviceuser;
 
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.hibernate4.SessionFactoryUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,12 +35,18 @@ public class TemplateResManager {
 	private SimpleHibernateTemplate<TemplateRes, String> manager;
 	private SimpleHibernateTemplate<TemplateResDetail, String> submanager;
 	private SimpleHibernateTemplate<TemplateResContent, String> conmanager;
-	
+	private SessionFactory sessionFactory;
+
 	@Autowired
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		manager = new SimpleHibernateTemplate<TemplateRes, String>(sessionFactory, TemplateRes.class);
 		submanager = new SimpleHibernateTemplate<TemplateResDetail, String>(sessionFactory, TemplateResDetail.class);
 		conmanager = new SimpleHibernateTemplate<TemplateResContent, String>(sessionFactory, TemplateResContent.class);
+		this.sessionFactory=sessionFactory;		
+	}
+	
+	public SessionFactory getSessionFactory() {
+		return sessionFactory;
 	}
 	
 	@Transactional(readOnly = true)
@@ -74,7 +85,17 @@ public class TemplateResManager {
 	
 	@Transactional(readOnly = true)
 	public TemplateRes getTemplateRes(String depid) {
-		return manager.get(depid);
+		return manager.get1(depid);
+	}
+	
+	@Transactional(readOnly = true)
+	public TemplateResDetail getTemplateResDetail(String detailId){
+		return submanager.get1(detailId);
+	}
+	
+	@Transactional(readOnly = true)
+	public TemplateResContent getTemplateResContent(String id){
+		return conmanager.get1(id);
 	}
 	
 	public void deleteTemplateRes(String depid) {
@@ -91,17 +112,11 @@ public class TemplateResManager {
 	@Transactional(readOnly = true)
 	public List<TemplateResDetail> getAllTemplateRes(String id,Condition condition){
 		com.suun.publics.hibernate.FilterInfo f=new com.suun.publics.hibernate.FilterInfo();
-		f.setFieldName("mid");
+		f.setFieldName("resmain.did");
 		f.setLogic(Logic.EQUAL);
 		f.setValue(id);
 		condition.getFilterInfos().add(f);
 		return submanager.findAll(condition);
-	}
-	
-	public void saveTemplateRes(TemplateRes dep) {
-		//从JSP提交的Employeeid为""
-		//if (dep.getHeader().getEmployeeid()=="") dep.setHeader(null);
-		manager.save(dep);
 	}
 	
 	@Transactional(readOnly = true)
@@ -116,20 +131,20 @@ public class TemplateResManager {
 		return submanager.findAll(page);
 	}
 	
+	public void saveTemplateRes(TemplateRes dep) {
+		manager.save(dep);
+	}
+	
 	public void saveTemplateResDetail(TemplateResDetail sub) {
-//		List<TemplateResContent> auths=conmanager.findByProperty("resdetail.did", sub.getDid());
-//	    for(TemplateResContent auth:auths){
-//	    	conmanager.delete(auth);
-//		}
-//	    conmanager.getSession().flush();
-		//一样的，因为Authority ManyToOne authgroups CascadeType.ALL
-		//authgroupsDao.delete(authgroups.getAuthGroupId());
-		//authgroupsDao.getSession().flush();		
-		for(TemplateResContent auth : sub.getRescontent()){
-			auth.setResdetail(sub);
-			conmanager.save(auth);
+		for(TemplateResContent content : sub.getRescontent()){
+			content.setResdetail(sub);
+			conmanager.save(content);
 		}	
 		submanager.save(sub);
+	}
+	
+	public void saveTemplateResContent(TemplateResContent sub) {
+		conmanager.save(sub);
 	}
 	
 	//删除所有模板
@@ -158,6 +173,31 @@ public class TemplateResManager {
 		    return list.get(0);
 		}else{
 			return null;
+		}
+	}
+	
+	@Transactional(readOnly = true)
+	public boolean isGridDidUnique(String did, String olddid) {
+		return submanager.isUnique("did", did, olddid);
+	}
+	
+	@Transactional(readOnly = true)
+	public boolean isGridNameUnique(String did, String olddid) {
+		return submanager.isUnique("name", did, olddid);
+	}
+	
+	@Transactional(readOnly = true)
+	public boolean isExistTable(String name) {
+		Connection conn;
+		try {
+			conn = SessionFactoryUtils.getDataSource(getSessionFactory()).getConnection();
+			DatabaseMetaData  dm =conn.getMetaData();
+			ResultSet rs = dm.getTables(conn.getCatalog(), "root", name, new String[]{"TABLE"});
+			boolean flag = rs.next();
+			return flag;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
 		}
 	}
 

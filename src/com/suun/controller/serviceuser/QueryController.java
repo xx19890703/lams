@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.suun.model.serviceuser.ContractDetail;
 import com.suun.model.serviceuser.ContractTemplateRes;
-import com.suun.model.serviceuser.FactoryInfo;
 import com.suun.publics.controller.BaseCRUDController;
 import com.suun.publics.hibernate.Condition;
 import com.suun.publics.hibernate.Page;

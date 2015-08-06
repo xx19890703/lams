@@ -87,7 +87,7 @@ public class TemplateResDetail {
 		this.resmain = resmain;
 	}
 	
-	@OneToMany(cascade = { CascadeType.REFRESH, CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REMOVE },mappedBy ="resdetail",orphanRemoval=true)
+	@OneToMany(cascade = { CascadeType.REFRESH, CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REMOVE },mappedBy ="resdetail")
 	@NotFound(action = NotFoundAction.IGNORE)
 	@JsonManagedReference//主需要子的数据JSON转换
 	public List<TemplateResContent> getRescontent() {

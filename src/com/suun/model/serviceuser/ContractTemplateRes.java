@@ -3,6 +3,7 @@ package com.suun.model.serviceuser;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -16,7 +17,6 @@ import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.suun.model.IdEntity;
 import com.suun.model.system.Dic_data;
 
 /**
@@ -26,7 +26,9 @@ import com.suun.model.system.Dic_data;
 @Entity
 @Table(name = "app_contract_templateres")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class ContractTemplateRes extends IdEntity{
+public class ContractTemplateRes{
+	// 编号
+	private String id;
 	// 名称
 	private String name;
 	// 关联报表模板
@@ -39,6 +41,15 @@ public class ContractTemplateRes extends IdEntity{
 	private ContractDetail condetail;
 	// 状态
 	private Dic_data state;
+	
+	@Id
+    @Column(length=30)
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
 	
 	@Column(length=50)
 	public String getName() {

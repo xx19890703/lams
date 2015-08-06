@@ -12,30 +12,50 @@
     <script type="text/javascript" src="${ctx}/resources/js/thrid/validate/messages_cn.js"></script>
     <script type="text/javascript" src="${ctx}/resources/js/thrid/validate/jquery.metadata.js"></script>
     <script>
-   jQuery("#factoryinfo2").suunDateTime({
-							showsTime: true,
-							ifFormat: "%Y/%m/%d-%H:%M",
-							daFormat: "%l;%M %p, %e %m,  %Y",
-							//align: "TL",
-							electric: false,
-							singleClick: true,
-							step           :    1,
-							button: ".next()" //next sibling
-						});      	
-/*     Calendar.setup({
-        inputField     :    "factoryinfo",      // id of the input field
-        ifFormat       :    "%m/%d/%Y %I:%M %p",       // format of the input field
-        showsTime      :    true,            // will display a time selector
-        button         :    "f_trigger_b",   // trigger for the calendar (button ID)
-        singleClick    :    true,           // double-click mode
-        step           :    1                // show all years in drop-down boxes (instead of every other year as default)
-    }); */
-    jQuery("#txt1").suunDateTime();//此方法会新建一个Calendar，不是整个页面共用一个，最好用以下方法
-    
-    SuunCalendar.iniCalendar();
-    function setupDateTime(me){
-    	SuunCalendar.show(me,{ifFormat: "%Y-%m-%d %H:%M:%S",showsTime: true});
-    }
+	    $("form:first").validate({
+			rules: { 
+				fno: { 
+	    			required: true, 
+	    			maxlength: 30,
+	    			remote: {url:'${ctx}/serviceuser/factoryInfo!checkfno',
+						     type:'post',
+						     data:{oldid:'${factoryinfo.fno}'}
+			        }
+	    		 } ,
+	    		 fname: { 
+	     			required: true,
+	     			maxlength: 30
+	     		 } ,
+	     		fregister:  { 
+	    			 required: true,
+	    			 maxlength: 60,
+	    			 remote: {url:'${ctx}/serviceuser/factoryInfo!checkfregister',
+					     type:'post',
+					     data:{oldid:'${factoryinfo.fregister}'}
+		        }
+	    		 }	
+		    },
+		 	messages: {
+		 		fno: { 
+	    			required: "制造厂编号不能为空！", 
+	    			maxlength: "制造厂编号长度不能超过30！",
+	    			remote: "制造厂编号已存在！"
+	    		 } ,
+	    		 fname: { 
+	     			required:  "制造厂名称不能为空！", 
+	    			maxlength: "制造厂名称长度不能超过30！"
+	     		 } ,
+	     		 fregister:  { 
+	    			 required:  "制造厂注册码不能为空！",
+	    			 maxlength: "制造厂注册码长度不能超过60！",
+	    			 remote: "制造厂注册码已存在！"
+	    		 }	
+			}
+		});
+	    SuunCalendar.iniCalendar();
+	    function setupDateTime(me){
+	    	SuunCalendar.show(me,{ifFormat: "%Y-%m-%d %H:%M:%S",showsTime: true});
+	    }
      </script>
       
 </head>    
@@ -47,10 +67,10 @@
 			<td>
 			   <c:choose>		  
 			     <c:when test="${isEdit}">
-			         <input type="text" name="fno" style="width: 180px;" value="${factoryinfo.fno}" />
+			         <input type="text" name="fno" style="width: 180px;" readonly="readonly" value="${factoryinfo.fno}" />
 			      </c:when>		  
 	              <c:otherwise>
-	                 <input type="text" name="fno" style="width: 180px;" readonly="readonly" value="${factoryinfo.fno}" />                     
+	                 <input type="text" name="fno" style="width: 180px;" value="${factoryinfo.fno}" />                     
 	              </c:otherwise>
 	          </c:choose>        
 	        </td>
@@ -118,19 +138,15 @@
 			<td>
 				<input type="text" name="ftime" style="width: 180px;" value="${factoryinfo.ftime}"/>
 	        </td>
-	        <td style="width: 80px;" align="right">附件 </td>
+	        <td style="width: 80px;" align="right">附件</td>
 			<td>
 				<input type="text" name="fattachment" style="width: 180px;" value="${factoryinfo.fattachment}"/>
 	        </td>
 		</tr>
 		<tr>
-			<td style="width: 80px;" align="right">备注  </td>
+			<td style="width: 80px;" align="right">备注</td>
 			<td>
 				<input type="text" name="remark" style="width: 180px;" value="${factoryinfo.remark}"/>
-	        </td>
-	        <td style="width: 80px;" align="right">合同id </td>
-			<td>
-				<input type="text" name="contractId" style="width: 180px;" value="${factoryinfo.contractId}"/>
 	        </td>
 		</tr>
 	</table>

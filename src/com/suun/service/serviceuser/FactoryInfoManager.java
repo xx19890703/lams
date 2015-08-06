@@ -58,8 +58,13 @@ public class FactoryInfoManager {
 	}
 
 	@Transactional(readOnly = true)
-	public boolean isFactoryInfoUnique(String value, String oldvalue) {
+	public boolean isFnoUnique(String value, String oldvalue) {
 		return manager.isUnique("fno", value, oldvalue);
+	}
+	
+	@Transactional(readOnly = true)
+	public boolean isFregisterUnique(String value, String oldvalue) {
+		return manager.isUnique("fregister", value, oldvalue);
 	}
 	
 }

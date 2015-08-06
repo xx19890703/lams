@@ -114,6 +114,11 @@ public class SimpleHibernateTemplate<T, PK extends Serializable> {
 	/**
 	 * 按id获取对象.
 	 */
+	
+	public T get1(final PK id) {
+		return (T) getSession().get(entityClass, id);
+	}
+	
 	public T get(final PK id) {
 		return (T) getSession().load(entityClass, id);
 	}

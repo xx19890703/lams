@@ -4,16 +4,55 @@
 <html>
 	<head>
 	   <title>合同信息配置</title>
+       <link rel="stylesheet" type="text/css" media="all" href="${ctx}/resources/js/thrid/calendar/calendar-blue.css"  />
 	   <script type="text/javascript" src="${ctx}/resources/js/thrid/validate/jquery.validate.js"></script>
        <script type="text/javascript" src="${ctx}/resources/js/thrid/validate/messages_cn.js"></script>
        <script type="text/javascript" src="${ctx}/resources/js/thrid/validate/jquery.metadata.js"></script>
-       <link rel="stylesheet" type="text/css" media="all" href="${ctx}/resources/js/thrid/calendar/calendar-blue.css"  />
 	    <script type="text/javascript" src="${ctx}/resources/js/thrid/calendar/jquery.calendar.js"/>
 	    <script type="text/javascript" src="${ctx}/resources/js/thrid/calendar/calendar-cn-utf8.js"></script>
 		<script type="text/javascript" src="${ctx}/resources/js/system/core/detail.js"></script>
 		<script type="text/javascript" src="${ctx}/resources/js/system/core/gridsel.js"></script>
 		<script type="text/javascript" src="${ctx}/resources/js/system/core/treegridsel.js"></script>
 		<script>
+			$("form:first").validate({
+				rules: { 
+					did: { 
+	        			required: true, 
+	        			maxlength: 30,
+	        			remote: {url:'${ctx}/system/developer/menu!validateFunId',
+							     type:'post',
+							     data:{oldid:'${function.funId}',menuid:'${treeid}'}
+				        }
+	        		 } ,
+	        		 name: { 
+	         			required: true,
+	         			maxlength: 20
+	         		 } ,
+	        		 'finfo.fno':  { 
+	        			 required: true
+	        		 }	
+			    },
+			 	messages: {
+			 		did: { 
+	        			required: "合同编号不能为空！", 
+	        			maxlength: "合同编号的长度不能超过30！",
+	        			remote: '合同编号已存在！'
+	        		 } ,
+	        		 name: { 
+	         			required:  "合同名称不能为空！", 
+	        			maxlength: "合同名称的长度不能超过20！"
+	         		 } ,
+	        		 'finfo.fno':  { 
+	        			 required:  "制造厂信息不能为空！"
+	        		 }	
+				}
+			}); 
+			
+			SuunCalendar.iniCalendar();
+	        function setupDateTime(me){
+	        	SuunCalendar.show(me,{showsTime: true,ifFormat: "%Y-%m-%d %H:%M:%S"});
+	        }
+	        
 			function selectfactory(me){		
 				gridselect({listurl:$ctx+'/serviceuser/factoryInfo!lists',//基本url
 					suuncolumns:[{columnid:'fno',columnname:'制造厂编号',colwidth:20,defaultsort:true},
@@ -25,49 +64,44 @@
 					}
 				});
 			}
-		
-		SuunCalendar.iniCalendar();
-        function setupDateTime(me){
-        	SuunCalendar.show(me,{showsTime: true,ifFormat: "%Y-%m-%d %H:%M:%S"});
-        }
         
-        function showReport(url,type){
-        	new Ext.Window({
-    			title : '报表展现',
-    			width : 800,
-    			height : 600,
-    			layout : 'fit',
-    			plain : true,
-    			closeAction : 'close',
-    			modal: true,
-    			bodyStyle : 'background-color:white;padding:0px;',
-    			buttonAlign : 'center',
-    			html: '<iframe style="background-color:white;overflow:auto;width:100%; height:100%;" src="${ctx}/ReportServer?reportlet='+url+'&op='+type+'" frameborder="0"></iframe>',
-    		}).show(); 
-        }
+	        function showReport(url,type){
+	        	new Ext.Window({
+	    			title : '报表展现',
+	    			width : 800,
+	    			height : 600,
+	    			layout : 'fit',
+	    			plain : true,
+	    			closeAction : 'close',
+	    			modal: true,
+	    			bodyStyle : 'background-color:white;padding:0px;',
+	    			buttonAlign : 'center',
+	    			html: '<iframe style="background-color:white;overflow:auto;width:100%; height:100%;" src="${ctx}/ReportServer?reportlet='+url+'&op='+type+'" frameborder="0"></iframe>',
+	    		}).show(); 
+	        }
         
-        function selecttemp(me){		
-        	treegridselect({baseurl:$ctx+"/serviceuser/templateRes",//基本url
-				tree:{
-					width:'30%'//默认40%
-				},
-				grid:{
-					pagenum:10,//页记录数 默认20
-					suuncolumns:[{columnid:'did',columnname:'编号',colwidth:20,defaultsort:true},
-						 {columnid:'name',columnname:'名称',colwidth:40},
-						 {columnid:'path',columnname:'模版文件',colwidth:40}  ]
-				},
-				winWidth:650,
-				winHeight:350,
-				callback:function(records){
-					me.value=records[0].get('name');
-					$(me).parent().next().val(records[0].get('did'));
-				}
-			});
-		}
-        
-        $.SuunRept({jsonbean:${jsonbean},beanname:"rescontent",detailnames:"name,template.name,template.did,openType,description,condetail.did,state.key.data_no",required:true});
-        
+	        function selecttemp(me){		
+	        	treegridselect({baseurl:$ctx+"/serviceuser/templateRes",//基本url
+					tree:{
+						width:'30%'//默认40%
+					},
+					grid:{
+						pagenum:10,//页记录数 默认20
+						suuncolumns:[{columnid:'did',columnname:'编号',colwidth:20,defaultsort:true},
+							 {columnid:'name',columnname:'名称',colwidth:40},
+							 {columnid:'path',columnname:'模版文件',colwidth:40}  ]
+					},
+					winWidth:650,
+					winHeight:350,
+					callback:function(records){
+						me.value=records[0].get('name');
+						$(me).parent().next().val(records[0].get('did'));
+					}
+				});
+			}
+	        $(document).ready(function(){
+        		$.SuunRept({jsonbean:${jsonbean},beanname:"rescontent",detailnames:"id,name,template.name,template.did,openType,description,condetail.did,state.key.data_no",required:true});
+	        });
         </script>
 	</head>
 	<body>
@@ -98,24 +132,18 @@
 			<tr>
 				<td width="100" align="right">导出时间</td>
 				<td width="240"> 
-					<div style="background-color:white;border:1px solid #7f9db9;display:inline-block;padding:0;white-space:nowrap;width:174px;height:18px;cursor:pointer;text-align:left;"> 
-                		<input name="importTime" class="JuiCssed" type="text" style="vertical-align:middle;border:0px;cursor:pointer;height:17px;width:158px;" onblur="validateTime(this)" value='<fmt:formatDate value="${contractdetail.importTime}" pattern="yyyy-MM-dd"/>'>
-                		<img style="vertical-align:middle;border:0px;cursor:pointer;height:16px;width:16px;" src="${ctx}/resources/js/system/core/ui/images/calendar.png" onclick="sss(this)"> 
-            		</div>
+					<input class="datew" style="width:174px;" name="importTime" type="text" onclick="JavaScript:setupDateTime(this);" value="${contractdetail.importTime}"/>
            	 	</td>
 				<td width="100" align="right">预计导入时间</td>
 				<td width="240">
-					<div style="background-color:white;border:1px solid #7f9db9;display:inline-block;padding:0;white-space:nowrap;width:174px;height:18px;cursor:pointer;text-align:left;"> 
-                		<input name="planImportTime" class="JuiCssed" type="text" style="vertical-align:middle;border:0px;cursor:pointer;height:17px;width:158px;" onblur="validateTime(this)" value='<fmt:formatDate value="${contractdetail.planImportTime}" pattern="yyyy-MM-dd"/>'>
-                		<img style="vertical-align:middle;border:0px;cursor:pointer;height:16px;width:16px;" src="${ctx}/resources/js/system/core/ui/images/calendar.png" onclick="sss(this)"> 
-            		</div>
+					<input class="datew" style="width:174px;" name="planImportTime" type="text" onclick="JavaScript:setupDateTime(this);" value="${contractdetail.planImportTime}"/>
 				</td>
 			</tr>
 			<tr>
 			    <td  align="right">状态</td>
 				<td >     
 				 <input type="hidden" name="state.key.dic_no" value="STATE"/>
-		        <select name="state.key.data_no" style="width:170;">
+		        <select name="state.key.data_no" style="width:174px;">
 				<c:forEach var="mystatus" items="${status}">
 					<c:choose >
 						<c:when test="${isEdit&&mystatus.key.data_no==contractdetail.state.key.data_no}">
@@ -131,22 +159,22 @@
 			</tr>
 		</table>
 		<br>
-	  <div style="position:relative;overflow:auto; width:750px;">
-	  <table class="suunRept" width="100%" border="1" cellpadding="0" cellspacing="0"> 
-	      <tr>     
-	          <td align="center">编号</td>    
-			  <td align="center">报表名称</td>
-			  <td align="center">报表浏览方式</td>
-			  <td>预览</td>
-	      </tr>
-		      <tr class="items">         
-		      	<input type="hidden" name="resdetail.did" value="${condetail.did}"/>
-				   	<td align="center"><input type="text" class="sysindex" style="width:40px;"/></td>    
-					<td align="center"><input type="text" class="dataa" onclick="selecttemp(this);" name="name" /><input type="hidden" name="template.did" /></td>
-		      		<td align="center"><input type="text" name="openType" /></td>
-		      		<td align="center"><input type="button" value="预览" onclick="showReport('${fn:replace(item.template.path,"\\", "/")}','${item.openType}')"></td>
+	  <div style="margin-left: 50px;position:relative;overflow:auto; width:600px;">
+		  <table class="suunRept" width="100%" border="1" cellpadding="0" cellspacing="0"> 
+		      <tr>     
+		          <td align="center">编号</td>    
+				  <td align="center">报表名称</td>
+				  <td align="center">报表浏览方式</td>
+				  <td>预览</td>
 		      </tr>
-	  </table>
+			      <tr class="items">         
+			      	<input type="hidden" name="resdetail.did" value="${condetail.did}"/>
+					   	<td align="center"><input type="text" name="id" class="sysindex" style="width:40px;"/></td>    
+						<td align="center"><input type="text" class="dataa" style="width:200px;" onclick="selecttemp(this);" name="name" class="{required:true,messages:{required:'第【】行报表不能为空！'}}"/><input type="hidden" name="template.did" /></td>
+			      		<td align="center"><input type="text" style="width:80px;" name="openType" class="{required:true,messages:{required:'第【】行报表打开方式不能为空！'}}"/></td>
+			      		<td align="center"><input type="button" value="预览" onclick="showReport('${fn:replace(item.template.path,"\\", "/")}','${item.openType}')"></td>
+			      </tr>
+		  </table>
 	  </div>
 	</body>
 </html>

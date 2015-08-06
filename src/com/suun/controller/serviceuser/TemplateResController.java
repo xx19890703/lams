@@ -1,31 +1,36 @@
 package com.suun.controller.serviceuser;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FilenameFilter;
-import java.io.OutputStream;
-import java.net.URLEncoder;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fr.base.FRContext;
-import com.fr.base.dav.Env;
-import com.fr.base.dav.LocalEnv;
-import com.fr.report.WorkBook;
-import com.fr.report.io.TemplateImporter;
-import com.fr.report.io.core.EmbeddedTableDataExporter;
 import com.suun.model.serviceuser.TemplateRes;
 import com.suun.model.serviceuser.TemplateResContent;
 import com.suun.model.serviceuser.TemplateResDetail;
@@ -33,7 +38,6 @@ import com.suun.model.system.Constant;
 import com.suun.publics.controller.TreeGridCRUDController;
 import com.suun.publics.hibernate.Condition;
 import com.suun.publics.hibernate.Page;
-import com.suun.service.serviceuser.TemplateResDeatilManager;
 import com.suun.service.serviceuser.TemplateResManager;
 import com.suun.service.system.DicManager;
 
@@ -48,8 +52,6 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 
 	@Autowired
 	TemplateResManager mainManager;
-	@Autowired
-	TemplateResDeatilManager gridManager;
 	@Autowired 
 	DicManager dicManager;
 	
@@ -77,19 +79,6 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 		}else{
 			return renderText(response,"false");
 		}
-	}
-	
-	@RequestMapping
-	public String getTemplateRes(HttpServletRequest request,HttpServletResponse response) {
-//		Condition condition=new Condition();
-//		condition.setFilterInfos(new ArrayList<FilterInfo>());
-//		List<TemplateResDetail> res = manager.getAllTemplateRes(request.getParameter("pid"),condition);
-//		String existids="";
-//		for (TemplateResDetail temp : res){
-//			existids = temp.getEmployee().getEmployeeid()+"@"+existids;
-//		}
-//		return this.renderText(response, existids);		
-		return "";
 	}
 	
 	@Override
@@ -193,7 +182,7 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 			
         	for (int i=0;i<ids.length;i++){			
         		mainManager.deleteTemplateResContent(ids[i]);
-        		mainManager.deleteTemplateResDetail(treeid,ids[i]);//传入的是employee id
+        		mainManager.deleteTemplateResDetail(treeid,ids[i]);//传入的是 id
     		}
     		return "";
 		}catch (Exception e){
@@ -203,10 +192,18 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 
 	@Override
 	protected String saveGridRecordSet(HttpServletRequest request,TemplateResDetail operatebean) {
+		if(operatebean.getRescontent().size()==0)
+			return "请填写明细表数据！";
+		//判断数据表在数据库中是否存在
+		for(TemplateResContent trc:operatebean.getRescontent()){
+			if(!mainManager.isExistTable(trc.getName())){
+				return "表【" + trc.getName() + "】不存在，请检查后提交！";
+			}
+		}
 		mainManager.deleteTemplateResContent(operatebean.getDid());
 		try{
 			for(TemplateResContent trc:operatebean.getRescontent()){
-				trc.setDid(operatebean.getDid()+trc.getDid());
+				trc.setDid(operatebean.getDid()+"-"+trc.getDid());
 			}
 			mainManager.saveTemplateResDetail(operatebean);
 			return "";
@@ -246,88 +243,212 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 	
 	@RequestMapping
 	@ResponseBody
-	public void downPZip(String id, HttpServletResponse response){  
-	    
-		byte[] data = null;
-	 // 定义报表运行环境,才能执行报表  
-        //String envPath = "D:\\FineReport_6.5\\WebReport\\WEB-INF"; 
-        Env oldEnv = FRContext.getCurrentEnv();  
-        String envPath = oldEnv.getPath();  
-        System.out.println(envPath);
-        FRContext.setCurrentEnv(new LocalEnv(envPath)); 
-        File file = new File(envPath+"\\reportlets\\");
-        //文件后缀名过滤
-        String [] temp = file.list(new FilenameFilter(){
-            public boolean accept(File f , String name){
-                return name.endsWith(".cpt");  
-            }    
-        });
-        for(String s : temp){
-        	System.out.print(envPath+"\\"+s);
-	        try {
-	            // 未执行模板工作薄  
-	            File cptfile = new File(envPath+"\\reportlets\\"+s);  
-	            TemplateImporter tplImp = new TemplateImporter();  
-	            WorkBook workbook = tplImp.generateWorkBook(cptfile);
-	            // 获取报表参数并设置值，导出内置数据集时数据集会根据参数值查询出结果从而转为内置数据集  
-//	            Parameter[] parameters = workbook.getParameters();  
-//	            parameters[0].setValue("2015-06-10");  
-	            // 定义parametermap用于执行报表，将执行后的结果工作薄保存为rworkBook  
-	//            java.util.Map parameterMap = new java.util.HashMap();  
-	//            for (int i = 0; i < parameters.length; i++) {  
-	//                parameterMap.put(parameters[i].getName(), parameters[i].getValue());  
-	//            }
-	            // 定义输出流  
-	            FileOutputStream outputStream1;  
-	            // 将未执行模板工作薄导出为内置数据集模板  
-	            outputStream1 = new FileOutputStream(new File("E:\\test\\"+s));  
-	            EmbeddedTableDataExporter EmbExport = new EmbeddedTableDataExporter();  
-	            EmbExport.export(outputStream1, workbook);
-	            
-	//            //通过名称查找数据源
-	            /*NameDatabaseConnection nconn = new NameDatabaseConnection("erp");
-	            Connection conn = nconn.createConnection();
-	            //Statement s1 = conn.createStatement();
-	            //s1.execute("show create table demo");
-	            //s1.executeUpdate("CREATE TABLE if not exists erp_test_v1 (`id` varchar(255) default NULL,`name` varchar(255) default NULL);");
-	            String sql = "show create table erp_customer";
-	            PreparedStatement pstmt;
-	            try {
-	                pstmt = (PreparedStatement)conn.prepareStatement(sql);
-	                ResultSet rs = pstmt.executeQuery();
-	                int col = rs.getMetaData().getColumnCount();
-	                System.out.println("*********************");
-	                while (rs.next()) {
-	                    for (int i = 1; i <= col; i++) {
-	                        System.out.print(rs.getString(i) + "\t");
-	                        if ((i == 2) && (rs.getString(i).length() < 8)) {
-	                        }
-	                     }
-	                    System.out.println("");
-	                }
-	                    System.out.println("***************");
-	            } catch (SQLException e) {
-	                e.printStackTrace();
-	            }*/
-	//
-	        } catch (Exception e) {  
-	            e.printStackTrace();  
-	        }
-	        
-        }
-        try {
-        	String fileName = System.currentTimeMillis()+".zip";  
-        	fileName = URLEncoder.encode(fileName, "UTF-8");  
-        	response.reset();  
-        	response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");  
-        	response.setContentType("application/octet-stream;charset=UTF-8");  
-        	OutputStream outputStream = new BufferedOutputStream(response.getOutputStream());  
-        	outputStream.write(data);  
-        	outputStream.flush();  
-        	outputStream.close();  
-        } catch (Exception e) {
-        	e.printStackTrace();
-        }
-        
+	public String checkgriddid(HttpServletRequest request,HttpServletResponse response) {	
+		String id = request.getParameter("did");
+		String oldid = request.getParameter("oldid");
+		
+		if(mainManager.isGridDidUnique(id, oldid)){
+			return renderText(response,"true");
+		}else{
+			return renderText(response,"false");
+		}
+	}
+	
+	@RequestMapping
+	@ResponseBody
+	public String checkgridname(HttpServletRequest request,HttpServletResponse response) {	
+		String id = request.getParameter("name");
+		String oldid = request.getParameter("oldid");
+		
+		if(mainManager.isGridNameUnique(id, oldid)){
+			return renderText(response,"true");
+		}else{
+			return renderText(response,"false");
+		}
+	}
+	
+	/**
+	 * 服务端解析    配置模板包的数据
+	 * 
+	 * @param file
+	 * @param request
+	 * @param response
+	 * @return  前端extjs form.getForm().submit 需要返回类型为text/html  故返回String
+	 */
+	@RequestMapping
+	@ResponseBody
+	public String configupload(@RequestParam("file") MultipartFile file, HttpServletRequest request, HttpServletResponse response){
+		String returnStr = "";
+		if (!file.isEmpty()){
+			//文件上传路径
+			String path = request.getSession().getServletContext().getRealPath(File.separator + "tempfile" + File.separator + "config_" + file.getOriginalFilename());
+			//解包后xls临时路径
+			String xlspath = request.getSession().getServletContext().getRealPath(File.separator + "tempfile" + File.separator + "config_");
+			String xls = "";
+			File destFile = new File(path);
+			try {
+				String envPath = FRContext.getCurrentEnv().getPath();
+				FileUtils.copyInputStreamToFile(file.getInputStream(), destFile);
+				ZipInputStream zip = new ZipInputStream(new FileInputStream(path));
+				BufferedInputStream bin=new BufferedInputStream(zip);
+				ZipEntry entry;
+				//逐个读取压缩包的文件
+				while((entry = zip.getNextEntry()) != null ){
+					//处理以.cpt结尾的文件  及 .sql结尾的文件  .xls文件
+					String fileName = entry.getName();
+					if(fileName.endsWith(".cpt")){
+						destFile=new File(envPath,entry.getName());
+						if(!destFile.exists()){
+							(new File(destFile.getParent())).mkdirs();
+						}
+						FileOutputStream out=new FileOutputStream(destFile);
+						BufferedOutputStream bout=new BufferedOutputStream(out);
+						int b;
+						while((b=bin.read())!=-1){
+							bout.write(b);
+						}
+						bout.close();
+						out.close();
+					}else if(fileName.endsWith(".sql")){
+						destFile=new File(envPath,entry.getName());
+						if(!destFile.exists()){
+							(new File(destFile.getParent())).mkdirs();
+						}
+						FileOutputStream out=new FileOutputStream(destFile);
+						BufferedOutputStream bout=new BufferedOutputStream(out);
+						int b;
+						while((b=bin.read())!=-1){
+							bout.write(b);
+						}
+						bout.close();
+						out.close();
+					}else if(fileName.endsWith(".xls") || fileName.endsWith(".xlsx")){
+						destFile=new File(envPath,entry.getName());
+						xls = xlspath + entry.getName();
+						FileOutputStream out=new FileOutputStream(xls);
+						BufferedOutputStream bout=new BufferedOutputStream(out);
+						int b;
+						while((b=bin.read())!=-1){
+							bout.write(b);
+						}
+						bout.close();
+						out.close();
+						String str = readExcel(xls);
+						if(!str.equals("")){
+							returnStr = "{\"success\":false,\"msg\":\"" + str + "\"}";
+						}else{
+							returnStr = "{\"success\":true,\"msg\":\"上传解析文件成功!\"}";
+						}
+					}
+				}  
+				bin.close();  
+				zip.close();
+			} catch (IOException e) {
+				returnStr = "{\"success\":false,\"msg\":\"解析上传文件出错!\"}";
+				return returnStr;
+			}
+		}else{
+			returnStr = "{\"success\":false,\"msg\":\"上传文件为空!\"}";
+		}
+		return returnStr;
+	}
+	
+	
+	/**
+	 * 解析开发人员生成的配置包中的xls文件，生成模板信息
+	 * @return
+	 */
+	public String readExcel(String path){
+		//定义sheet名称
+		String [] sheets = {"templateres", "templateres_detail", "templateres_content"};
+		// 构造 Workbook 对象，strPath 传入文件路径  
+		Workbook xls = null;
+		try{
+			if (path.endsWith("xlsx")){
+				//2007格式
+				xls = new XSSFWorkbook(new FileInputStream(new File(path)));
+			}else if (path.endsWith("xls")){
+				//2003格式
+				xls = new HSSFWorkbook(new FileInputStream(new File(path)));
+			}
+		}catch(Exception e){
+			return "Excel file is not found!";
+		}
+		
+		//判断文件是否包含sheets中定义的sheet页
+		for(int i=0; i<sheets.length; i++){
+			if(null == xls.getSheet(sheets[i]))
+				return "xls配置文件错误！";
+		}
+		
+		// 读取sheet(templateres)的内容  
+		Sheet sheet = xls.getSheet(sheets[0]);
+		Row row = null;
+		// 循环输出表格中的内容  
+		for (int i = 2; i < sheet.getPhysicalNumberOfRows(); i++) {
+			row = sheet.getRow(i);
+			TemplateRes temp = mainManager.getTemplateRes(row.getCell(0).toString());
+			if(null == temp){
+			    TemplateRes tempres = new TemplateRes();
+		        tempres.setDid(row.getCell(0).toString());
+		        tempres.setName(row.getCell(1).toString());
+		        tempres.setDescription(row.getCell(2).toString());
+		        tempres.setPid(row.getCell(3).toString());
+		        tempres.setState(dicManager.getByKey("STATE", "1"));
+		        mainManager.saveTemplateRes(tempres);
+			}else{
+				return sheets[0]+"中主键重复！";
+			}
+		}
+		
+		// 读取sheet(templateres_detail)的内容  
+		sheet = xls.getSheet(sheets[1]); 
+		for (int i = 2; i < sheet.getPhysicalNumberOfRows(); i++) {
+		   row = sheet.getRow(i);
+		   TemplateResDetail resdetail = mainManager.getTemplateResDetail(row.getCell(0).toString());
+		   if(null == resdetail){
+			   TemplateRes tempres = mainManager.getTemplateRes(row.getCell(3).toString());
+			   if(null != tempres){
+				   TemplateResDetail tempdetail = new TemplateResDetail();
+				   tempdetail.setDid(row.getCell(0).toString());
+				   tempdetail.setName(row.getCell(1).toString());
+				   tempdetail.setPath(row.getCell(2).toString());
+				   tempdetail.setResmain(tempres);
+				   tempdetail.setState(dicManager.getByKey("STATE", "1"));
+				   mainManager.saveTemplateResDetail(tempdetail);
+			   }else{
+				   return sheets[1]+"未找到此行的外键！";
+			   }
+		   }else{
+			   return sheets[1]+"中主键重复！";
+		   }
+		}
+				
+		// 读取sheet(templateres_content)的内容  
+		sheet = xls.getSheet(sheets[2]); 
+		for (int i = 2; i < sheet.getPhysicalNumberOfRows(); i++) {  
+			row = sheet.getRow(i);
+			TemplateResDetail rescontent = mainManager.getTemplateResDetail(row.getCell(0).toString());
+			if(null == rescontent){
+			TemplateResDetail resdetail = mainManager.getTemplateResDetail(row.getCell(4).toString());
+				if(null != resdetail){
+					TemplateResContent tempcontent = new TemplateResContent();
+					tempcontent.setDid(row.getCell(0).toString());
+					tempcontent.setName(row.getCell(1).toString());
+					tempcontent.setCsqlpath(row.getCell(2).toString());
+					tempcontent.setIsqlpath(row.getCell(3).toString());
+					tempcontent.setResdetail(resdetail);
+					tempcontent.setState(dicManager.getByKey("STATE", "1"));
+					mainManager.saveTemplateResContent(tempcontent);
+				}else{
+					return sheets[2]+"未找到此行的外键！";
+				}
+			}else{
+				return sheets[2]+"中主键重复！";
+			}
+		}
+		mainManager.getSessionFactory().getCurrentSession().flush();
+		
+		return "";
 	}
 }

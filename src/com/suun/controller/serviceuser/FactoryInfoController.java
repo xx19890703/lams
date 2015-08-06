@@ -5,9 +5,12 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.suun.model.serviceuser.FactoryInfo;
 import com.suun.publics.controller.BaseCRUDController;
@@ -88,5 +91,31 @@ public class FactoryInfoController extends BaseCRUDController<FactoryInfo>{
 	protected Map<String, Object> doEditbefore(HttpServletRequest request,FactoryInfo operatebean) {
 		Map<String,Object> rmap = doNewbefore(request);
 		return rmap;
+	}
+	
+	@RequestMapping
+	@ResponseBody
+	public String checkfno(HttpServletRequest request,HttpServletResponse response) {	
+		String id = request.getParameter("fno");
+		String oldid = request.getParameter("oldid");
+		
+		if(manager.isFnoUnique(id, oldid)){
+			return renderText(response,"true");
+		}else{
+			return renderText(response,"false");
+		}
+	}
+	
+	@RequestMapping
+	@ResponseBody
+	public String checkfregister(HttpServletRequest request,HttpServletResponse response) {	
+		String id = request.getParameter("fregister");
+		String oldid = request.getParameter("oldid");
+		
+		if(manager.isFregisterUnique(id, oldid)){
+			return renderText(response,"true");
+		}else{
+			return renderText(response,"false");
+		}
 	}
 }
