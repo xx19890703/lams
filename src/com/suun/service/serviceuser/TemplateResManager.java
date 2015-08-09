@@ -186,6 +186,7 @@ public class TemplateResManager {
 		return submanager.isUnique("name", did, olddid);
 	}
 	
+	//判断表(name)在数据库中是否存在
 	@Transactional(readOnly = true)
 	public boolean isExistTable(String name) {
 		Connection conn;
@@ -200,5 +201,4 @@ public class TemplateResManager {
 			return false;
 		}
 	}
-
 }

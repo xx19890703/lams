@@ -25,7 +25,7 @@
 			        anchor : '95%'  
 			       }]  
 			});
-			var winUpload = new Ext.Window({
+			var formUpload = new Ext.Window({
 				resizable: false,
 	            modal: true,
 	            id:"suunFormWindowcfg",
@@ -39,8 +39,7 @@
 				buttons : [{
 					text : '上 传',
 					handler : function() {
-						if (formUpload.form.isValid()) {
-							formUpload.getForm().submit({
+							form.getForm().submit({
 								url : $ctx+'/serviceuser/contractCategory!serverupload',
 								waitMsg : '正在处理',
 								waitTitle : '请等待',
@@ -55,12 +54,11 @@
 									Ext.Msg.alert('错误', flag);
 								}
 							});
-						}
 					}
 				},{
 					text : '取 消',
 					handler : function() {
-						winUpload.close();
+						formUpload.close();
 					}
 				}]
 			}).show();

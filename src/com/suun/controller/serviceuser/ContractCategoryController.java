@@ -64,19 +64,26 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 
 	@Autowired
 	ContractCategoryManager mainManager;
+	
 	@Autowired
 	ContractDetailManager subManager;
+	
 	@Autowired
 	DataminingManager dataminingManager;
+	
 	@Autowired
 	FactoryInfoManager factoryInfoManager;
+	
 	@Autowired 
 	DicManager dicManager;
-	@Autowired
-	private DataminingFactory factory;
+	
 	@Autowired
 	MenuManager menuManager;	
 	
+	@Autowired
+	private DataminingFactory factory;
+	
+	// 合同分类id校验
 	@RequestMapping
 	@ResponseBody
 	public String validateDid(HttpServletRequest request,HttpServletResponse response) {	
@@ -89,20 +96,7 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 		}
 	}
 	
-	protected ContractDetail getGridClass(){
-		ContractDetail cd = new ContractDetail();
-		cd.setRescontent(new ArrayList<ContractTemplateRes>());
-		return cd;
-	}
-	
-	@RequestMapping
-	@ResponseBody
-	public Map<String,Object> getTest(){
-		Map<String,Object> map=new HashMap<String,Object>();
-		map.put("renlq", "test");
-		return map;
-	}
-	
+	// 合同分类name校验
 	@RequestMapping
 	@ResponseBody
 	public String validateName(HttpServletRequest request,HttpServletResponse response) {	
@@ -117,29 +111,18 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 		}
 	}
 	
-	@RequestMapping
-	public String getContractCategory(HttpServletRequest request,HttpServletResponse response) {
-//		Condition condition=new Condition();
-//		condition.setFilterInfos(new ArrayList<FilterInfo>());
-//		List<TemplateResDetail> res = manager.getAllTemplateRes(request.getParameter("pid"),condition);
-//		String existids="";
-//		for (TemplateResDetail temp : res){
-//			existids = temp.getEmployee().getEmployeeid()+"@"+existids;
-//		}
-//		return this.renderText(response, existids);		
-		return "";
-	}
-	
 	@Override
 	public Map<String,Object> doTreeNewbefore() {
 		Map<String,Object> map=new HashMap<String,Object>();
 		map.put("status", dicManager.findDicsByDicno(Constant.STATE));
 		return map;
 	}
+	
 	@Override
 	public Map<String,Object> doTreeEditbefore() {
 		return doTreeNewbefore();
 	}
+	
 	@Override
 	public Map<String,Object> doGridNewbefore(HttpServletRequest request,String treeid) {
 		Map<String,Object> map=new HashMap<String,Object>();
@@ -241,6 +224,8 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 	@Override
 	protected String saveGridRecordSet(HttpServletRequest request,ContractDetail operatebean) {
 		try{
+			if(operatebean.getRescontent().size()==0)
+				return "请填写合同明细表数据！";
 			mainManager.deleteContractTemplateRes(operatebean.getDid());
 			for(ContractTemplateRes trc:operatebean.getRescontent()){
 				trc.setId(operatebean.getDid()+"-"+trc.getId());
@@ -682,49 +667,18 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 	        String filePath = "";
 	        
 	        //返回合同-数据库表的数据
-	        for(String temp : strategy.findTableData(contract.getDid(),"contract_mode"))
+	        for(String temp : dataminingManager.findTableData(contract.getDid(),"contract_mode"))
 	        	sbuffer = sbuffer + temp;
 	        //返回合同-模板url的数据
-	        for(String temp : strategy.findTableData(contract.getDid(),"contract_template"))
+	        for(String temp : dataminingManager.findTableData(contract.getDid(),"contract_template"))
 	        	sbuffer = sbuffer + temp;
-	        
+	      //遍历所有数据库表
+			List<String> tableNames = dataminingManager.findModeTables(contract.getDid());
+			for(String tableName:tableNames){
+				for(String temp : dataminingManager.findTableData(contract.getDid(), tableName))
+				sbuffer = sbuffer + temp;
+			}
 	        //遍历所有模板
-	        for(ContractTemplateRes s : contract.getRescontent()){
-	        	TemplateResDetail temple = s.getTemplate();
-	        	//添加模板到zip包
-	        	filePath = reportPath + "reportlets" + File.separator + temple.getPath();
-	        	System.out.println(filePath);
-	        	File tfile = new File(filePath);  
-    			if (!tfile.exists()) {
-    				continue;
-    			}
-	        	ZipEntry tentry = new ZipEntry(temple.getPath());
-        		zos.putNextEntry(tentry);
-        		InputStream tis = new BufferedInputStream(new FileInputStream(tfile));
-    			while ((readLength = tis.read()) != -1) {
-    				zos.write(readLength);
-    			}
-    			tis.close();
-    			
-	        	//遍历所有数据库表
-	        	for(TemplateResContent tt : temple.getRescontent()){
-	        		//返回表数据查询语句
-	        		for(String temp : strategy.findTableData(contract.getDid(), tt.getName()))
-	        			sbuffer = sbuffer + temp;
-	        		filePath = reportPath + tt.getCsqlpath();
-	        		File file = new File(filePath);  
-	    			if (!file.exists()) {
-	    				continue;
-	    			}
-	    			ZipEntry entry = new ZipEntry(tt.getCsqlpath());
-	        		zos.putNextEntry(entry);
-	        		InputStream is = new BufferedInputStream(new FileInputStream(file));
-	    			while ((readLength = is.read()) != -1) {
-	    				zos.write(readLength);
-	    			}
-	    			is.close();
-	        	}
-	        }
 	        //创建insert.sql(报表数据文件)文件
 	        if (sbuffer != null && !sbuffer.trim().equals("")){
 	        	ZipEntry entry = new ZipEntry("insert.sql");

@@ -246,45 +246,46 @@ function createsuungrids(option){
 	//为权限预留
 	//var suunauths=suunCore.GetAuths(option);
 	var topbar=[];
-	if (suunCore.HaveAuths(option.authurl,option.operation.add.auth)) {
-		if (!option.operation.add.hidden){
-			topbar.push({
-				iconCls:option.operation.add.iconCls,
-				text:option.operation.add.text,
-				tooltip:option.operation.add.tooltip,
-	            handler:function(){ 
-	                if (!option.operation.add.onClick) {
-	                	add();
-	                } else {
-	                	option.operation.add.onClick(suungrid);
-	                }
-	            }
-	       });
-		}	
-	}
-	var bottombar=[];
-	if (!option.simplemode && !option.operation.exp.hidden &&
-			option.operation.exp.btns.length>0){
-		if (suunCore.HaveAuths(option.authurl,option.operation.exp.auth)) {	
-			bottombar.push('-');
-			for (i=0;i<option.operation.exp.btns.length;i++){
-				bottombar.push(option.operation.exp.btns[i]);
-			}
-		}
-	}	
-	var suungrid2=new suunGridPanel({
-		simplemode:option.simplemode,
-	    listurl:option.listurl,
-		pagenum:option.pagenum,
-		isprewidth:option.isprewidth,
-		suuncolumns:option.suuncolumns,	
-		extTopbar:topbar,
-		extBottombar:bottombar,
-		region : "center",
-		storebeforeload:function (store, options){
-			Ext.apply(store.baseParams,{contractId:selcontractId});
-		}
-	});
+//	
+//	if (suunCore.HaveAuths(option.authurl,option.operation.add.auth)) {
+//		if (!option.operation.add.hidden){
+//			topbar.push({
+//				iconCls:option.operation.add.iconCls,
+//				text:option.operation.add.text,
+//				tooltip:option.operation.add.tooltip,
+//	            handler:function(){ 
+//	                if (!option.operation.add.onClick) {
+//	                	add();
+//	                } else {
+//	                	option.operation.add.onClick(suungrid);
+//	                }
+//	            }
+//	       });
+//		}	
+//	}
+//	var bottombar=[];
+//	if (!option.simplemode && !option.operation.exp.hidden &&
+//			option.operation.exp.btns.length>0){
+//		if (suunCore.HaveAuths(option.authurl,option.operation.exp.auth)) {	
+//			bottombar.push('-');
+//			for (i=0;i<option.operation.exp.btns.length;i++){
+//				bottombar.push(option.operation.exp.btns[i]);
+//			}
+//		}
+//	}	
+//	var suungrid2=new suunGridPanel({
+//		simplemode:option.simplemode,
+//	    listurl:option.listurl,
+//		pagenum:option.pagenum,
+//		isprewidth:option.isprewidth,
+//		suuncolumns:option.suuncolumns,	
+//		extTopbar:topbar,
+//		extBottombar:bottombar,
+//		region : "center",
+//		storebeforeload:function (store, options){
+//			Ext.apply(store.baseParams,{contractId:selcontractId});
+//		}
+//	});
 	
 	Ext.getCmp(option.containerid).add(suungrid2);
 	Ext.getCmp(option.containerid).setLayout(new Ext.layout.BorderLayout());

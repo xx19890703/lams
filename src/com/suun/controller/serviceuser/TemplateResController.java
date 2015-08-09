@@ -56,6 +56,7 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 	@Autowired 
 	DicManager dicManager;
 	
+	 //模板分类id校验
 	@RequestMapping
 	@ResponseBody
 	public String validateDid(HttpServletRequest request,HttpServletResponse response) {	
@@ -68,6 +69,7 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 		}
 	}
 	
+	//模板分类name校验
 	@RequestMapping
 	@ResponseBody
 	public String validateName(HttpServletRequest request,HttpServletResponse response) {	
@@ -180,7 +182,6 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 	@Override
 	protected String deleteGridRecordSet(HttpServletRequest request,String treeid, String[] ids) {
 		try{
-			
         	for (int i=0;i<ids.length;i++){			
         		mainManager.deleteTemplateResContent(ids[i]);
         		mainManager.deleteTemplateResDetail(treeid,ids[i]);//传入的是 id
@@ -193,17 +194,18 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 
 	@Override
 	protected String saveGridRecordSet(HttpServletRequest request,TemplateResDetail operatebean) {
-		if(operatebean.getRescontent().size()==0)
-			return "请填写明细表数据！";
-		//判断数据表在数据库中是否存在
-		for(TemplateResContent trc:operatebean.getRescontent()){
-			if(!mainManager.isExistTable(trc.getName())){
-				return "表【" + trc.getName() + "】不存在，请检查后提交！";
-			}
-		}
-		mainManager.deleteTemplateResContent(operatebean.getDid());
 		try{
+			if(operatebean.getRescontent().size()==0)
+				return "请填写模板明细表数据！";
+			//判断数据表在数据库中是否存在
 			for(TemplateResContent trc:operatebean.getRescontent()){
+				if(!mainManager.isExistTable(trc.getName())){
+					return "数据表【" + trc.getName() + "】不存在，请检查后提交！";
+				}
+			}
+			mainManager.deleteTemplateResContent(operatebean.getDid());
+			for(TemplateResContent trc:operatebean.getRescontent()){
+				//设置主键
 				trc.setDid(operatebean.getDid()+"-"+trc.getDid());
 			}
 			mainManager.saveTemplateResDetail(operatebean);
@@ -361,8 +363,7 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 	 * @return
 	 */
 	public String readExcel(String path){
-		String cptpath = FRContext.getCurrentEnv().getPath()+ "reportlets" + File.separator + "";
-		String sqlpath = FRContext.getCurrentEnv().getPath();
+		String filepath = FRContext.getCurrentEnv().getPath();
 		//定义sheet名称
 		String [] sheets = {"templateres", "templateres_detail", "templateres_content"};
 		// 构造 Workbook 对象，strPath 传入文件路径  
@@ -382,7 +383,7 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 		//判断文件是否包含sheets中定义的sheet页
 		for(int i=0; i<sheets.length; i++){
 			if(null == xls.getSheet(sheets[i]))
-				return "xls配置文件错误！";
+				return "xls配置文件错误，缺少【" + sheets[i] + "】页";
 		}
 		
 		// 读取sheet(templateres)的内容  
@@ -416,7 +417,7 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 				   TemplateResDetail tempdetail = new TemplateResDetail();
 				   tempdetail.setDid(row.getCell(0).toString());
 				   tempdetail.setName(row.getCell(1).toString());
-				   String str = cptpath+row.getCell(2).toString().replaceAll("\\\\", Matcher.quoteReplacement(File.separator));
+				   String str = filepath + "reportlets" + File.separator + row.getCell(2).toString().replaceAll("\\\\", Matcher.quoteReplacement(File.separator));
 				   if(new File(str).exists())
 					   tempdetail.setPath(row.getCell(2).toString());
 				   else
@@ -443,7 +444,7 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 					TemplateResContent tempcontent = new TemplateResContent();
 					tempcontent.setDid(row.getCell(0).toString());
 					tempcontent.setName(row.getCell(1).toString());
-					if(new File(sqlpath+row.getCell(2).toString().replaceAll("\\\\", Matcher.quoteReplacement(File.separator))).exists())
+					if(new File(filepath+row.getCell(2).toString().replaceAll("\\\\", Matcher.quoteReplacement(File.separator))).exists())
 						tempcontent.setCsqlpath(row.getCell(2).toString());
 				   else
 					   return sheets[2]+"中"+row.getCell(2).toString()+"文件不存在！";
@@ -459,7 +460,6 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 			}
 		}
 		mainManager.getSessionFactory().getCurrentSession().flush();
-		
 		return "";
 	}
 }
