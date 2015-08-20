@@ -263,7 +263,7 @@ function createsuungrids(option){
 //	       });
 //		}	
 //	}
-//	var bottombar=[];
+	var bottombar=[];
 //	if (!option.simplemode && !option.operation.exp.hidden &&
 //			option.operation.exp.btns.length>0){
 //		if (suunCore.HaveAuths(option.authurl,option.operation.exp.auth)) {	
@@ -273,19 +273,19 @@ function createsuungrids(option){
 //			}
 //		}
 //	}	
-//	var suungrid2=new suunGridPanel({
-//		simplemode:option.simplemode,
-//	    listurl:option.listurl,
-//		pagenum:option.pagenum,
-//		isprewidth:option.isprewidth,
-//		suuncolumns:option.suuncolumns,	
-//		extTopbar:topbar,
-//		extBottombar:bottombar,
-//		region : "center",
-//		storebeforeload:function (store, options){
-//			Ext.apply(store.baseParams,{contractId:selcontractId});
-//		}
-//	});
+	var suungrid2=new suunGridPanel({
+		simplemode:option.simplemode,
+	    listurl:option.listurl,
+		pagenum:option.pagenum,
+		isprewidth:option.isprewidth,
+		suuncolumns:option.suuncolumns,	
+		extTopbar:topbar,
+		extBottombar:bottombar,
+		region : "center",
+		storebeforeload:function (store, options){
+			Ext.apply(store.baseParams,{contractId:selcontractId});
+		}
+	});
 	
 	Ext.getCmp(option.containerid).add(suungrid2);
 	Ext.getCmp(option.containerid).setLayout(new Ext.layout.BorderLayout());

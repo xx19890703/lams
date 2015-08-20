@@ -1,5 +1,6 @@
 package com.suun.controller.serviceuser;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,7 @@ import com.suun.model.serviceuser.ContractTemplateRes;
 import com.suun.publics.controller.BaseCRUDController;
 import com.suun.publics.hibernate.Condition;
 import com.suun.publics.hibernate.Page;
+import com.suun.publics.utils.TreeObj;
 import com.suun.service.serviceuser.ContractCategoryManager;
 import com.suun.service.serviceuser.ContractTemplateResManager;
 
@@ -45,6 +47,25 @@ public class QueryController extends BaseCRUDController<ContractTemplateRes> {
 		return pp;
 	}
 
+	@RequestMapping
+	@ResponseBody
+	public List<Object> queryTemplate(HttpServletRequest request, Page<ContractTemplateRes> page) {
+		List<Object> model = new ArrayList<Object>();
+		String contactId = request.getParameter("contractId");
+		List<ContractTemplateRes> list = manager.getContractTemplateResByContractId(contactId);
+		//modelMap.put("root", list);
+		for(ContractTemplateRes ct:list){
+			TreeObj obj= new TreeObj();
+			obj.setId(ct.getTemplate().getPath().replaceAll("\\\\", "/"));
+			obj.setText(ct.getName());
+			obj.setParentId("0");
+			obj.setChecked(false);
+			obj.setLeaf(true);
+			model.add(obj);
+		}
+		return model;
+	}
+	
 	@RequestMapping
 	@ResponseBody
 	public Map<String, Object> queryContract(HttpServletRequest request, Page<ContractTemplateRes> page) {

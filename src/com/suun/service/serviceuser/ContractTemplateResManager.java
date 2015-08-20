@@ -1,5 +1,8 @@
 package com.suun.service.serviceuser;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,4 +37,11 @@ public class ContractTemplateResManager{
 		return conmanager.findAll(page);
 	}
 	
+	@Transactional(readOnly = true)
+	public List<ContractTemplateRes> getContractTemplateResByContractId(String contractId) {
+		List<ContractTemplateRes> list = new ArrayList<ContractTemplateRes>();
+		String hql = "from ContractTemplateRes c where c.condetail.did=?";
+		list = conmanager.find(hql, contractId);
+		return list;
+	}
 }
