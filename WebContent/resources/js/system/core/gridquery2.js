@@ -4,7 +4,7 @@ Ext.onReady(function() {
         id:  "panel2",  
         region : "center",
         fitToFrame: true,                   
-        html: '<iframe id="im" style="background-color:white;overflow:auto;width:100%; height:100%;" src="'+$ctx+'/ReportServer?reportlet=templater/day1.cpt&op=write" frameborder="0"></iframe>'  
+        html: '<iframe id="im" style="background-color:white;overflow:auto;width:100%; height:100%;" src="" frameborder="0"></iframe>'  
     });    
 	
 	
@@ -235,7 +235,13 @@ function showSelect() {
 				loader.on('beforeload', function(loader, node) {
 					this.baseParams.contractId = selcontractId; // 通过这个传递参数，这样就可以点一个节点出来它的子节点来实现异步加载  
 			    }, loader);  
-				loader.load(aphyciniTree.root); 
+				loader.load(aphyciniTree.root,function(){
+					var aphyciniTree2 = Ext.getCmp('treep');
+					if(aphyciniTree2.root.childNodes.length>0){
+						var fn=aphyciniTree2.root.childNodes[0];
+						document.getElementById('im').src=$ctx+"/ReportServer?reportlet="+fn.id+"&op=write";
+					}
+				}); 
 				htselectPanel.close();
 			}
 		}, {
