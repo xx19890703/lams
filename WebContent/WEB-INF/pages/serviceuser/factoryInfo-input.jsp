@@ -144,6 +144,11 @@
 	        </td>
 		</tr>
 		<tr>
+			<td style="width: 80px;" align="right">状态  </td>
+			<td>
+	            <ui:selectlist cssStyle="width:180px;" name="status.key.data_no" lists="${allObjects5}" listValue="key.data_no" listTitle="data_name" 
+	            	checkValue="${factoryinfo.status.key.data_no}" defaultCheckValue="1"/>
+			</td>
 			<td style="width: 80px;" align="right">备注</td>
 			<td>
 				<input type="text" name="remark" style="width: 180px;" value="${factoryinfo.remark}"/>

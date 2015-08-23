@@ -39,6 +39,7 @@ public class FactoryInfo {
 	private String fattachment;//附件
 	private String remark;     //备注
 	private String contractId;// 合同id
+	private Dic_data status;//资质标准
 	
 	@Id
     @Column(length=30,nullable=false)
@@ -187,6 +188,20 @@ public class FactoryInfo {
 	}
 	public void setContractId(String contractId) {
 		this.contractId = contractId;
+	}
+	
+	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, 
+			targetEntity = com.suun.model.system.Dic_data.class)
+	@JoinColumnsOrFormulas({
+            @JoinColumnOrFormula(column=@JoinColumn(name = "status", referencedColumnName = "data_no")),
+		    @JoinColumnOrFormula(formula=@JoinFormula(value="'STATE'", referencedColumnName = "dic_no"))
+	})
+	@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
+	public Dic_data getStatus() {
+		return status;
+	}
+	public void setStatus(Dic_data status) {
+		this.status = status;
 	}
 	
 }

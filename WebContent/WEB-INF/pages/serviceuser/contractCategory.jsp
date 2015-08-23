@@ -23,13 +23,16 @@
 			suuncolumns:[{columnid:'did',columnname:'合同编号',colwidth:40,defaultsort:true},
 	             {columnid:'name',columnname:'合同名称',colwidth:60},
 	             {columnid:'finfo.fno',columnname:'制造厂信息',colwidth:60},
-	             {columnid:'orderinfo',columnname:'所属订单',colwidth:60},
-	             {columnid:'importTime',columnname:'导出时间',colwidth:60},
-	             {columnid:'issuedTime',columnname:'下发时间',colwidth:60},
+	             //{columnid:'orderinfo',columnname:'所属订单',colwidth:60},
+	             //{columnid:'importTime',columnname:'导出时间',colwidth:60},
+	             {columnid:'importCount',columnname:'下发次数',colwidth:60},
+	             {columnid:'importTime',columnname:'下发时间',colwidth:60},
+	             {columnid:'status.data_name',columnname:'合同状态',colwidth:60},
 	             {columnid:'conmain.name',columnname:'合同分类名称',colwidth:60} ],
 			inputFormWidth:800,
             inputFormHeight:400
-     	 }
+     	 } 
+         
       });
     </script>
 </head>

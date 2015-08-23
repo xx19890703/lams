@@ -90,6 +90,12 @@ public class ContractCategoryManager {
 		return manager.get(did);
 	}
 	
+
+	@Transactional(readOnly = true)
+	public ContractDetail getContractDetail(String did) {
+		return submanager.get(did);
+	}
+	
 	public void deleteContractCategory(String depid) {
 		Condition condition=new Condition();
 		List<FilterInfo> filterInfos=new ArrayList<FilterInfo>();

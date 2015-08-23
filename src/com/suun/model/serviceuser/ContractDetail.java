@@ -48,6 +48,10 @@ public class ContractDetail {
 	private Date issuedTime;
 	// 预计导入时间
 	private Date planImportTime;
+	// 导出次数
+	private Integer importCount;
+	// 当前状态
+	private com.suun.model.system.Dic_data status;
 	// 关联主表
 	private ContractCategory conmain;
 	// 模板对应数据库表
@@ -150,5 +154,27 @@ public class ContractDetail {
 	}
 	public void setPlanImportTime(Date planImportTime) {
 		this.planImportTime = planImportTime;
+	}
+	
+	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, 
+			targetEntity = com.suun.model.system.Dic_data.class)
+	@JoinColumnsOrFormulas({
+            @JoinColumnOrFormula(column=@JoinColumn(name = "xfstatus", referencedColumnName = "data_no")),
+		    @JoinColumnOrFormula(formula=@JoinFormula(value="'STATUS'", referencedColumnName = "dic_no"))
+	})
+	@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
+	public com.suun.model.system.Dic_data getStatus() {
+		return status;
+	}
+	public void setStatus(com.suun.model.system.Dic_data status) {
+		this.status = status;
+	}
+	
+	@Column
+	public Integer getImportCount() {
+		return importCount;
+	}
+	public void setImportCount(Integer importCount) {
+		this.importCount = importCount;
 	}
 }

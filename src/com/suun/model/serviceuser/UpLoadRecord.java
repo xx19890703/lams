@@ -1,0 +1,69 @@
+package com.suun.model.serviceuser;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
+
+import com.suun.model.IdEntity;
+
+/**
+ * 合同上传记录
+ * @author renlq
+ */
+@Entity
+@Table(name = "app_uploadrecord")
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+public class UpLoadRecord extends IdEntity{
+
+	// 上传合同编号
+	private String contractid;
+	// 上传人
+	private String person;
+	// 上传时间
+	private Date upTime;
+	// 备注
+	private String remark;
+	
+	@Column(name="contractid")
+	@NotFound(action = NotFoundAction.IGNORE)
+	public String getContractid() {
+		return contractid;
+	}
+	public void setContractid(String contractid) {
+		this.contractid = contractid;
+	}
+	
+	@Column(length=50)
+	public String getPerson() {
+		return person;
+	}
+	public void setPerson(String person) {
+		this.person = person;
+	}
+	
+	@Temporal(TemporalType.DATE)
+	@Column(length=50)
+	public Date getUpTime() {
+		return upTime;
+	}
+	public void setUpTime(Date upTime) {
+		this.upTime = upTime;
+	}
+	
+	@Column(length=200)
+	public String getRemark() {
+		return remark;
+	}
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+}

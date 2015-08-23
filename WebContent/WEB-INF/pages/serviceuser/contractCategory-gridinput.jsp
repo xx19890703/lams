@@ -112,9 +112,14 @@
 				<td width="100" align="right">合同编号</td>					
 				<td width="240">
 				    <c:choose><c:when test="${isEdit}">
-		                <input  type="text" name="did"  value="${contractdetail.did}" style="width:174px;"/>
+		                <input type="text" name="did"  value="${contractdetail.did}" style="width:174px;"/>
+		                <input type="hidden" name="importCount"  value="${contractdetail.importCount }"/>
+		                <input type="hidden" name="importTime"  value="${contractdetail.importTime }"/>
+		                <input type="hidden" name="status.key.data_no"  value="${contractdetail.status.key.data_no }"/>
+		                <input type="hidden" name="orderinfo"  value="${contractdetail.orderinfo}"/>
 		            </c:when><c:otherwise>
-		                <input  type="text" name="did"  value="" style="width:174px;"/>
+		                <input type="text" name="did"  value="" style="width:174px;"/>
+		                <input type="hidden" name="status.key.data_no"  value="A"/>
 		            </c:otherwise></c:choose>
 		        </td>
 				<td width="100" align="right">合同名称</td>
@@ -126,20 +131,6 @@
 					<input type="hidden" id="fno" name="finfo.fno" value="${contractdetail.finfo.fno}" />
 					<input class="dataa" type="text" id="fname" name="finfo.fname" style="font-family:arial;width:174px"  value="${contractdetail.finfo.fname}" onclick="selectfactory(this)" />
 				</td>
-				<td width="100" align="right">所属订单</td>
-				<td width="240"><input  type="text" name="orderinfo"  value="${contractdetail.orderinfo}" style="width:174px;"/></td>
-			</tr>
-			<tr>
-				<td width="100" align="right">导出时间</td>
-				<td width="240"> 
-					<input class="datew" style="width:174px;" name="importTime" type="text" onclick="JavaScript:setupDateTime(this);" value="${contractdetail.importTime}"/>
-           	 	</td>
-				<td width="100" align="right">预计导入时间</td>
-				<td width="240">
-					<input class="datew" style="width:174px;" name="planImportTime" type="text" onclick="JavaScript:setupDateTime(this);" value="${contractdetail.planImportTime}"/>
-				</td>
-			</tr>
-			<tr>
 			    <td  align="right">状态</td>
 				<td >     
 				 <input type="hidden" name="state.key.dic_no" value="STATE"/>
@@ -157,9 +148,23 @@
 		    	</select>
 		        </td>
 			</tr>
+			<!-- <tr>
+				<td width="100" align="right">导出时间</td>
+				<td width="240"> 
+					<input class="datew" style="width:174px;" name="importTime" type="text" onclick="JavaScript:setupDateTime(this);" value="${contractdetail.importTime}"/>
+           	 	</td>
+				<td width="100" align="right">预计导入时间</td>
+				<td width="240">
+					<input class="datew" style="width:174px;" name="planImportTime" type="text" onclick="JavaScript:setupDateTime(this);" value="${contractdetail.planImportTime}"/>
+				</td>
+			</tr>
+			<tr>
+				<td width="100" align="right">所属订单</td>
+				<td width="240"><input  type="text" name="orderinfo"  value="${contractdetail.orderinfo}" style="width:174px;"/></td>
+			</tr>-->
 		</table>
 		<br>
-	  <div style="margin-left: 50px;position:relative;overflow:auto; width:600px;">
+	  <div style="margin-left: 50px;position:relative;overflow:auto; width:600px;height: 230px">
 		  <table class="suunRept" width="100%" border="1" cellpadding="0" cellspacing="0"> 
 		      <tr>     
 		          <td align="center">编号</td>    

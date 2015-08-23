@@ -70,23 +70,23 @@
 			    <td  align="right">状态</td>
 				<td>     
 					<input type="hidden" name="state.key.dic_no" value="STATE"/>
-		        <select name="state.key.data_no" style="width:174px;">
-				<c:forEach var="mystatus" items="${status}">
-					<c:choose >
-						<c:when test="${isEdit && mystatus.key.data_no==templateresdetail.state.key.data_no}">
-							<option selected value="${mystatus.key.data_no}">${mystatus.data_name}</option>
-						</c:when>	  
-		              	<c:otherwise>
-		                 	<option value="${mystatus.key.data_no}">${mystatus.data_name}</option>
-		              	</c:otherwise>
-					</c:choose> 
-		    	</c:forEach>
-		    	</select>
+			        <select name="state.key.data_no" style="width:174px;">
+					<c:forEach var="mystatus" items="${status}">
+						<c:choose >
+							<c:when test="${isEdit && mystatus.key.data_no==templateresdetail.state.key.data_no}">
+								<option selected value="${mystatus.key.data_no}">${mystatus.data_name}</option>
+							</c:when>	  
+			              	<c:otherwise>
+			                 	<option value="${mystatus.key.data_no}">${mystatus.data_name}</option>
+			              	</c:otherwise>
+						</c:choose> 
+			    	</c:forEach>
+			    	</select>
 		        </td>
 			</tr>
 		</table>
 		<br>
-	  	<div style="position:relative;overflow:auto; width:750px;">
+	  	<div style="position:relative;overflow:auto; width:750px;height: 230px">
 	  		<table class="suunRept" width="100%" border="0" border="0" cellpadding="0" cellspacing="0">
 		      <tr>     
 		          <td align="center">编号</td>    

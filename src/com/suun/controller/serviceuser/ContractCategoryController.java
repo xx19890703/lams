@@ -10,9 +10,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -38,6 +41,7 @@ import com.suun.model.serviceuser.ContractTemplateRes;
 import com.suun.model.serviceuser.FactoryInfo;
 import com.suun.model.serviceuser.TemplateResContent;
 import com.suun.model.serviceuser.TemplateResDetail;
+import com.suun.model.serviceuser.UpLoadRecord;
 import com.suun.model.system.Constant;
 import com.suun.model.system.developer.Menu;
 import com.suun.publics.controller.TreeGridCRUDController;
@@ -49,7 +53,9 @@ import com.suun.publics.utils.ReadFile;
 import com.suun.service.data.DataminingManager;
 import com.suun.service.serviceuser.ContractCategoryManager;
 import com.suun.service.serviceuser.ContractDetailManager;
+import com.suun.service.serviceuser.ContractTemplateResManager;
 import com.suun.service.serviceuser.FactoryInfoManager;
+import com.suun.service.serviceuser.UpLoadRecordManager;
 import com.suun.service.system.DicManager;
 import com.suun.service.system.developer.MenuManager;
 
@@ -69,10 +75,16 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 	ContractDetailManager subManager;
 	
 	@Autowired
+	ContractTemplateResManager conManager;
+	
+	@Autowired
 	DataminingManager dataminingManager;
 	
 	@Autowired
 	FactoryInfoManager factoryInfoManager;
+	
+	@Autowired
+	UpLoadRecordManager uploadManager;
 	
 	@Autowired 
 	DicManager dicManager;
@@ -223,13 +235,22 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 
 	@Override
 	protected String saveGridRecordSet(HttpServletRequest request,ContractDetail operatebean) {
+		Set<String> oldset = new HashSet<String>();
+		Set<String> newset = new HashSet<String>();
+		//将原合同编号放入set中
+		for(ContractTemplateRes trc : conManager.getContractTemplateResByContractId(operatebean.getDid())){
+			oldset.add(trc.getTemplate().getDid());
+		}
 		try{
 			if(operatebean.getRescontent().size()==0)
 				return "请填写合同明细表数据！";
 			mainManager.deleteContractTemplateRes(operatebean.getDid());
-			for(ContractTemplateRes trc:operatebean.getRescontent()){
+			for(ContractTemplateRes trc : operatebean.getRescontent()){
 				trc.setId(operatebean.getDid()+"-"+trc.getId());
+				newset.add(trc.getTemplate().getDid());
 			}
+			if(operatebean.getStatus().getKey().getData_no().equalsIgnoreCase("B") && newset.contains(oldset))
+				return "合同已审核，不能删除以前的模板！";
 			mainManager.saveContractDetail(operatebean);
 			return "";
 		}catch (Exception e){
@@ -465,6 +486,13 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 				}  
 				bin.close();  
 				zip.close();
+				
+				//保存上传记录
+				UpLoadRecord upload = new UpLoadRecord();
+				upload.setContractid(contractId);
+				upload.setUpTime(new Date());
+				uploadManager.saveUpLoadRecord(upload);
+				
 				map.put("success", true);
 				map.put("msg", "上传成功!");
 			} catch (IOException e) {
