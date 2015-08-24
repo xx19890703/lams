@@ -48,7 +48,7 @@
     				winWidth:650,
     				winHeight:350,
     				callback:function(records){
-    					if(records.length=0){
+    					if(records.length==0){
     						Ext.Msg.alert("消息","请选择一个合同!");
     						return;
     					}
