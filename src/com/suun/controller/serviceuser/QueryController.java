@@ -59,7 +59,6 @@ public class QueryController extends BaseCRUDController<ContractTemplateRes> {
 			obj.setId(ct.getTemplate().getPath().replaceAll("\\\\", "/"));
 			obj.setText(ct.getName());
 			obj.setParentId("0");
-			obj.setChecked(false);
 			obj.setLeaf(true);
 			model.add(obj);
 		}

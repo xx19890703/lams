@@ -10,7 +10,7 @@ Ext.onReady(function() {
 	
 	
 	var treepanel = new Ext.tree.TreePanel( {
-		title : '模板',
+		title : '报表类别',
 		id:"treep",
 		width:'150',
 		collapsible: true,
@@ -40,7 +40,39 @@ Ext.onReady(function() {
 	var view = new Ext.Viewport({
 		layout : "border",
 		items : [{
+			height:60,
 			region : "north",
+			id:'condivp',
+			items:[{
+				layout : 'column',
+				labelWidth : 60,
+				frame:true,
+				labelAlign : "right",
+				items : [
+							{
+								layout : 'form',
+								columnWidth : .2, // 该列占用的宽度，标识为50％
+								width : 160,
+								items : [{
+									name : "htmcs",
+									xtype : "textfield",
+									id : "htmcs",
+									readOnly:true,
+									fieldLabel : "合同名称"
+								}]
+							},{
+								layout : 'form',
+								columnWidth : .2, // 该列占用的宽度，标识为50％
+								width : 160,
+								items : [{
+									name : "htbhs",
+									xtype : "textfield",
+									id : "htbhs",
+									readOnly:true,
+									fieldLabel : "合同编号"
+								}]
+							}]
+			}],
 			tbar:[{text:"查询",
 				iconCls:'edit',
 				handler:showSelect}]
@@ -242,6 +274,8 @@ function showSelect() {
 						document.getElementById('im').src=$ctx+"/ReportServer?reportlet="+fn.id+"&op=write";
 					}
 				}); 
+				Ext.getCmp('htbhs').setValue(selcontractId);
+				Ext.getCmp('htmcs').setValue(re[0].get('name'));
 				htselectPanel.close();
 			}
 		}, {
