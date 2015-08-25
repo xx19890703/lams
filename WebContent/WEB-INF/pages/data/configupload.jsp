@@ -4,13 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <title>配置包上传</title>
-	<link rel="stylesheet" href="${ctx}/resources/js/thrid/extjs/resources/css/ext-all.css" type="text/css"></link>
-    <script type="text/javascript" src="${ctx}/resources/js/thrid/extjs/adapter/ext/ext-base.js"></script>
-    <script type="text/javascript" src="${ctx}/resources/js/thrid/extjs/ext-all.js"></script>
-    <script type="text/javascript" src="${ctx}/resources/js/thrid/extjs/locale/ext-lang-zh_CN.js"></script>
     <script type="text/javascript" charset="UTF-8">
 		function griduploadrecord() {
-		
 			var form = new Ext.form.FormPanel({  
 			     baseCls : 'x-plain',  
 			     labelWidth : 150,  
@@ -78,6 +73,6 @@
 		});
     </script>
 </head>
-<body> 
+<body>
 </body>
 </html>

@@ -82,8 +82,8 @@ public class FactoryInfoController extends BaseCRUDController<FactoryInfo>{
 		Map<String,Object> rmap=new HashMap<String,Object>();
 		rmap.put("allObjects1", DicService.GetDicByDicNo("FTYPE"));
 		rmap.put("allObjects2", DicService.GetDicByDicNo("FLEVEL"));
-		rmap.put("allObjects3", DicService.GetDicByDicNo("FSTANDARD"));
-		rmap.put("allObjects4", DicService.GetDicByDicNo("FDOMAIN"));
+		rmap.put("allObjects3", DicService.GetDicByDicNo("FDOMAIN"));
+		rmap.put("allObjects4", DicService.GetDicByDicNo("FSTANDARD"));
 		rmap.put("allObjects5", DicService.GetDicByDicNo("STATE"));
 		return rmap;
 	}

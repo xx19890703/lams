@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -60,7 +61,7 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 	@RequestMapping
 	@ResponseBody
 	public String validateDid(HttpServletRequest request,HttpServletResponse response) {	
-		String did = request.getParameter("did");
+		String did = request.getParameter("id");
 		String olddid = request.getParameter("olddid");		
 		if(mainManager.isDTemplateResIdUnique(did, olddid)){
 			return renderText(response,"true");
@@ -280,8 +281,24 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 	 */
 	@RequestMapping
 	@ResponseBody
-	public String configupload(@RequestParam("file") MultipartFile file, HttpServletRequest request, HttpServletResponse response){
-		String returnStr = "";
+	public Map<String,Object> configupload(@RequestParam("file") MultipartFile file, HttpServletRequest request, HttpServletResponse response){
+		Map<String,Object> map=new HashMap<String,Object>();
+		//获取文件后缀
+		String suffix = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+		if(!".zip".equalsIgnoreCase(suffix)){
+			map.put("success", false);
+			map.put("msg", "上传文件不符合要求(要求zip格式文件)！");
+			return map;
+		}
+		
+		Pattern p = Pattern.compile("[\u4e00-\u9fa5]");
+        Matcher match = p.matcher(file.getOriginalFilename());
+        if (match.find()) {
+        	map.put("success", false);
+			map.put("msg", "上传文件名称不能包含中文！");
+            return map;
+        }
+        
 		if (!file.isEmpty()){
 			//文件上传路径
 			String path = request.getSession().getServletContext().getRealPath(File.separator + "tempfile" + File.separator + "config_" + file.getOriginalFilename());
@@ -339,22 +356,26 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 						out.close();
 						String str = readExcel(xls);
 						if(!str.equals("")){
-							returnStr = "{\"success\":false,\"msg\":\"" + str + "\"}";
+							map.put("success", false);
+							map.put("msg", str);
 						}else{
-							returnStr = "{\"success\":true,\"msg\":\"上传解析文件成功!\"}";
+							map.put("success", true);
+							map.put("msg", "解析上传文件成功!");
 						}
 					}
 				}  
 				bin.close();  
 				zip.close();
 			} catch (IOException e) {
-				returnStr = "{\"success\":false,\"msg\":\"解析上传文件出错!\"}";
-				return returnStr;
+				map.put("success", false);
+				map.put("msg", "解析上传文件出错!");
+				return map;
 			}
 		}else{
-			returnStr = "{\"success\":false,\"msg\":\"上传文件为空!\"}";
+			map.put("success", false);
+			map.put("msg", "上传文件为空!");
 		}
-		return returnStr;
+		return map;
 	}
 	
 	

@@ -16,6 +16,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -435,6 +437,23 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 		Map<String,Object> map=new HashMap<String,Object>();
 		String contractId = null;
 		List<String> sqls = new ArrayList<String>();
+		
+		//获取文件后缀
+		String suffix = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+		if(!".zip".equalsIgnoreCase(suffix)){
+			map.put("success", false);
+			map.put("msg", "上传文件不符合要求(要求zip格式文件)！");
+			return map;
+		}
+		
+		Pattern p = Pattern.compile("[\u4e00-\u9fa5]");
+        Matcher match = p.matcher(file.getOriginalFilename());
+        if (match.find()) {
+        	map.put("success", false);
+			map.put("msg", "上传文件名称不能包含中文！");
+            return map;
+        }
+        
 		if (!file.isEmpty()){
 			//文件上传路径
 			String path = request.getSession().getServletContext().getRealPath(File.separator + "tempfile" + File.separator + "upload_" + file.getOriginalFilename());
@@ -594,6 +613,23 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 		Map<String,Object> map=new HashMap<String,Object>();
 		String contractId = null;
 		List<String> sqls = new ArrayList<String>();
+		
+		//获取文件后缀
+		String suffix = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+		if(!".zip".equalsIgnoreCase(suffix)){
+			map.put("success", false);
+			map.put("msg", "上传文件不符合要求(要求zip格式文件)！");
+			return map;
+		}
+		
+		Pattern p = Pattern.compile("[\u4e00-\u9fa5]");
+        Matcher match = p.matcher(file.getOriginalFilename());
+        if (match.find()) {
+        	map.put("success", false);
+			map.put("msg", "上传文件名称不能包含中文！");
+            return map;
+        }
+		        
 		if (!file.isEmpty()){
 			//文件上传路径
 			String path = request.getSession().getServletContext().getRealPath(File.separator + "tempfile" + File.separator + "server_" + file.getOriginalFilename());
