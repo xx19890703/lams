@@ -5,6 +5,32 @@
 <head>
 <title>上传</title>
 <script type="text/javascript" src="${ctx}/resources/js/system/core/treegridsel.js"></script>
+<link rel="stylesheet" href="${ctx}/resources/js/thrid/extjs/resources/css/ext-all.css" type="text/css"></link>
+    <script type="text/javascript" src="${ctx}/resources/js/thrid/extjs/adapter/ext/ext-base.js"></script>
+    <script type="text/javascript" src="${ctx}/resources/js/thrid/extjs/ext-all.js"></script>
+    <script type="text/javascript" src="${ctx}/resources/js/thrid/extjs/locale/ext-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="${ctx}/resources/js/system/core/gridcrud2.js"></script>
+    <script type="text/javascript" charset="UTF-8">
+        var cn=new Ext.grid.RowNumberer();
+		createsuungrid({
+			containerid:'contextPanel-'+$tabtitle,
+			keyid:"id",//关键字
+			type:"导出",//关键字
+			baseurl:$ctx+'/serviceuser/upLoadRecord',//基本url
+			pagenum:5,//页记录数
+			suuncolumns:[new Ext.grid.RowNumberer({header:"序号",width:40}),
+		             {columnid:'id',hidden:true,columnname:'编号'},
+                     {columnid:'contractid',columnname:'合同编号',type:'N',colwidth:80},
+                     {columnid:'contractname',columnname:'合同名称',type:'N',colwidth:80},
+					 {columnid:'person',columnname:'上传人',type:'D',colwidth:80},
+					 {columnid:'upTime',columnname:'上传时间',type:'D',colwidth:80}
+					// {columnid:'count',columnname:'下发次数',type:'D',colwidth:80},
+					],
+			inputFormWidth:720,
+			inputFormHeight:300,
+			operation:{check:{hidden:false}}
+		});
+    </script>
 <script type="text/javascript" charset="UTF-8">
 	function griduploadrecord(list) {
 		var data1 = []
@@ -91,7 +117,7 @@
 				}).show();
 	}
 
-	Ext.onReady(function() {
+	function add(){
 		Ext.Ajax.request({
 			url : $ctx + '/serviceuser/contractCategory!findContract',
 			method : 'POST',
@@ -101,7 +127,7 @@
 			}
 		})
 
-	});
+	}
 </script>
 </head>
 <body>

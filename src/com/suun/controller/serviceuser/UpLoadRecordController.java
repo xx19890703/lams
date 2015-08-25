@@ -32,7 +32,8 @@ public class UpLoadRecordController extends BaseCRUDController<UpLoadRecord>{
 	
 	@Override
 	public Page<UpLoadRecord> getPageRecords(HttpServletRequest request,Page<UpLoadRecord> page) {
-		return manager.getAllUpLoadRecord(page);
+		String type = request.getParameter("type");
+		return manager.getAllUpLoadRecord(page,type);
 	}
 
 	@Override

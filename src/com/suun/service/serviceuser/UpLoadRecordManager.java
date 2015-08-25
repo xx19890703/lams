@@ -11,6 +11,8 @@ import com.suun.model.serviceuser.UpLoadRecord;
 import com.suun.publics.hibernate.Condition;
 import com.suun.publics.hibernate.Page;
 import com.suun.publics.hibernate.SimpleHibernateTemplate;
+import com.suun.publics.hibernate.FilterInfo.Logic;
+import com.suun.publics.hibernate.OrderBy;
 
 /**
  * UpLoadRecordManager
@@ -39,7 +41,18 @@ public class UpLoadRecordManager {
 	}
 	
 	@Transactional(readOnly = true)
-	public Page<UpLoadRecord> getAllUpLoadRecord(Page<UpLoadRecord> page) {
+	public Page<UpLoadRecord> getAllUpLoadRecord(Page<UpLoadRecord> page,String type) {
+		Condition condition=page.getCondition();
+		com.suun.publics.hibernate.FilterInfo f=new com.suun.publics.hibernate.FilterInfo();
+		f.setFieldName("type");
+		f.setLogic(Logic.EQUAL);
+		f.setValue(type);
+		condition.getFilterInfos().add(f);
+		OrderBy ob = new OrderBy();
+		ob.setFieldName("upTime");
+		ob.setAsc(false);
+		condition.getOrderBys().add(ob);
+		page.setCondition(condition);
 		return manager.findAll(page);
 	}
 	

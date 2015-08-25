@@ -26,13 +26,16 @@ public class UpLoadRecord extends IdEntity{
 
 	// 上传合同编号
 	private String contractid;
+	// 上传合同编号
+	private String contractname;
 	// 上传人
 	private String person;
 	// 上传时间
 	private Date upTime;
 	// 备注
 	private String remark;
-	
+	//类型
+	private String type;//上传还是下载
 	@Column(name="contractid")
 	@NotFound(action = NotFoundAction.IGNORE)
 	public String getContractid() {
@@ -41,7 +44,13 @@ public class UpLoadRecord extends IdEntity{
 	public void setContractid(String contractid) {
 		this.contractid = contractid;
 	}
-	
+	@Column(length=50)
+	public String getContractname() {
+		return contractname;
+	}
+	public void setContractname(String contractname) {
+		this.contractname = contractname;
+	}
 	@Column(length=50)
 	public String getPerson() {
 		return person;
@@ -66,4 +75,12 @@ public class UpLoadRecord extends IdEntity{
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
+	@Column(length=20)
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+	
 }

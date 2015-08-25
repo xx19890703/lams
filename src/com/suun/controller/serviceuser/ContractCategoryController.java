@@ -27,6 +27,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -412,6 +414,19 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 	        input.close();
 	        outputStream.flush();  
 	        outputStream.close();
+	        
+	      //保存上传记录
+			ContractDetail cd = mainManager.getContractDetailByContractId(id);
+			//保存上传记录
+			UpLoadRecord upload = new UpLoadRecord();
+			upload.setContractid(id);
+			upload.setContractname(cd.getName());
+			upload.setUpTime(new Date());
+			upload.setType("导出");
+			UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			upload.setPerson(userDetails.getUsername());
+			uploadManager.saveUpLoadRecord(upload);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -507,9 +522,15 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 				zip.close();
 				
 				//保存上传记录
+				ContractDetail cd = mainManager.getContractDetailByContractId(contractId);
+				//保存上传记录
 				UpLoadRecord upload = new UpLoadRecord();
 				upload.setContractid(contractId);
+				upload.setContractname(cd.getName());
 				upload.setUpTime(new Date());
+				upload.setType("导出");
+				UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+				upload.setPerson(userDetails.getUsername());
 				uploadManager.saveUpLoadRecord(upload);
 				
 				map.put("success", true);
@@ -681,6 +702,17 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 					for(String sql:sqls){
 						dataminingManager.insertData(sql);
 					}
+					ContractDetail cd = mainManager.getContractDetailByContractId(contractId);
+					//保存上传记录
+					UpLoadRecord upload = new UpLoadRecord();
+					upload.setContractid(contractId);
+					upload.setContractname(cd.getName());
+					upload.setUpTime(new Date());
+					upload.setType("上传");
+					UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+					upload.setPerson(userDetails.getUsername());
+					uploadManager.saveUpLoadRecord(upload);
+					
 					map.put("success", true);
 					map.put("msg", "上传成功!");
 				}else{
@@ -779,6 +811,17 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 	        input.close();
 	        outputStream.flush();  
 	        outputStream.close();
+	        
+	        ContractDetail cd = mainManager.getContractDetailByContractId(id);
+			//保存上传记录
+			UpLoadRecord upload = new UpLoadRecord();
+			upload.setContractid(id);
+			upload.setContractname(cd.getName());
+			upload.setUpTime(new Date());
+			upload.setType("导出");
+			UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			upload.setPerson(userDetails.getUsername());
+			uploadManager.saveUpLoadRecord(upload);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
