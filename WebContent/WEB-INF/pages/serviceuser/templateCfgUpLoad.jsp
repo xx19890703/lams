@@ -55,7 +55,7 @@
 		});
     </script>
     <script type="text/javascript" charset="UTF-8">
-		function add(){
+		function addfile(){
 			var fp = new Ext.form.FormPanel({
 					fileUpload: true,  
 					width: 400,  

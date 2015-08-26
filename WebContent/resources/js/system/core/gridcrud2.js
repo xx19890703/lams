@@ -11,6 +11,7 @@ function createsuungridupload(option){
 	if (!option.inputFormWidth) option.inputFormWidth=200;
 	if (!option.inputFormHeight) option.inputFormHeight=150;
 	option.operation = option.operation || {};
+	option.operation.addfile=option.operation.addfile || {};
 	option.operation.add=option.operation.add || {};
 	option.operation.edit=option.operation.edit || {};
 	option.operation.del=option.operation.del || {};
@@ -18,8 +19,7 @@ function createsuungridupload(option){
 	option.operation.check=option.operation.check || {};
 	option.operation.extend=option.operation.extend || [];
 	Ext.applyIf(option.operation.add,{hidden:false,iconCls:'add',text:"添加",tooltip:'增加一条信息'});
-	Ext.applyIf(option.operation.edit,{hidden:false,iconCls:'edit',text:"修改",tooltip:'修改一条信息'});
-	Ext.applyIf(option.operation.del,{hidden:false,iconCls:'remove',text:"删除",tooltip:'删除信息'});	
+	Ext.applyIf(option.operation.addfile,{hidden:false,iconCls:'add',text:"添加",tooltip:'增加一条信息'});
 	Ext.applyIf(option.operation.exp,{hidden:false,btns:[]});
 	Ext.applyIf(option.operation.exp.btns,[
 	    {iconCls:'pdf',handler:function(btn,pressed){suunExport('pdf');}}, 
@@ -36,26 +36,19 @@ function createsuungridupload(option){
 	//var suunauths=suunCore.GetAuths(option);
 	var topbar=['->'];
 	topbar.push({
-		iconCls:option.operation.add.iconCls,
-		text:option.operation.add.text,
-		tooltip:option.operation.add.tooltip,
+		iconCls:"add",
+		text:"上传",
         handler:function(){ 
-            if (!option.operation.add.onClick) {
-            	add();
-            } else {
-            	option.operation.add.onClick(suungrid);
-            }
+            	addfile();
         }
    });
 	var bottombar=[];
 	if (!option.simplemode && !option.operation.exp.hidden &&
 			option.operation.exp.btns.length>0){
-		if (suunCore.HaveAuths(option.authurl,option.operation.exp.auth)) {	
 			bottombar.push('-');
 			for (i=0;i<option.operation.exp.btns.length;i++){
 				bottombar.push(option.operation.exp.btns[i]);
 			}
-		}
 	}	
 	var suungrid=new suunGridPanel({
 		simplemode:option.simplemode,

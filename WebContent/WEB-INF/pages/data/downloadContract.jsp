@@ -117,7 +117,7 @@
 				}).show();
 	}
 
-	function add(){
+	function addfile(){
 		Ext.Ajax.request({
 			url : $ctx + '/serviceuser/contractCategory!findContract',
 			method : 'POST',
