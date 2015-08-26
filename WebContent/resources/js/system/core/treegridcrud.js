@@ -32,16 +32,12 @@ function createtreegrid(option) {
 	option.grid.operation.add=option.grid.operation.add || {};
 	option.grid.operation.edit=option.grid.operation.edit || {};
 	option.grid.operation.del=option.grid.operation.del || {};
-	option.grid.operation.down=option.grid.operation.down || {};
-	option.grid.operation.upload=option.grid.operation.upload || {};
 	option.grid.operation.exp=option.grid.operation.exp || {};
 	option.grid.operation.check=option.grid.operation.check || {};
 	option.grid.operation.extend=option.grid.operation.extend || [];
 	Ext.applyIf(option.grid.operation.add,{hidden:false,iconCls:'add',text:"添加",tooltip:'增加一条信息'});
 	Ext.applyIf(option.grid.operation.edit,{hidden:false,iconCls:'edit',text:"修改",tooltip:'修改一条信息'});
 	Ext.applyIf(option.grid.operation.del,{hidden:false,iconCls:'remove',text:"删除",tooltip:'删除信息'});
-	Ext.applyIf(option.grid.operation.down,{hidden:false,iconCls:'down',text:"下载",tooltip:'下载数据包'});
-	Ext.applyIf(option.grid.operation.upload,{hidden:false,iconCls:'upload',text:"上传",tooltip:'上载数据包'});
 	Ext.applyIf(option.grid.operation.exp,{hidden:false,btns:[]});
 	Ext.applyIf(option.grid.operation.exp.btns,[
 	    {iconCls:'pdf',handler:function(btn,pressed){suunExport('pdf');}}, 
@@ -219,41 +215,6 @@ function createtreegrid(option) {
 	                	griddeleterecord();
 	                } else {
 	                	option.grid.operation.del.onClick(tree,suungrid);
-	                }
-	            }
-	       });
-		}	
-	}
-	//下载
-	if (suunCore.HaveAuths(option.authurl,option.grid.operation.down.auth)) {		
-    	if (!option.grid.operation.down.hidden){
-			gridtopbar.push({
-				iconCls:option.grid.operation.down.iconCls,
-				text:option.grid.operation.down.text,
-				tooltip:option.grid.operation.down.tooltip,
-	            handler:function(){ 
-	                if (!option.grid.operation.down.onClick) {
-	                	griddownrecord();
-	                } else {
-	                	option.grid.operation.down.onClick(tree,suungrid);
-	                }
-	            }
-	       });
-		}	
-	}
-	
-	//上传
-	if (suunCore.HaveAuths(option.authurl,option.grid.operation.upload.auth)) {		
-    	if (!option.grid.operation.upload.hidden){
-			gridtopbar.push({
-				iconCls:option.grid.operation.upload.iconCls,
-				text:option.grid.operation.upload.text,
-				tooltip:option.grid.operation.upload.tooltip,
-	            handler:function(){ 
-	                if (!option.grid.operation.upload.onClick) {
-	                	griduploadrecord();
-	                } else {
-	                	option.grid.operation.upload.onClick(tree,suungrid);
 	                }
 	            }
 	       });
@@ -585,65 +546,6 @@ function createtreegrid(option) {
 			return;
 		}
 		window.open(option.grid.downurl+'?id='+record[0].get(option.grid.keyid)+'&treeid='+tree.selModel.selNode.id);
-	}
-	
-	//上传
-	function griduploadrecord() {
-		var formUpload = new Ext.form.FormPanel({
-			baseCls : 'x-plain',
-			labelWidth : 80,
-			fileUpload : true,
-			defaultType : 'textfield',
-			items : [{
-				xtype : 'textfield',
-				fieldLabel : '文 件',
-				name : 'file',
-				inputType : 'file',
-				allowBlank : false,
-				blankText : '请上传文件',
-				anchor : '90%'
-			}]
-		});
-
-		var winUpload = new Ext.Window({
-			title : '资源上传',
-			width : 400,
-			height : 200,
-			minWidth : 300,
-			minHeight : 100,
-			layout : 'fit',
-			plain : true,
-			bodyStyle : 'padding:5px;',
-			buttonAlign : 'center',
-			items : formUpload,
-			buttons : [{
-				text : '上 传',
-				handler : function() {
-					if (formUpload.form.isValid()) {
-						formUpload.getForm().submit({
-							url : option.grid.uploadurl,
-							waitMsg: '正在处理',  
-				            waitTitle: '请等待',
-				            success : function(form, action) {
-				            	var flag=action.result.msg;
-								Ext.Msg.alert('成功', flag);
-								winUpload.hide();
-							},
-							failure : function(form,action) {
-								console.log(action.result);
-								var flag=action.result.msg;
-								Ext.Msg.alert('错误', flag);
-							}
-						})
-					}
-				}
-			}, {
-				text : '取 消',
-				handler : function() {
-					winUpload.hide();
-				}
-			} ]
-		}).show(); 
 	}
 	
 	// 查看

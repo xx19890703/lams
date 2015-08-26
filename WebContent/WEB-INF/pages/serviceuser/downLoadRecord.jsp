@@ -24,8 +24,7 @@
 					 {columnid:'state.data_name',columnname:'状态',type:'C',colwidth:80},
 					],
 			inputFormWidth:720,
-			inputFormHeight:300,
-			operation:{check:{hidden:false}}
+			inputFormHeight:300
 		});
     </script>
 </head>

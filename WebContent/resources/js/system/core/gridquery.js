@@ -81,7 +81,7 @@
                    }]
                 },{
                 	layout:'form',
-                    columnWidth:.5,  //该列占用的宽度，标识为50％
+                    columnWidth:1,  //该列占用的宽度，标识为50％
                     items: [{
                 	   name: "htbh",
                 	   xtype:"textfield",

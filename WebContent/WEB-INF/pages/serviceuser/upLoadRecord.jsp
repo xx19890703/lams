@@ -21,8 +21,7 @@
 					// {columnid:'count',columnname:'下发次数',type:'D',colwidth:80},
 					],
 			inputFormWidth:720,
-			inputFormHeight:300,
-			operation:{check:{hidden:false}}
+			inputFormHeight:300
 		});
     </script>
 </head>

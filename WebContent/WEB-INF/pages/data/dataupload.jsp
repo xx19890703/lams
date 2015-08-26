@@ -11,7 +11,7 @@
     <script type="text/javascript" src="${ctx}/resources/js/system/core/gridcrud2.js"></script>
     <script type="text/javascript" charset="UTF-8">
         var cn=new Ext.grid.RowNumberer();
-		createsuungrid({
+		createsuungridupload({
 			containerid:'contextPanel-'+$tabtitle,
 			keyid:"id",//关键字
 			type:"上传",//关键字

@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +26,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,7 +35,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fr.base.FRContext;
+import com.suun.model.serviceuser.TemplateCfgUpLoad;
 import com.suun.model.serviceuser.TemplateRes;
 import com.suun.model.serviceuser.TemplateResContent;
 import com.suun.model.serviceuser.TemplateResDetail;
@@ -40,6 +46,7 @@ import com.suun.model.system.Constant;
 import com.suun.publics.controller.TreeGridCRUDController;
 import com.suun.publics.hibernate.Condition;
 import com.suun.publics.hibernate.Page;
+import com.suun.service.serviceuser.TemplateCfgUpLoadManager;
 import com.suun.service.serviceuser.TemplateResManager;
 import com.suun.service.system.DicManager;
 
@@ -54,6 +61,10 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 
 	@Autowired
 	TemplateResManager mainManager;
+	
+	@Autowired
+	TemplateCfgUpLoadManager upManager;
+	
 	@Autowired 
 	DicManager dicManager;
 	
@@ -278,17 +289,19 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 	 * @param request
 	 * @param response
 	 * @return  前端extjs form.getForm().submit 需要返回类型为text/html  故返回String
+	 * @throws JsonProcessingException 
 	 */
 	@RequestMapping
 	@ResponseBody
-	public Map<String,Object> configupload(@RequestParam("file") MultipartFile file, HttpServletRequest request, HttpServletResponse response){
+	public String configupload(@RequestParam("file") MultipartFile file, HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException{
 		Map<String,Object> map=new HashMap<String,Object>();
+		ObjectMapper mapper = new ObjectMapper();
 		//获取文件后缀
 		String suffix = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
 		if(!".zip".equalsIgnoreCase(suffix)){
 			map.put("success", false);
 			map.put("msg", "上传文件不符合要求(要求zip格式文件)！");
-			return map;
+			return mapper.writeValueAsString(map);
 		}
 		
 		Pattern p = Pattern.compile("[\u4e00-\u9fa5]");
@@ -296,7 +309,7 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
         if (match.find()) {
         	map.put("success", false);
 			map.put("msg", "上传文件名称不能包含中文！");
-            return map;
+			return mapper.writeValueAsString(map);
         }
         
 		if (!file.isEmpty()){
@@ -359,6 +372,14 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 							map.put("success", false);
 							map.put("msg", str);
 						}else{
+							//保存上传记录
+							TemplateCfgUpLoad upload = new TemplateCfgUpLoad();
+							UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+							upload.setPerson(userDetails.getUsername());
+							upload.setUpTime(new Date(System.currentTimeMillis()));
+							upload.setPath(path);
+							upManager.saveTemplateCfgUpLoad(upload);
+							
 							map.put("success", true);
 							map.put("msg", "解析上传文件成功!");
 						}
@@ -369,13 +390,13 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 			} catch (IOException e) {
 				map.put("success", false);
 				map.put("msg", "解析上传文件出错!");
-				return map;
+				return mapper.writeValueAsString(map);
 			}
 		}else{
 			map.put("success", false);
 			map.put("msg", "上传文件为空!");
 		}
-		return map;
+		return mapper.writeValueAsString(map);
 	}
 	
 	
@@ -423,7 +444,7 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 		        tempres.setState(dicManager.getByKey("STATE", "1"));
 		        mainManager.saveTemplateRes(tempres);
 			}else{
-				return sheets[0]+"中主键重复！";
+				return sheets[0]+"中主键(" + temp.getDid() + ")重复！";
 			}
 		}
 		
@@ -450,17 +471,17 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 				   return sheets[1]+"未找到此行的外键！";
 			   }
 		   }else{
-			   return sheets[1]+"中主键重复！";
+			   return sheets[1]+"中主键(" + resdetail.getDid() + ")重复！";
 		   }
 		}
 				
 		// 读取sheet(templateres_content)的内容  
 		sheet = xls.getSheet(sheets[2]); 
-		for (int i = 2; i < sheet.getPhysicalNumberOfRows(); i++) {  
+		for (int i = 2; i < sheet.getPhysicalNumberOfRows(); i++) {
 			row = sheet.getRow(i);
 			TemplateResDetail rescontent = mainManager.getTemplateResDetail(row.getCell(0).toString());
 			if(null == rescontent){
-			TemplateResDetail resdetail = mainManager.getTemplateResDetail(row.getCell(4).toString());
+				TemplateResDetail resdetail = mainManager.getTemplateResDetail(row.getCell(4).toString());
 				if(null != resdetail){
 					TemplateResContent tempcontent = new TemplateResContent();
 					tempcontent.setDid(row.getCell(0).toString());
@@ -477,7 +498,7 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 					return sheets[2]+"未找到此行的外键！";
 				}
 			}else{
-				return sheets[2]+"中主键重复！";
+				return sheets[2]+"中主键(" + rescontent.getDid() + ")重复！";
 			}
 		}
 		mainManager.getSessionFactory().getCurrentSession().flush();

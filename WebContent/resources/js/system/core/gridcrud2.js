@@ -1,4 +1,4 @@
-function createsuungrid(option){	
+function createsuungridupload(option){	
 	//处理默认值
 	if (!option.containerid||!option.keyid) {
 		alert("containerid||keyid is null")
@@ -34,7 +34,7 @@ function createsuungrid(option){
 		ftype='ENCTYPE="multipart/form-data"';	
 	//为权限预留
 	//var suunauths=suunCore.GetAuths(option);
-	var topbar=[];
+	var topbar=['->'];
 	topbar.push({
 		iconCls:option.operation.add.iconCls,
 		text:option.operation.add.text,

@@ -4,14 +4,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <title>配置包上传</title>
-    <link rel="stylesheet" type="text/css" media="all" href="${ctx}/resources/js/thrid/calendar/calendar-blue.css"  />
-    <script type="text/javascript" src="${ctx}/resources/js/thrid/calendar/jquery.calendar.js"/>
-    <script type="text/javascript" src="${ctx}/resources/js/thrid/calendar/calendar-cn-utf8.js"></script>
-    <!-- script和class两种校验均可 class校验不能换行 -->
-	<script type="text/javascript" src="${ctx}/resources/js/thrid/validate/jquery.validate.js"></script>
-    <script type="text/javascript" src="${ctx}/resources/js/thrid/validate/messages_cn.js"></script>
-    <script type="text/javascript" src="${ctx}/resources/js/thrid/validate/jquery.metadata.js"></script>
+    <link rel="stylesheet" href="${ctx}/resources/js/thrid/extjs/resources/css/ext-all.css" type="text/css"></link>
+    <script type="text/javascript" src="${ctx}/resources/js/thrid/extjs/adapter/ext/ext-base.js"></script>
+    <script type="text/javascript" src="${ctx}/resources/js/thrid/extjs/ext-all.js"></script>
+    <script type="text/javascript" src="${ctx}/resources/js/thrid/extjs/locale/ext-lang-zh_CN.js"></script>
     <script type="text/javascript" src="${ctx}/resources/js/system/core/ux/FileUploadField.js"></script>
+    <script type="text/javascript" src="${ctx}/resources/js/system/core/gridcrud2.js"></script>
     
     <style type=text/css>         
 	    .x-form-file-wrap {  
@@ -41,7 +39,7 @@
    </style>
    <script type="text/javascript" charset="UTF-8">
         var cn=new Ext.grid.RowNumberer();
-		createsuungrid({
+        createsuungridupload({
 			containerid:'contextPanel-'+$tabtitle,
 			keyid:"id",//关键字
 			baseurl:$ctx+'/serviceuser/templateCfgUpLoad',//基本url
@@ -49,7 +47,7 @@
 			suuncolumns:[new Ext.grid.RowNumberer({header:"序号",width:40}),
 		             {columnid:'id',hidden:true,columnname:'编号'},
 					 {columnid:'person',columnname:'上传人',type:'D',colwidth:80},
-					 {columnid:'upTime',columnname:'上传时间',type:'D',colwidth:100},
+					 {columnid:'upTime',columnname:'上传时间',type:'N',colwidth:100},
 					 {columnid:'path',columnname:'文件路径',type:'D',colwidth:300}
 					],
 			inputFormWidth:720,
@@ -58,7 +56,7 @@
     </script>
     <script type="text/javascript" charset="UTF-8">
 		function add(){
-			var fp=new Ext.form.FormPanel({ 
+			var fp = new Ext.form.FormPanel({
 					fileUpload: true,  
 					width: 400,  
 					frame: true,   
@@ -101,7 +99,7 @@
                                     success: function(form, action) {
                                     	if (action.result.success==true){
                                     		Ext.Msg.alert('消息',action.result.msg);
-                                    		windowupload.close(); 
+                                    		windowupload.close();
                                     	}
                                     },
 	                            	failure : function(form, action) {
@@ -117,7 +115,8 @@
                         }  
                      }]  
 		    });
-			var windowupload=new Ext.Window({
+			
+			var windowupload = new Ext.Window({
 			    title:'上传文件',
 			    width: 410,
 		        height:140, 
@@ -125,8 +124,7 @@
 				resizable: false,
 			    closeAction:'close',
 			    items:[fp]
-			});
-			windowupload.show();
+			}).show();
 		}
     </script>
 </head>
