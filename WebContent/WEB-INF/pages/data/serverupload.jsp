@@ -32,7 +32,7 @@
     </script>
     <script type="text/javascript" charset="UTF-8">
    
-    function add() {
+    function addfile() {
 		var form = new Ext.form.FormPanel({  
 		     baseCls : 'x-plain',  
 		     labelWidth : 150,  
