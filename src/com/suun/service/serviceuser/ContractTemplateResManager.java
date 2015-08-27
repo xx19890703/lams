@@ -37,6 +37,7 @@ public class ContractTemplateResManager{
 		return conmanager.findAll(page);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Transactional(readOnly = true)
 	public List<ContractTemplateRes> getContractTemplateResByContractId(String contractId) {
 		List<ContractTemplateRes> list = new ArrayList<ContractTemplateRes>();

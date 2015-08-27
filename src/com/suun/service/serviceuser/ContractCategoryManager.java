@@ -117,6 +117,7 @@ public class ContractCategoryManager {
 		return submanager.findAll(condition);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<ContractDetail> getAllContractDetails(String zzcid,String htmc,String htbh,String ssdd){
 		String hql="from ContractDetail o where o.name like ? and o.did like ? and o.orderinfo like ? and o.finfo.fno like ?";
 		List<ContractDetail> list=submanager.find(hql,"%"+htmc+"%","%"+htbh+"%","%"+ssdd+"%" ,"%"+zzcid+"%");
@@ -216,6 +217,7 @@ public class ContractCategoryManager {
 	 * @param url
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public Contract_template findContract_templateByTemplateUrl(String url){
 		List<Contract_template> list=new ArrayList<Contract_template>();
 		String hql="from Contract_template o where o.id.templateUrl=? order by o.id.contractId desc";
@@ -232,6 +234,7 @@ public class ContractCategoryManager {
 	 * @param cid
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public List<Contract_template> findContract_templateByContractId(String cid){
 		List<Contract_template> list=new ArrayList<Contract_template>();
 		String hql="from Contract_template o where o.id.contractId=?";
@@ -244,6 +247,7 @@ public class ContractCategoryManager {
 	 * @param cid
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public List<Contract_mode> findContract_modeByContractId(String cid){
 		List<Contract_mode> list=new ArrayList<Contract_mode>();
 		String hql="from Contract_mode o where o.id.contractId=?";

@@ -50,13 +50,17 @@ public class ContractDetail {
 	private Date planImportTime;
 	// 导出次数
 	private Integer importCount;
-	// 当前状态
+	// 审核人
+	private String auditPerson;
+	// 审核时间
+	private Date auditTime;
+	// 合同状态
 	private com.suun.model.system.Dic_data status;
 	// 关联主表
 	private ContractCategory conmain;
 	// 模板对应数据库表
 	private List<ContractTemplateRes> rescontent=new ArrayList<ContractTemplateRes>();
-	// 状态
+	// 数据状态
 	private com.suun.model.system.Dic_data state;
 	
 	@Id
@@ -159,7 +163,7 @@ public class ContractDetail {
 	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, 
 			targetEntity = com.suun.model.system.Dic_data.class)
 	@JoinColumnsOrFormulas({
-            @JoinColumnOrFormula(column=@JoinColumn(name = "xfstatus", referencedColumnName = "data_no")),
+            @JoinColumnOrFormula(column=@JoinColumn(name = "status", referencedColumnName = "data_no")),
 		    @JoinColumnOrFormula(formula=@JoinFormula(value="'STATUS'", referencedColumnName = "dic_no"))
 	})
 	@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
@@ -176,5 +180,22 @@ public class ContractDetail {
 	}
 	public void setImportCount(Integer importCount) {
 		this.importCount = importCount;
+	}
+	
+	@Column(length=50)
+	public String getAuditPerson() {
+		return auditPerson;
+	}
+	public void setAuditPerson(String auditPerson) {
+		this.auditPerson = auditPerson;
+	}
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(length=50)
+	public Date getAuditTime() {
+		return auditTime;
+	}
+	public void setAuditTime(Date auditTime) {
+		this.auditTime = auditTime;
 	}
 }

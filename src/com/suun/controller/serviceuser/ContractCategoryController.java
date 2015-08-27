@@ -294,6 +294,23 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 		return modelMap;	
 	}
 	
+	@RequestMapping
+	@ResponseBody
+	public Map<String, Object> gridaudit(HttpServletRequest request, String contractid, String auditPerson, String auditTime) {
+		Map<String, Object> modelMap = new HashMap<String, Object>();
+		ContractDetail detail = subManager.get(contractid);
+		if(detail != null){
+			detail.setAuditPerson(auditPerson);
+			detail.setAuditTime(new Date());
+			detail.setStatus(dicManager.getByKey("STATUS", "B"));
+			subManager.saveRecordSet(request, detail);
+			modelMap.put("success", true);
+		}else{
+			modelMap.put("success", false);
+		}
+		return modelMap;
+	}
+	
 	/**
 	 * 服务端下载数据包，给客户端导入模板使用
 	 * @param treeid
@@ -742,8 +759,6 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 	public void clientupload(HttpServletRequest request, HttpServletResponse response){
 		String id = request.getParameter("contractId");
 		response.reset();
-		//获取路径
-		String reportPath = FRContext.getCurrentEnv().getPath();
 		
 		//创建临时文件夹
 		String envPath = request.getSession().getServletContext().getRealPath(File.separator + "tempfile");
@@ -758,9 +773,7 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 	        ContractDetail contract = mainManager.getContractDetailByContractId(id);
 	        String tempPath = envPath + File.separator +"down_" + id + "_" + System.currentTimeMillis() + ".zip";
 	        zos = new ZipOutputStream(new FileOutputStream(tempPath));
-	        DataminingStrategy strategy = factory.getStrategy();
 	        int readLength = 0;
-	        String filePath = "";
 	        
 	        //返回合同-数据库表的数据
 	        for(String temp : dataminingManager.findTableData(contract.getDid(),"contract_mode"))

@@ -12,7 +12,6 @@ import org.springframework.stereotype.Controller;
 
 import com.suun.model.serviceuser.ContractDetail;
 import com.suun.model.serviceuser.DownLoadRecord;
-import com.suun.model.system.Dic_data;
 import com.suun.publics.controller.BaseCRUDController;
 import com.suun.publics.hibernate.Condition;
 import com.suun.publics.hibernate.Page;

@@ -32,12 +32,14 @@ function createtreegrid(option) {
 	option.grid.operation.add=option.grid.operation.add || {};
 	option.grid.operation.edit=option.grid.operation.edit || {};
 	option.grid.operation.del=option.grid.operation.del || {};
+	option.grid.operation.audit=option.grid.operation.audit || {};
 	option.grid.operation.exp=option.grid.operation.exp || {};
 	option.grid.operation.check=option.grid.operation.check || {};
 	option.grid.operation.extend=option.grid.operation.extend || [];
 	Ext.applyIf(option.grid.operation.add,{hidden:false,iconCls:'add',text:"添加",tooltip:'增加一条信息'});
 	Ext.applyIf(option.grid.operation.edit,{hidden:false,iconCls:'edit',text:"修改",tooltip:'修改一条信息'});
 	Ext.applyIf(option.grid.operation.del,{hidden:false,iconCls:'remove',text:"删除",tooltip:'删除信息'});
+	Ext.applyIf(option.grid.operation.audit,{hidden:true,iconCls:'upload',text:"审核",tooltip:'审核信息'});
 	Ext.applyIf(option.grid.operation.exp,{hidden:false,btns:[]});
 	Ext.applyIf(option.grid.operation.exp.btns,[
 	    {iconCls:'pdf',handler:function(btn,pressed){suunExport('pdf');}}, 
@@ -215,6 +217,23 @@ function createtreegrid(option) {
 	                	griddeleterecord();
 	                } else {
 	                	option.grid.operation.del.onClick(tree,suungrid);
+	                }
+	            }
+	       });
+		}	
+	}
+	// grid审核
+	if (suunCore.HaveAuths(option.authurl,option.grid.operation.audit.auth)) {		
+    	if (!option.grid.operation.audit.hidden){
+			gridtopbar.push({
+				iconCls:option.grid.operation.audit.iconCls,
+				text:option.grid.operation.audit.text,
+				tooltip:option.grid.operation.audit.tooltip,
+	            handler:function(){ 
+	                if (!option.grid.operation.audit.onClick) {
+	                	gridauditrecord();
+	                } else {
+	                	option.grid.operation.audit.onClick(tree,suungrid);
 	                }
 	            }
 	       });
@@ -525,13 +544,14 @@ function createtreegrid(option) {
 			});       	    					
 		}
 	}
-	//下载
-	function griddownrecord() {
+	
+	//审核
+	function gridauditrecord() {
 		var record =suungrid.getSelectionModel().getSelections(); 
 		if (record.length == 0) {
 			Ext.MessageBox.show({
 				title : "提示",
-				msg : "请先选择您要下载的数据行！",
+				msg : "请先选择您要审核的行！",
 				icon : Ext.MessageBox.INFO,
 				buttons : Ext.Msg.OK
 			})
@@ -539,13 +559,13 @@ function createtreegrid(option) {
 		} else if (record.length > 1) {
 			Ext.MessageBox.show({
 				title : "提示",
-				msg : "只能下载一行数据！",
+				msg : "只能选择一行数据进行审核！",
 				icon : Ext.MessageBox.WARNING,
 				buttons : Ext.Msg.OK
 			});
 			return;
 		}
-		window.open(option.grid.downurl+'?id='+record[0].get(option.grid.keyid)+'&treeid='+tree.selModel.selNode.id);
+		auditrecord(record[0].get(option.grid.keyid));
 	}
 	
 	// 查看
