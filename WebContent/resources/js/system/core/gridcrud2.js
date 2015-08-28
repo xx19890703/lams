@@ -39,7 +39,7 @@ function createsuungridupload(option){
 		iconCls:"add",
 		text:"上传",
         handler:function(){ 
-            	addfile();
+        	addfile();
         }
    });
 	var bottombar=[];

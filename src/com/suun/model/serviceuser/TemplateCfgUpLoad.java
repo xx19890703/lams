@@ -53,5 +53,4 @@ public class TemplateCfgUpLoad extends IdEntity{
 	public void setPath(String path) {
 		this.path = path;
 	}
-	
 }

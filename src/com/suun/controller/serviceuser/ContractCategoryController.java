@@ -223,6 +223,13 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 	public int getTreeLeaf(ContractCategory t) {
 		return 0;
 	}
+	
+	protected ContractDetail getGridClass(){
+		ContractDetail trd = new ContractDetail();
+		List<ContractTemplateRes> rescontent=new ArrayList<ContractTemplateRes>();
+		trd.setRescontent(rescontent);
+		return trd;
+	}
 
 	@Override
 	protected String deleteGridRecordSet(HttpServletRequest request,String treeid, String[] ids) {

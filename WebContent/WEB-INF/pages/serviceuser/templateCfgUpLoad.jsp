@@ -4,8 +4,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <title>配置包上传</title>
+    <link rel="stylesheet" href="${ctx}/resources/js/thrid/extjs/resources/css/ext-all.css" type="text/css"></link>
+    <script type="text/javascript" src="${ctx}/resources/js/thrid/extjs/adapter/ext/ext-base.js"></script>
+    <script type="text/javascript" src="${ctx}/resources/js/thrid/extjs/ext-all.js"></script>
+    <script type="text/javascript" src="${ctx}/resources/js/thrid/extjs/locale/ext-lang-zh_CN.js"></script>
     <script type="text/javascript" src="${ctx}/resources/js/system/core/gridcrud2.js"></script>
-    
     <style type=text/css>         
 	    .x-form-file-wrap {  
 	        position: relative;  
@@ -48,8 +51,7 @@
 			inputFormWidth:720,
 			inputFormHeight:300
 		});
-    </script>
-    <script type="text/javascript" charset="UTF-8">
+        
 		function addfile(){
 			var fp = new Ext.form.FormPanel({
 					fileUpload: true,  

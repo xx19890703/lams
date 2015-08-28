@@ -63,19 +63,25 @@
 	    function selectContract(){		
         	treegridselect({baseurl:$ctx+"/serviceuser/contractCategory",//基本url
 				tree:{
-					width:'30%'//默认40%
+					width:'25%'//默认40%
 				},
 				grid:{
 					pagenum:10,//页记录数 默认20
-					suuncolumns:[{columnid:'did',columnname:'编号',colwidth:20,defaultsort:true},
-						 {columnid:'name',columnname:'合同名称',colwidth:40},
-						 {columnid:'status.data_name',columnname:'合同状态',colwidth:40}  ]
+					suuncolumns:[{columnid:'did',columnname:'编号',colwidth:40,defaultsort:true},
+						 {columnid:'name',columnname:'合同名称',colwidth:80},
+						 {columnid:'auditPerson',columnname:'审核人',colwidth:50},
+						 {columnid:'auditTime',columnname:'审核时间',colwidth:50},
+						 {columnid:'planImportTime',columnname:'预计导入时间',colwidth:50},
+						 {columnid:'status.data_name',columnname:'合同状态',colwidth:40}]
 				},
-				winWidth:650,
-				winHeight:350,
+				winWidth:850,
+				winHeight:450,
 				callback:function(records){
 					$("input[name='contractid.did']").val(records[0].get('did'));
 					$("input[name='contractid.name']").val(records[0].get('name'));
+					$("input[name='checekPerson']").val(records[0].get('auditPerson'));
+					$("input[name='checkTime']").val(records[0].get('auditTime'));
+					$("input[name='importTime']").val(records[0].get('planImportTime'));
 				}
 			});
 		}

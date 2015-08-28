@@ -1696,13 +1696,12 @@ var suunCore = {
 				if (!options.tree.newurl) options.tree.newurl='';
 				if (!options.tree.editurl) options.tree.editurl='';
 				if (!options.tree.saveurl) options.tree.saveurl='';
-				if (!options.tree.auditurl) options.tree.auditurl='';
 				if (!options.tree.deleteurl) options.tree.deleteurl='';
 			}
 			if (!options.tree.baseurl&&!options.grid.baseurl) {
 				if (!options.baseurl){
 					if (!options.authurl&&
-						(!options.tree.baseurl&&(!options.tree.listurl||!options.tree.newurl||!options.tree.editurl||!options.tree.saveurl||!options.tree.deleteurl||!options.tree.auditurl))||
+						(!options.tree.baseurl&&(!options.tree.listurl||!options.tree.newurl||!options.tree.editurl||!options.tree.saveurl||!options.tree.deleteurl))||
 						(!options.grid.baseurl&&(!options.grid.listurl||!options.grid.newurl||!options.grid.editurl||!options.grid.saveurl||!options.grid.deleteurl||!options.grid.exporturl||!options.grid.auditurl))){
 						alert("url is null")
 						return false;
