@@ -39,7 +39,7 @@ function createtreegrid(option) {
 	Ext.applyIf(option.grid.operation.add,{hidden:false,iconCls:'add',text:"添加",tooltip:'增加一条信息'});
 	Ext.applyIf(option.grid.operation.edit,{hidden:false,iconCls:'edit',text:"修改",tooltip:'修改一条信息'});
 	Ext.applyIf(option.grid.operation.del,{hidden:false,iconCls:'remove',text:"删除",tooltip:'删除信息'});
-	Ext.applyIf(option.grid.operation.audit,{hidden:true,iconCls:'upload',text:"审核",tooltip:'审核信息'});
+	Ext.applyIf(option.grid.operation.audit,{hidden:true,iconCls:'select',text:"审核",tooltip:'审核信息'});
 	Ext.applyIf(option.grid.operation.exp,{hidden:false,btns:[]});
 	Ext.applyIf(option.grid.operation.exp.btns,[
 	    {iconCls:'pdf',handler:function(btn,pressed){suunExport('pdf');}}, 
@@ -231,7 +231,7 @@ function createtreegrid(option) {
 				tooltip:option.grid.operation.audit.tooltip,
 	            handler:function(){ 
 	                if (!option.grid.operation.audit.onClick) {
-	                	gridauditrecord();
+	                	gridauditrecord(refresh);
 	                } else {
 	                	option.grid.operation.audit.onClick(tree,suungrid);
 	                }
@@ -271,6 +271,10 @@ function createtreegrid(option) {
 			Ext.apply(store.baseParams, {treeid:tid});		
 		}
 	});
+	
+	function refresh(){
+		suungrid.loadStore();
+	}
 	
 	Ext.getCmp(option.containerid).add(tree);
 	Ext.getCmp(option.containerid).add(suungrid);
@@ -546,7 +550,7 @@ function createtreegrid(option) {
 	}
 	
 	//审核
-	function gridauditrecord() {
+	function gridauditrecord(refresh) {
 		var record =suungrid.getSelectionModel().getSelections(); 
 		if (record.length == 0) {
 			Ext.MessageBox.show({
@@ -565,7 +569,7 @@ function createtreegrid(option) {
 			});
 			return;
 		}
-		auditrecord(record[0].get(option.grid.keyid));
+		auditrecord(record[0].get(option.grid.keyid),refresh);
 	}
 	
 	// 查看

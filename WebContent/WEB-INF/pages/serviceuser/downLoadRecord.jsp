@@ -19,13 +19,34 @@
 					 {columnid:'contractid.name',columnname:'合同名称',colwidth:80},
 					 {columnid:'person',columnname:'下发人',type:'D',colwidth:80},
 					 {columnid:'issuedTime',columnname:'下发时间',type:'D',colwidth:80},
+					 {columnid:'contractid.conmain.did',hidden:true,columnname:'父节点',type:'N',colwidth:80},
 					 {columnid:'importTime',columnname:'预计导入时间',type:'D',colwidth:80},
 					// {columnid:'count',columnname:'下发次数',type:'D',colwidth:80},
 					 {columnid:'state.data_name',columnname:'状态',type:'C',colwidth:80},
+					 new Ext.grid.Column({
+							header : "管理",
+							dataIndex : "contractid.did",
+							sortable : false,
+							width : 60,
+							renderer : function(j, i, g, m, h) {
+								console.log(g.data)
+								var l = g.data['contractid.did'];
+								var ll = g.data['contractid.conmain.did'];
+								var k = "";
+								if (l != 0) {
+									k += '<button   onclick="javascript:down(\''+l+'\',\''+ll+'\');">下载合同</button>';									
+								}
+								return k;
+							}
+						})
 					],
 			inputFormWidth:720,
 			inputFormHeight:300
 		});
+		
+		function down(id,pid){
+			window.open($ctx+'/serviceuser/contractCategory!griddown.do?id='+id+'&treeid='+pid);
+		}
     </script>
 </head>
 <body> 

@@ -32,10 +32,10 @@
     </script>
     <script type="text/javascript" charset="UTF-8">
    
-    function addfile() {
+    function addfile(callback) {
 		var form = new Ext.form.FormPanel({  
 		     baseCls : 'x-plain',  
-		     labelWidth : 150,  
+		     labelWidth : 80,  
 		     labelHeight: 150,  
 		     fileUpload : true,  
 		     defaultType : 'textfield',  
@@ -55,8 +55,8 @@
             fileUpload:true,   
             defaultType: 'textfield',
             autoScroll:true,
-        	width: 400,
-	        height: 250,
+        	width: 300,
+	        height: 120,
             title: '<center style="curor:hand">上传</center>',
             items: form,
 			buttons : [{
@@ -69,15 +69,14 @@
 							success : function(form, action) {
 								var flag = action.result.msg;
 								Ext.Msg.alert('成功', flag);
-								winUpload.hide();
+								formUpload.hide();
 								suungrid.loadStore();
 							},
 							failure : function(form, action) {
-								console.log(action.result);
 								var flag = action.result.msg;
 								Ext.Msg.alert('错误', flag);
-								winUpload.hide();
-								suungrid.loadStore();
+								formUpload.close();
+								callback();
 							}
 						});
 				}

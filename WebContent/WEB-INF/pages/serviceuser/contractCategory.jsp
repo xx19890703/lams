@@ -37,7 +37,7 @@
       });
    </script>
    <script type="text/javascript">
-      function auditrecord(id){
+      function auditrecord(id,refresh){
    	   var fp = new Ext.form.FormPanel({
 			width: 400,  
 			frame: true,   
@@ -96,8 +96,10 @@
 	                       			if(o.success==true){
 	                       				Ext.Msg.alert('消息','审核完成');
 	                               		windowupload.close();
+	                               		callback();
 	                       			}else{
 	                       				Ext.Msg.alert('错误', '审核失败！');
+	                       				callback();
 	                       			}
 	                       		}, 
 	                       		failure : function() { 

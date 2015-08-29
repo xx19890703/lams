@@ -39,9 +39,11 @@ function createsuungridupload(option){
 		iconCls:"add",
 		text:"上传",
         handler:function(){ 
-        	addfile();
+        	addfile(refresh);
         }
    });
+	
+	
 	var bottombar=[];
 	if (!option.simplemode && !option.operation.exp.hidden &&
 			option.operation.exp.btns.length>0){
@@ -52,6 +54,7 @@ function createsuungridupload(option){
 	}	
 	var suungrid=new suunGridPanel({
 		simplemode:option.simplemode,
+		fileid:'aaa',
 	    listurl:option.baseurl+"!lists",
 		pagenum:option.pagenum,
 		isprewidth:option.isprewidth,
@@ -78,6 +81,9 @@ function createsuungridupload(option){
 	});
 	return suungrid;
 	
+	function refresh(){
+		suungrid.loadStore();
+	}
 	//导出
 	function suunExport(exporttype){	
 		var suunGridcolumnstr='';

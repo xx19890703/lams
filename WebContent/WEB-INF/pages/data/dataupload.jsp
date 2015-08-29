@@ -31,7 +31,7 @@
 		});
     </script>
     <script type="text/javascript" charset="UTF-8">
-		function addfile() {
+		function addfile(callback) {
 		
 		var form = new Ext.form.FormPanel({  
 		     baseCls : 'x-plain',  

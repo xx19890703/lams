@@ -52,7 +52,7 @@
 			inputFormHeight:300
 		});
         
-		function addfile(){
+		function addfile(callback){
 			var fp = new Ext.form.FormPanel({
 					fileUpload: true,  
 					width: 400,  
@@ -65,13 +65,20 @@
 					    allowBlank: false,  
 					    msgTarget: 'side'  
 					},  
-					items: [{  
+					items: [/* {  
 					    xtype: 'textfield',  
 					    fieldLabel: '文件名称', 
 					    name:"fileid",
 					    readOnly:true,
 					    id:"fileid"
-					}, {  
+					}, */ {  
+				        xtype : 'textfield',  
+				        fieldLabel : '选择文件',  
+				        name : 'file',  
+				        id : 'form-file',  
+				        inputType : 'file',  
+				        anchor : '95%'  
+				       }/* ,{  
 					    xtype: 'fileuploadfield',  
 					    id: 'form-file',  
 					    emptyText: '选择上传的文件(zip格式文件)',  
@@ -84,7 +91,7 @@
 								Ext.getCmp("fileid").setValue(fs[fs.length-1]);
 							}
 						}
-					 }],  
+					 } */],  
                      buttons: [{  
                         text: '上传',  
                         handler: function() {  
@@ -97,10 +104,12 @@
                                     	if (action.result.success==true){
                                     		Ext.Msg.alert('消息',action.result.msg);
                                     		windowupload.close();
+                                    		callback();
                                     	}
                                     },
 	                            	failure : function(form, action) {
 	    								Ext.Msg.alert('错误', action.result.msg);
+	    								callback();
 	    							}
                                 });
                             }

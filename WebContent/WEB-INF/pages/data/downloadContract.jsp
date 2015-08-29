@@ -117,13 +117,14 @@
 				}).show();
 	}
 
-	function addfile(){
+	function addfile(callback){
 		Ext.Ajax.request({
 			url : $ctx + '/serviceuser/contractCategory!findContract',
 			method : 'POST',
 			success : function(resp, opts) {
 				var respText = Ext.util.JSON.decode(resp.responseText);
 				griduploadrecord(respText.list);
+				callback();
 			}
 		})
 

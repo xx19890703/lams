@@ -22,7 +22,6 @@
 					 {columnid:'flevel.data_name',columnname:'等级',type:'D',colwidth:80},
 					 {columnid:'fdomain.data_name',columnname:'加工领域',type:'D',colwidth:80},
 					 {columnid:'fstandard.data_name',columnname:'资质标准',type:'D',colwidth:80},
-					 {columnid:'fattachment',columnname:'附件',type:'D',colwidth:80},
 					 {columnid:'status.data_name',columnname:'状态',type:'C',colwidth:50},
 					],
 			inputFormWidth:720,
