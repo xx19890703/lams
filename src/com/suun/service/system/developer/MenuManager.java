@@ -94,12 +94,15 @@ public class MenuManager {
 		menuDao.save(menu);
 	}
 	
-	public void saveMenuAndFunction(Menu menu){
+	public void saveMenuAndFunction(Menu menu, Integer type){
 		menuDao.save(menu);
 		Function function = new Function();
 		function.setFunId("AUTH_"+(new Date()).getTime());
 		function.setMenuId(menu.getMenuId());
-		function.setFunName(menu.getMenuName());
+		if(type==0)
+			function.setFunName("填报");
+		else
+			function.setFunName("浏览");
 		function.setUrl(menu.getMenuUrl());
 		funDao.save(function);
 	}

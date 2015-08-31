@@ -597,7 +597,7 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 			mm.setMenuImg("/resources/images/system/group.png");
 			mm.setMenuParid("0102");
 			mm.setItemOrder(999);
-			mm.setIsadmin(1);
+			mm.setIsadmin(0);
 			mm.setIsframe(0);
 			menuManager.saveMenu(mm);
 			
@@ -605,14 +605,16 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 			String pid2 =""+System.currentTimeMillis();
 			Menu mm2 = new Menu();
 			mm2.setMenuId(pid2);
-			mm2.setMenuName(contractId+"(预览)");
+			mm2.setMenuName(contractId+"(浏览)");
 			mm2.setMenuType(2);
 			mm2.setMenuImg("/resources/images/system/group.png");
 			mm2.setMenuParid("0102");
 			mm2.setItemOrder(999);
-			mm2.setIsadmin(1);
+			mm2.setIsadmin(0);
 			mm2.setIsframe(0);
 			menuManager.saveMenu(mm2);
+			
+			int i = 1;
 			
 			for(Contract_template cts:list){
 				Menu m = new Menu();
@@ -621,13 +623,15 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 				m.setMenuType(3);
 				m.setMenuImg("/resources/images/system/group.png");
 				m.setMenuParid(pid);
-				m.setItemOrder(999);
+				m.setItemOrder(i*10);
 				m.setMenuUrl("/ReportServer?reportlet="+cts.getId().getTemplateUrl().replaceAll("\\\\", "/")+"&op=write");//+cts.getOpenType());
 				m.setIsadmin(1);
 				m.setIsframe(1);
-				menuManager.saveMenuAndFunction(m);
+				menuManager.saveMenuAndFunction(m,0);
+				i++;
 			}
 			
+			i = 1;
 			for(Contract_template cts:list){
 				Menu m = new Menu();
 				m.setMenuId(""+System.currentTimeMillis());
@@ -635,11 +639,12 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 				m.setMenuType(3);
 				m.setMenuImg("/resources/images/system/group.png");
 				m.setMenuParid(pid2);
-				m.setItemOrder(999);
+				m.setItemOrder(i*10);
 				m.setMenuUrl("/ReportServer?reportlet="+cts.getId().getTemplateUrl().replaceAll("\\\\", "/"));
 				m.setIsadmin(1);
 				m.setIsframe(1);
-				menuManager.saveMenuAndFunction(m);
+				menuManager.saveMenuAndFunction(m,1);
+				i++;
 			}
 		}
 		return map;
