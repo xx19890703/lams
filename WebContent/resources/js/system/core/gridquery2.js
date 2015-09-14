@@ -32,7 +32,7 @@ Ext.onReady(function() {
 		}),
 		listeners : {
 			'click': function(n) {
-				document.getElementById('im').src=$ctx+"/ReportServer?reportlet="+n.id+"&op=write";
+				document.getElementById('im').src=$ctx+"/ReportServer?reportlet="+n.id+"&op=view";
 			}
 		}     
 	});  
@@ -271,7 +271,7 @@ function showSelect() {
 					var aphyciniTree2 = Ext.getCmp('treep');
 					if(aphyciniTree2.root.childNodes.length>0){
 						var fn=aphyciniTree2.root.childNodes[0];
-						document.getElementById('im').src=$ctx+"/ReportServer?reportlet="+fn.id+"&op=write";
+						document.getElementById('im').src=$ctx+"/ReportServer?reportlet="+fn.id+"&op=view";
 					}
 				}); 
 				Ext.getCmp('htbhs').setValue(selcontractId);

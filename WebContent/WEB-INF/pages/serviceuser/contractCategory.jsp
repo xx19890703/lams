@@ -37,7 +37,7 @@
       });
    </script>
    <script type="text/javascript">
-      function auditrecord(id,refresh){
+      function auditrecord(id,callback){
    	   var fp = new Ext.form.FormPanel({
 			width: 400,  
 			frame: true,   

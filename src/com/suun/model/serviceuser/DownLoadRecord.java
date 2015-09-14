@@ -20,6 +20,7 @@ import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
 import com.suun.model.IdEntity;
+import com.suun.model.system.Dic_data;
 
 /**
  * 合同下载记录
@@ -33,7 +34,7 @@ public class DownLoadRecord extends IdEntity{
 	// 下发合同编号
 	private ContractDetail contractid;
 	// 状态
-	private String status;
+	private Dic_data status;
 	// 下发人
 	private String person;
 	// 下发时间
@@ -66,10 +67,10 @@ public class DownLoadRecord extends IdEntity{
 		    @JoinColumnOrFormula(formula=@JoinFormula(value="'STATE'", referencedColumnName = "dic_no"))
 	})
 	@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
-	public String getStatus() {
+	public Dic_data getStatus() {
 		return status;
 	}
-	public void setStatus(String status) {
+	public void setStatus(Dic_data status) {
 		this.status = status;
 	}
 	

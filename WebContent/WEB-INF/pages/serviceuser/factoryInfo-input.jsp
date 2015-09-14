@@ -72,6 +72,8 @@
 	    function setupDateTime(me){
 	    	SuunCalendar.show(me,{ifFormat: "%Y-%m-%d %H:%M:%S",showsTime: true});
 	    }
+	    
+	    
      </script>
       
 </head>    

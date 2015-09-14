@@ -44,7 +44,13 @@ public class FactoryInfoController extends BaseCRUDController<FactoryInfo>{
 	
 	@Override
 	public Page<FactoryInfo> getPageRecords(HttpServletRequest request,Page<FactoryInfo> page) {
-		return manager.getAllFactoryInfo(page);
+		String type = request.getParameter("type");
+		if(type!=null&&"sel".equals(type)){
+			return manager.getSelFactoryInfo(page);
+		}else{
+			return manager.getAllFactoryInfo(page);
+		}
+		
 	}
 
 	@Override
