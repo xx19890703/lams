@@ -813,7 +813,11 @@ var suunCore = {
 						icon : Ext.MessageBox.ERROR,
 						buttons : Ext.Msg.OK
 					});*/
-					Ext.ux.Toast.msg("后台出错","您访问的URL:{0}对应的页面不存在，具体原因请联系管理员。", url);
+					if(typeof(url)=="undefined"){
+						
+					}else{
+						Ext.ux.Toast.msg("后台出错","您访问的URL:{0}对应的页面不存在，具体原因请联系管理员。", url);
+					}
 				} else if (request.status==0) {//jquery
 					Ext.ux.Toast.msg("后台出错", "你访问的URL：{0}没有响应！",url);
 				} 

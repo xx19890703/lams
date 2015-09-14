@@ -56,6 +56,8 @@
 	    function setupDateTime(me){
 	    	SuunCalendar.show(me,{ifFormat: "%Y-%m-%d %H:%M:%S",showsTime: true});
 	    }
+	    
+	    
      </script>
       
 </head>    
@@ -136,7 +138,7 @@
 		<tr>
 			<td style="width: 80px;" align="right">登记时间  </td>
 			<td>
-				<input type="text" name="ftime" style="width: 180px;" value="${factoryinfo.ftime}"/>
+				<input type="text"  class="datew" name="ftime" style="width: 180px;" onclick="JavaScript:setupDateTime(this);" value="${factoryinfo.ftime}"/>
 	        </td>
 	        <td style="width: 80px;" align="right">状态  </td>
 			<td>

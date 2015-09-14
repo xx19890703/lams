@@ -54,7 +54,7 @@
 	        }
 	        
 			function selectfactory(me){		
-				gridselect({listurl:$ctx+'/serviceuser/factoryInfo!lists',//基本url
+				gridselect({listurl:$ctx+'/serviceuser/factoryInfo!lists?type=sel',//基本url
 					suuncolumns:[{columnid:'fno',columnname:'制造厂编号',colwidth:20,defaultsort:true},
 							 {columnid:'fname',columnname:'制造厂名称',colwidth:40}
 							],
@@ -176,7 +176,7 @@
 			      	<input type="hidden" name="resdetail.did" value="${condetail.did}"/>
 					   	<td align="center"><input type="text" name="id" class="sysindex" style="width:40px;"/></td>    
 						<td align="center"><input type="text" class="dataa" style="width:200px;" onclick="selecttemp(this);" name="name" class="{required:true,messages:{required:'第【】行报表不能为空！'}}"/><input type="hidden" name="template.did" /></td>
-			      		<td align="center"><input type="text" style="width:80px;" name="openType" class="{required:true,messages:{required:'第【】行报表打开方式不能为空！'}}"/></td>
+			      		<td align="center"><input type="text" style="width:80px;" value="view" name="openType" class="{required:true,messages:{required:'第【】行报表打开方式不能为空！'}}"/></td>
 			      		<td align="center"><input type="button" value="预览" onclick="showReport('${fn:replace(item.template.path,"\\", "/")}','${item.openType}')"></td>
 			      </tr>
 		  </table>

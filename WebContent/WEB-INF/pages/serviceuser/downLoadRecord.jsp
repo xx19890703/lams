@@ -13,16 +13,16 @@
 			baseurl:$ctx+'/serviceuser/downLoadRecord',//基本url
 			pagenum:5,//页记录数
 			//isprewidth:true,//是否宽度按百分比 列信息	hidden: true,locked: ture type:"S"/"N"/"D"/"C":字符串、数字、时间、选择，默认S，C是必须设置cdata属性
-			suuncolumns:[new Ext.grid.RowNumberer({header:"序号",width:40}),
-		             {columnid:'id',hidden:true,columnname:'编号'},
+			suuncolumns:[new Ext.grid.RowNumberer({header:"序号",width:40,hidden:true}),
+		             {columnid:'id',hidden:true,columnname:'编号',issearch:false},
                      {columnid:'contractid.did',columnname:'合同编号',type:'N',colwidth:80,defaultsort:true},
 					 {columnid:'contractid.name',columnname:'合同名称',colwidth:80},
 					 {columnid:'person',columnname:'下发人',type:'D',colwidth:80},
 					 {columnid:'issuedTime',columnname:'下发时间',type:'D',colwidth:80},
-					 {columnid:'contractid.conmain.did',hidden:true,columnname:'父节点',type:'N',colwidth:80},
+					 {columnid:'contractid.conmain.did',hidden:true,columnname:'父节点',type:'N',colwidth:80,issearch:false},
 					 {columnid:'importTime',columnname:'预计导入时间',type:'D',colwidth:80},
 					// {columnid:'count',columnname:'下发次数',type:'D',colwidth:80},
-					 {columnid:'state.data_name',columnname:'状态',type:'C',colwidth:80},
+					 {columnid:'status.data_name',columnname:'状态',colwidth:80},
 					 new Ext.grid.Column({
 							header : "管理",
 							dataIndex : "contractid.did",

@@ -43,10 +43,10 @@
 			baseurl:$ctx+'/serviceuser/templateCfgUpLoad',//基本url
 			pagenum:5,//页记录数
 			suuncolumns:[new Ext.grid.RowNumberer({header:"序号",width:40}),
-		             {columnid:'id',hidden:true,columnname:'编号'},
-					 {columnid:'person',columnname:'上传人',type:'D',colwidth:80},
-					 {columnid:'upTime',columnname:'上传时间',type:'N',colwidth:100},
-					 {columnid:'path',columnname:'文件路径',type:'D',colwidth:300}
+		             {columnid:'id',hidden:true,columnname:'编号',issearch:false},
+					 {columnid:'person',columnname:'上传人',type:'N',colwidth:80},
+					 {columnid:'upTime',columnname:'上传时间',type:'D',colwidth:100},
+					 {columnid:'path',columnname:'文件路径',type:'N',colwidth:300}
 					],
 			inputFormWidth:720,
 			inputFormHeight:300
