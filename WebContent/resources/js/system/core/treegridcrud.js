@@ -7,6 +7,7 @@ function createtreegrid(option) {
 	}
 	if ("undefined" == typeof option.tree.allowEdit) option.tree.allowEdit=false;	
 	if ("undefined" == typeof option.grid.simplemode) option.grid.simplemode=false;
+	console.log(Ext.getCmp(option.containerid));
 	if (!option.grid.keyid||!option.containerid) {
 		alert("grid.keyid||containerid is null")
 		return;

@@ -20,7 +20,7 @@
 	    			remote: {url:'${ctx}/serviceuser/factoryInfo!checkfno',
 						     type:'post',
 						     data:{oldid:'${factoryinfo.fno}'}
-			        }
+			   		}
 	    		 } ,
 	    		 fname: { 
 	     			required: true,
@@ -32,8 +32,16 @@
 	    			 remote: {url:'${ctx}/serviceuser/factoryInfo!checkfregister',
 					     type:'post',
 					     data:{oldid:'${factoryinfo.fregister}'}
-		        }
-	    		 }	
+		        	}
+	    		} ,
+	    		ftel: {
+	    			number:true,
+	    			maxlength: 11
+	    		},
+	    		fcontecttel: {
+	    			number:true,
+	    			maxlength: 11
+	    		}
 		    },
 		 	messages: {
 		 		fno: { 
@@ -49,7 +57,15 @@
 	    			 required:  "制造厂注册码不能为空！",
 	    			 maxlength: "制造厂注册码长度不能超过60！",
 	    			 remote: "制造厂注册码已存在！"
-	    		 }	
+	    		 } ,
+	    		 ftel: {
+	    			 number: "请输入数字！",
+	    			 maxlength:"电话号码不能超过11位！"
+	    		 },
+	    		 fcontecttel: {
+	    			 number: "请输入数字！",
+	    			 maxlength:"联系人电话不能超过11位！"
+	    		 }
 			}
 		});
 	    SuunCalendar.iniCalendar();
@@ -136,7 +152,7 @@
 		<tr>
 			<td style="width: 80px;" align="right">登记时间  </td>
 			<td>
-				<input type="text" name="ftime" style="width: 180px;" value="${factoryinfo.ftime}"/>
+				<input class="datew" type="text" onclick="JavaScript:setupDateTime(this);" name="ftime" style="width: 180px;" value="${factoryinfo.ftime}" readonly="readonly"/>
 	        </td>
 	        <td style="width: 80px;" align="right">状态  </td>
 			<td>
@@ -148,8 +164,8 @@
 		<tr>
 			
 			<td style="width: 80px;" align="right">备注</td>
-			<td>
-				<input type="text" name="remark" style="width: 180px;" value="${factoryinfo.remark}"/>
+			<td colspan="3">
+				<textarea style="margin-left: 0px;" name="remark" rows="2" cols="72">${factoryinfo.remark}</textarea>
 	        </td>
 		</tr>
 	</table>

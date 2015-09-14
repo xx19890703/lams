@@ -1716,7 +1716,6 @@ var suunCore = {
 					if (!options.authurl) options.authurl=options.baseurl+'!userAuth';
 				}
 			} 			
-			
 			if (!options.grid.listurl) options.grid.listurl=options.grid.baseurl+'!gridlists';
 			if (!options.grid.newurl) options.grid.newurl=options.grid.baseurl+'!grid_new.do';
 			if (!options.grid.editurl) options.grid.editurl=options.grid.baseurl+'!gridedit.do';

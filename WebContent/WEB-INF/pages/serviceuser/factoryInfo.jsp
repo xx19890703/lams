@@ -13,19 +13,18 @@
 			baseurl:$ctx+'/serviceuser/factoryInfo',//基本url
 			pagenum:5,//页记录数
 			//isprewidth:true,//是否宽度按百分比 列信息	hidden: true,locked: ture type:"S"/"N"/"D"/"C":字符串、数字、时间、选择，默认S，C是必须设置cdata属性
-			suuncolumns:[new Ext.grid.RowNumberer({header:"序号",width:35}),
-                     {columnid:'fno',columnname:'制造厂编号',type:'N',colwidth:80,defaultsort:true},
+			suuncolumns:[{columnid:'fno',columnname:'制造厂编号',colwidth:80,defaultsort:true},
 					 {columnid:'fregister',columnname:'注册码',colwidth:100},
-					 {columnid:'fname',columnname:'工厂名称',type:'D',colwidth:200},
-					 {columnid:'faddress',columnname:'地址',type:'D',colwidth:100},
-					 {columnid:'ftype.data_name',columnname:'类别',type:'D',colwidth:80},
-					 {columnid:'flevel.data_name',columnname:'等级',type:'D',colwidth:80},
-					 {columnid:'fdomain.data_name',columnname:'加工领域',type:'D',colwidth:80},
-					 {columnid:'fstandard.data_name',columnname:'资质标准',type:'D',colwidth:80},
-					 {columnid:'status.data_name',columnname:'状态',type:'C',colwidth:50},
+					 {columnid:'fname',columnname:'工厂名称',colwidth:200},
+					 {columnid:'faddress',columnname:'地址',colwidth:100},
+					 {columnid:'ftype.data_name',columnname:'类别',type:'C',cdata:${sel_data1},colwidth:80},
+					 {columnid:'flevel.data_name',columnname:'等级',type:'C',cdata:${sel_data2},colwidth:80},
+					 {columnid:'fdomain.data_name',columnname:'加工领域',type:'C',cdata:${sel_data3},colwidth:80},
+					 {columnid:'fstandard.data_name',columnname:'资质标准',type:'C',cdata:${sel_data4},colwidth:80},
+					 {columnid:'status.data_name',columnname:'状态',type:'C',cdata:${sel_data5},colwidth:50},
 					],
-			inputFormWidth:720,
-			inputFormHeight:300
+			inputFormWidth:600,
+			inputFormHeight:320
 		});
     </script>
 </head>

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.suun.model.serviceuser.FactoryInfo;
 import com.suun.publics.controller.BaseCRUDController;
@@ -29,6 +30,17 @@ public class FactoryInfoController extends BaseCRUDController<FactoryInfo>{
 	
 	@Autowired
 	FactoryInfoManager manager; 
+	
+	@RequestMapping
+	public ModelAndView index(HttpServletRequest request,HttpServletResponse response) {	
+		ModelAndView modelandview=new ModelAndView();
+		modelandview.getModel().put("sel_data1",DicService.GetDataNameExtArrayByDicNo("FTYPE"));
+		modelandview.getModel().put("sel_data2",DicService.GetDataNameExtArrayByDicNo("FLEVEL"));
+		modelandview.getModel().put("sel_data3",DicService.GetDataNameExtArrayByDicNo("FDOMAIN"));
+		modelandview.getModel().put("sel_data4",DicService.GetDataNameExtArrayByDicNo("FSTANDARD"));
+		modelandview.getModel().put("sel_data5",DicService.GetDataNameExtArrayByDicNo("STATE"));
+		return modelandview;
+	}
 	
 	@Override
 	public Page<FactoryInfo> getPageRecords(HttpServletRequest request,Page<FactoryInfo> page) {
