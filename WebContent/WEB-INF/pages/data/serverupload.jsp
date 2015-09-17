@@ -16,12 +16,12 @@
 			keyid:"id",//关键字
 			type:"上传",//关键字
 			baseurl:$ctx+'/serviceuser/upLoadRecord',//基本url
-			pagenum:5,//页记录数
-			suuncolumns:[new Ext.grid.RowNumberer({header:"序号",width:40}),
-		             {columnid:'id',hidden:true,columnname:'编号'},
-                     {columnid:'contractid',columnname:'合同编号',type:'N',colwidth:80},
-                     {columnid:'contractname',columnname:'合同名称',type:'N',colwidth:80},
-					 {columnid:'person',columnname:'上传人',type:'D',colwidth:80},
+			pagenum:15,//页记录数
+			suuncolumns:[new Ext.grid.RowNumberer({header:"序号",hidden:true,width:40}),
+		             {columnid:'id',hidden:true,columnname:'编号',issearch:false},
+                     {columnid:'contractid',columnname:'合同编号',colwidth:80},
+                     {columnid:'contractname',columnname:'合同名称',colwidth:80},
+					 {columnid:'person',columnname:'上传人',colwidth:80},
 					 {columnid:'upTime',columnname:'上传时间',type:'D',colwidth:80}
 					// {columnid:'count',columnname:'下发次数',type:'D',colwidth:80},
 					],
@@ -36,7 +36,8 @@
 		var form = new Ext.form.FormPanel({  
 		     baseCls : 'x-plain',  
 		     labelWidth : 80,  
-		     labelHeight: 150,  
+		     labelHeight: 150,
+		     bodyStyle: 'padding: 15px 5px 0 5px;', 
 		     fileUpload : true,  
 		     defaultType : 'textfield',  
 		     items : [{  
@@ -55,7 +56,7 @@
             fileUpload:true,   
             defaultType: 'textfield',
             autoScroll:true,
-        	width: 300,
+        	width: 400,
 	        height: 120,
             title: '<center style="curor:hand">上传</center>',
             items: form,
@@ -88,10 +89,6 @@
 			}]
 		}).show();
 	}
-		//Ext.onReady(function() {
-		//	griduploadrecord()
-		//});
-		
 	</script>
 </head>
 <body> 

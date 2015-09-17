@@ -327,7 +327,7 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 	 */
 	@RequestMapping
 	@ResponseBody
-	public void griddown(String treeid, String id, HttpServletRequest request, HttpServletResponse response){
+	public void griddown(String treeid, String id, String filename, HttpServletRequest request, HttpServletResponse response){
 		response.reset();
 		//获取路径
 		String reportPath = FRContext.getCurrentEnv().getPath();
@@ -432,7 +432,7 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 	        while ((n = input.read(buffer)) != -1) {
 	        	outputStream.write(buffer, 0, n);
 	        }
-	        response.setHeader("Content-Disposition", "attachment; filename=\"" + id + "_" + System.currentTimeMillis() + ".zip\"");  
+	        response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + ".zip\"");  
 	        response.setHeader("Content-Length",String.valueOf(input.read()));
 	        response.setContentType("application/octet-stream; charset=utf-8");
 	        input.close();
@@ -768,7 +768,7 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 	 */
 	@RequestMapping
 	@ResponseBody
-	public void clientupload(HttpServletRequest request, HttpServletResponse response){
+	public void clientupload(HttpServletRequest request, HttpServletResponse response, String filename){
 		String id = request.getParameter("contractId");
 		response.reset();
 		
@@ -830,7 +830,7 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 	        while ((n = input.read(buffer)) != -1) {
 	        	outputStream.write(buffer, 0, n);
 	        }
-	        response.setHeader("Content-Disposition", "attachment; filename=\"" + id + "_" + System.currentTimeMillis() + ".zip\"");  
+	        response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + ".zip\"");  
 	        response.setHeader("Content-Length",String.valueOf(input.read()));
 	        response.setContentType("application/octet-stream; charset=utf-8");
 	        input.close();

@@ -42,7 +42,7 @@
 			keyid:"id",//关键字
 			baseurl:$ctx+'/serviceuser/templateCfgUpLoad',//基本url
 			pagenum:5,//页记录数
-			suuncolumns:[new Ext.grid.RowNumberer({header:"序号",width:40}),
+			suuncolumns:[new Ext.grid.RowNumberer({header:"序号",hidden:true,width:40}),
 		             {columnid:'id',hidden:true,columnname:'编号',issearch:false},
 					 {columnid:'person',columnname:'上传人',colwidth:80},
 					 {columnid:'upTime',columnname:'上传时间',type:'D',colwidth:100},
@@ -124,9 +124,8 @@
 			
 			var windowupload = new Ext.Window({
 			    title:'上传文件',
-			    width: 410,
-		        height:140, 
 			    modal :true,
+			    border : false,
 				resizable: false,
 			    closeAction:'close',
 			    items:[fp]

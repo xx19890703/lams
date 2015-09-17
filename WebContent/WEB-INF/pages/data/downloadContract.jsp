@@ -18,11 +18,11 @@
 			type:"导出",//关键字
 			baseurl:$ctx+'/serviceuser/upLoadRecord',//基本url
 			pagenum:5,//页记录数
-			suuncolumns:[new Ext.grid.RowNumberer({header:"序号",width:40}),
-		             {columnid:'id',hidden:true,columnname:'编号'},
-                     {columnid:'contractid',columnname:'合同编号',type:'N',colwidth:80},
-                     {columnid:'contractname',columnname:'合同名称',type:'N',colwidth:80},
-					 {columnid:'person',columnname:'上传人',type:'D',colwidth:80},
+			suuncolumns:[new Ext.grid.RowNumberer({header:"序号",hidden:true,width:40}),
+		             {columnid:'id',hidden:true,columnname:'编号',issearch:false},
+                     {columnid:'contractid',columnname:'合同编号',colwidth:80},
+                     {columnid:'contractname',columnname:'合同名称',colwidth:80},
+					 {columnid:'person',columnname:'上传人',colwidth:80},
 					 {columnid:'upTime',columnname:'上传时间',type:'D',colwidth:80}
 					// {columnid:'count',columnname:'下发次数',type:'D',colwidth:80},
 					],
@@ -110,7 +110,30 @@
 							if (contractId == "") {
 								alert("请选择合同！")
 							} else {
-								window.open($ctx+ '/serviceuser/contractCategory!clientupload?contractId='+contractId);
+								Ext.Msg.prompt('下载文件名', '请输入下载文件名称(不带扩展名):', function(btn, text){
+						  	        if (btn == 'ok'){
+										if (! Ext.fly('suungridexportform')) {
+											var ifrm = document.createElement('iframe');
+											ifrm.id = 'suungridexportiframe';
+											ifrm.name = 'suungridexportiframe';
+											ifrm.scrolling='no';
+											ifrm.width='0';
+											ifrm.height='0';
+											ifrm.frameborder='0';
+											document.body.appendChild(ifrm);
+											var frm = document.createElement('form');
+											frm.id = 'suungridexportform';
+											frm.name = 'suungridexportform';
+											frm.method='post';
+											frm.className = 'x-hidden';
+											frm.target='suungridexportiframe';
+											frm.action=$ctx+ '/serviceuser/contractCategory!clientupload?contractId='+contractId;
+											document.body.appendChild(frm);
+										}
+										Ext.fly('suungridexportform').dom.innerHTML='<input type="text" id="suunexportfilename" name="filename" value="'+text+'"/>';
+										Ext.fly('suungridexportform').dom.submit();
+						  	        }
+						  	    });
 							}
 						}
 					} ]
