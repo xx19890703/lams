@@ -108,8 +108,10 @@
                                     	}
                                     },
 	                            	failure : function(form, action) {
-	    								Ext.Msg.alert('错误', action.result.msg);
-	    								callback();
+	                            		//console.log(action.result.msg);
+	                            		//alert(action.response.responseText);
+	    								Ext.Msg.alert('错误', action.response.responseText);
+	    								//callback();
 	    							}
                                 });
                             }

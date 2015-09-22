@@ -104,7 +104,7 @@ public class ContractDetail {
 		this.conmain = conmain;
 	}
 	
-	@OneToMany(cascade = { CascadeType.REFRESH, CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REMOVE },mappedBy ="condetail")
+	@OneToMany(cascade = { CascadeType.ALL },mappedBy ="condetail")
 	@NotFound(action = NotFoundAction.IGNORE)
 	@JsonManagedReference//主需要子的数据JSON转换
 	public List<ContractTemplateRes> getRescontent() {

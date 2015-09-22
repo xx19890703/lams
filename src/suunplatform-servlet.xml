@@ -52,7 +52,8 @@
                           <value>text/html;charset=UTF-8</value>  
                           <value>text/plain;charset=UTF-8</value>  
                      </list>   
-                </property>   
+                </property>
+                <constructor-arg value="UTF-8"/> 
              </bean>   
              <!-- json转换器 -->
              <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" > 

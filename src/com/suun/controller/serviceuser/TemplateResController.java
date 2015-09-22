@@ -396,7 +396,7 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 			map.put("success", false);
 			map.put("msg", "上传文件为空!");
 		}
-		return mapper.writeValueAsString(map);
+		return renderHtml(response, mapper.writeValueAsString(map));
 	}
 	
 	

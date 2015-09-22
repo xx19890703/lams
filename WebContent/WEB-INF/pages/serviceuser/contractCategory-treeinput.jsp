@@ -77,19 +77,8 @@
 	<tr>
 	    <td  align="right">使用状态</td>
 		<td >     
-		 <input type="hidden" name="state.key.dic_no" value="STATE"/>
-        <select name="state.key.data_no" style="width:100%;">
-		<c:forEach var="mystatus" items="${status}">
-			<c:choose >
-				<c:when test="${isEdit&&mystatus.key.data_no==contractcategory.state.key.data_no}">
-					<option selected value="${mystatus.key.data_no}">${mystatus.data_name}</option>
-				</c:when>	  
-              	<c:otherwise>
-                 	<option value="${mystatus.key.data_no}">${mystatus.data_name}</option>
-              	</c:otherwise>
-			</c:choose> 
-    	</c:forEach>
-    	</select>
+		 <ui:selectlist cssStyle="width:180px;" name="state.key.data_no" lists="${status}" listValue="key.data_no" listTitle="data_name" 
+	            	checkValue="${contractcategory.state.key.data_no}" defaultCheckValue="1"/>
         </td>
 	</tr>
 </table>

@@ -246,22 +246,23 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 
 	@Override
 	protected String saveGridRecordSet(HttpServletRequest request,ContractDetail operatebean) {
+		if(operatebean.getRescontent().size()==0)
+			return "请填写合同明细表数据！";
 		Set<String> oldset = new HashSet<String>();
 		Set<String> newset = new HashSet<String>();
 		//将原合同编号放入set中
 		for(ContractTemplateRes trc : conManager.getContractTemplateResByContractId(operatebean.getDid())){
 			oldset.add(trc.getTemplate().getDid());
 		}
+		for(ContractTemplateRes trc : operatebean.getRescontent()){
+			trc.setId(operatebean.getDid()+"-"+trc.getId());
+			newset.add(trc.getTemplate().getDid());
+		}
+		if(operatebean.getStatus().getKey().getData_no().equalsIgnoreCase("B") && newset.contains(oldset))
+			return "合同已审核，不能删除以前的模板！";
+		
 		try{
-			if(operatebean.getRescontent().size()==0)
-				return "请填写合同明细表数据！";
 			mainManager.deleteContractTemplateRes(operatebean.getDid());
-			for(ContractTemplateRes trc : operatebean.getRescontent()){
-				trc.setId(operatebean.getDid()+"-"+trc.getId());
-				newset.add(trc.getTemplate().getDid());
-			}
-			if(operatebean.getStatus().getKey().getData_no().equalsIgnoreCase("B") && newset.contains(oldset))
-				return "合同已审核，不能删除以前的模板！";
 			mainManager.saveContractDetail(operatebean);
 			return "";
 		}catch (Exception e){
