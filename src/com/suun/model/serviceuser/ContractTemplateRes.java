@@ -81,7 +81,7 @@ public class ContractTemplateRes{
 		this.state = state;
 	}
 
-	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, targetEntity = TemplateResDetail.class)
+	@ManyToOne(cascade = { CascadeType.PERSIST }, targetEntity = TemplateResDetail.class)
 	@JoinColumn(name="resdetail")
 	@NotFound(action = NotFoundAction.IGNORE)
 	public TemplateResDetail getTemplate() {

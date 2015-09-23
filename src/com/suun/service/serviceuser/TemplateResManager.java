@@ -136,10 +136,10 @@ public class TemplateResManager {
 	}
 	
 	public void saveTemplateResDetail(TemplateResDetail sub) {
-		for(TemplateResContent content : sub.getRescontent()){
-			content.setResdetail(sub);
-			conmanager.save(content);
-		}	
+//		for(TemplateResContent content : sub.getRescontent()){
+//			content.setResdetail(sub);
+//			conmanager.save(content);
+//		}	
 		submanager.save(sub);
 	}
 	

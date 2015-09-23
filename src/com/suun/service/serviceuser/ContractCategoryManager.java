@@ -128,12 +128,17 @@ public class ContractCategoryManager {
 		manager.save(dep);
 	}
 	
+	public void saveContractTemplateRes(ContractTemplateRes dep) {
+		conmanager.save(dep);
+	}
+	
 	public void deleteContractTemplateRes(String pid) {
-		//String hql="delete ContractTemplateRes o where o.condetail.did=? ";
-		List<ContractTemplateRes> temp = conmanager.findByProperty("condetail.did", pid);
-		for(ContractTemplateRes t : temp){
-			conmanager.delete(t);
-		}
+		String hql="delete ContractTemplateRes o where o.condetail.did=? ";
+		conmanager.executeHql(hql,pid);
+//		List<ContractTemplateRes> temp = conmanager.findByProperty("condetail.did", pid);
+//		for(ContractTemplateRes t : temp){
+//			conmanager.delete(t);
+//		}
 	}
 	
 	public void deleteContractDetails(String did) {
@@ -154,9 +159,11 @@ public class ContractCategoryManager {
 	}
 	
 	public void saveContractDetail(ContractDetail sub) {
+		submanager.save(sub);
+		//submanager.save((ContractDetail)submanager.getSession().merge(sub));
 	    // 保存子表
 		for(ContractTemplateRes temp : sub.getRescontent()){
-			TemplateResDetail templ = templatemanager.get1(temp.getTemplate().getDid());
+			//TemplateResDetail templ = templatemanager.get1(temp.getTemplate().getDid());
 			List<TemplateResContent> ress = templatecmanager.findByProperty("resdetail.did", temp.getTemplate().getDid());
 			for(TemplateResContent res : ress){
 				ContractModePK modepk = new ContractModePK();
@@ -174,12 +181,9 @@ public class ContractCategoryManager {
 			template.setTemplateName(templatemanager.get1(temp.getTemplate().getDid()).getName());
 			template.setOpenType(temp.getOpenType());
 			contracttemplate.save((Contract_template)contracttemplate.getSession().merge(template));
-			
-			//temp.setCondetail(sub);
-			temp.setTemplate(templ);
+			temp.setCondetail(sub);
 			conmanager.save(temp);
 		}
-		submanager.save(sub);
 	}
 	
 	public void deleteContractDetail(String mid,String did) {

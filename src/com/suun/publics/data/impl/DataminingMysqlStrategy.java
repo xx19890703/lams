@@ -129,7 +129,6 @@ public class DataminingMysqlStrategy implements DataminingStrategy {
 		return result;
 	}
 
-	@SuppressWarnings("resource")
 	private List<String> getTableInsertSql(Connection conn, String tableName, String where) throws Exception {
 		ResultSet rs = null;
 		Statement statement = null;

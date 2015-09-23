@@ -216,11 +216,13 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 				}
 			}
 			mainManager.deleteTemplateResContent(operatebean.getDid());
+			mainManager.saveTemplateResDetail(operatebean);
 			for(TemplateResContent trc:operatebean.getRescontent()){
 				//设置主键
 				trc.setDid(operatebean.getDid()+"-"+trc.getDid());
+				trc.setResdetail(operatebean);
+				mainManager.saveTemplateResContent(trc);
 			}
-			mainManager.saveTemplateResDetail(operatebean);
 			return "";
 		}catch (Exception e){
 			return e.getMessage();

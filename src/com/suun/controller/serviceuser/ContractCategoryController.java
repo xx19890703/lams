@@ -263,6 +263,7 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 		
 		try{
 			mainManager.deleteContractTemplateRes(operatebean.getDid());
+			//mainManager.deleteContractDetails(operatebean.getDid());
 			mainManager.saveContractDetail(operatebean);
 			return "";
 		}catch (Exception e){

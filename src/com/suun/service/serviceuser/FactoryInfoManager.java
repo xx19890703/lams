@@ -2,7 +2,6 @@ package com.suun.service.serviceuser;
 
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import com.suun.model.serviceuser.FactoryInfo;
 import com.suun.publics.hibernate.Condition;
 import com.suun.publics.hibernate.Page;
 import com.suun.publics.hibernate.SimpleHibernateTemplate;
-import com.suun.publics.hibernate.FilterInfo.Logic;
 
 /**
  * FactoryInfoManager
