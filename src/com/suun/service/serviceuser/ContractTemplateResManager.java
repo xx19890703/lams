@@ -43,6 +43,10 @@ public class ContractTemplateResManager{
 		List<ContractTemplateRes> list = new ArrayList<ContractTemplateRes>();
 		String hql = "from ContractTemplateRes c where c.condetail.did=?";
 		list = conmanager.find(hql, contractId);
+		for(ContractTemplateRes trc:list){
+			conmanager.getSession().evict(trc.getCondetail());
+			conmanager.getSession().evict(trc);
+		}
 		return list;
 	}
 }

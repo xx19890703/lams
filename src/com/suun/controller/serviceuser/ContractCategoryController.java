@@ -250,7 +250,7 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 			return "请填写合同明细表数据！";
 		Set<String> oldset = new HashSet<String>();
 		Set<String> newset = new HashSet<String>();
-		//将原合同编号放入set中
+//		将原合同编号放入set中
 		for(ContractTemplateRes trc : conManager.getContractTemplateResByContractId(operatebean.getDid())){
 			oldset.add(trc.getTemplate().getDid());
 		}
