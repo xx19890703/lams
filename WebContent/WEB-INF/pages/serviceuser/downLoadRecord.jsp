@@ -21,8 +21,8 @@
 					 {columnid:'issuedTime',columnname:'下发时间',type:'D',colwidth:80},
 					 {columnid:'contractid.conmain.did',hidden:true,columnname:'父节点',colwidth:80,issearch:false},
 					 {columnid:'importTime',columnname:'预计导入时间',type:'D',colwidth:80},
-					// {columnid:'count',columnname:'下发次数',type:'D',colwidth:80},
-					 {columnid:'status.data_name',columnname:'状态',colwidth:80},
+					 //{columnid:'count',columnname:'下发次数',type:'D',colwidth:80},
+					 //{columnid:'status.data_name',columnname:'状态',colwidth:80},
 					 new Ext.grid.Column({
 							header : "下载",
 							dataIndex : "contractid.did",
@@ -39,8 +39,8 @@
 							}
 						})
 					],
-			inputFormWidth:720,
-			inputFormHeight:300
+			inputFormWidth:620,
+			inputFormHeight:230
 		});
 		
 		function down(id,pid){

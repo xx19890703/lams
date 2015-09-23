@@ -21,12 +21,16 @@
 	        			maxlength: 30,
 	        			remote: {url:'${ctx}/system/developer/menu!validateFunId',
 							     type:'post',
-							     data:{oldid:'${function.funId}',menuid:'${treeid}'}
+							     data:{oldid:'${contractdetail.did}',id:$("input[name=d]")}
 				        }
 	        		 } ,
 	        		 name: { 
 	         			required: true,
-	         			maxlength: 20
+	         			maxlength: 20,
+	         			remote: {url:'${ctx}/system/developer/menu!validateFunId',
+						     type:'post',
+						     data:{oldname:'${contractdetail.name}',name:'${treeid}'}
+			        	}
 	         		 } ,
 	        		 'finfo.fno':  { 
 	        			 required: true
@@ -40,7 +44,8 @@
 	        		 } ,
 	        		 name: { 
 	         			required:  "合同名称不能为空！", 
-	        			maxlength: "合同名称的长度不能超过20！"
+	        			maxlength: "合同名称的长度不能超过20！",
+	        			remote: '合同编号已存在！'
 	         		 } ,
 	        		 'finfo.fno':  { 
 	        			 required:  "制造厂信息不能为空！"
@@ -109,7 +114,7 @@
 		<table align="center">
 		<br/>
 			<tr>
-				<td width="100" align="right">合同编号</td>					
+				<td width="80" align="right">合同编号</td>					
 				<td width="240">
 				    <c:choose><c:when test="${isEdit}">
 		                <input type="text" name="did"  value="${contractdetail.did}" style="width:180px;"/>
@@ -122,11 +127,11 @@
 		                <input type="hidden" name="status.key.data_no"  value="A"/>
 		            </c:otherwise></c:choose>
 		        </td>
-				<td width="100" align="right">合同名称</td>
+				<td width="80" align="right">合同名称</td>
 				<td width="240"><input  type="text" name="name"  value="${contractdetail.name}" style="width:180px;"/></td>
 			</tr>
 			<tr>
-				<td width="100" align="right">制造厂信息</td>
+				<td width="80" align="right">制造厂信息</td>
 				<td width="240">
 					<input type="hidden" id="fno" name="finfo.fno" value="${contractdetail.finfo.fno}" />
 					<input class="dataa" type="text" id="fname" name="finfo.fname" style="font-family:arial;width:180px"  value="${contractdetail.finfo.fname}" onclick="selectfactory(this)" />
@@ -153,7 +158,7 @@
 			</tr>-->
 		</table>
 		<br>
-	  <div style="margin-left: 50px;position:relative;overflow:auto; width:600px;height: 230px">
+	  <div style="margin-left: 40px;position:relative;overflow:auto; width:570px;height: 230px">
 		  <table class="suunRept" width="100%" border="1" cellpadding="0" cellspacing="0"> 
 		      <tr>     
 		          <td align="center">编号</td>    

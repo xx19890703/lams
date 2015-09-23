@@ -16,24 +16,24 @@
     				     type:'post',
     				     data:{olddid:'${templateRes.did}'}
     			}
-			},
+			}/* ,
 			name:{
 				required:true, 
     			remote: {url:'${ctx}/serviceuser/templateRes!validateName',
 				     type:'post',
 				     data:{oldname:'${templateRes.name}',id:'${suunplatformTreePid}'}
 			    }
-			}             	
+			}  */            	
 		},
 		messages: {
 			did: {
 				required:'模板分类编号不能为空！',
 				remote:'模板分类编号已存在！'
-			},
+			}/* ,
 			name: {
 				required: "模板分类名称不能为空！",
 				remote:'模板分类名称已存在！'
-			}
+			} */
 		}
      });     
     </script>

@@ -74,7 +74,7 @@ public class FactoryInfo {
 		this.faddress = faddress;
 	}
 	
-	@Column(length=30)
+	@Column(length=15)
 	public String getFtel() {
 		return ftel;
 	}
@@ -98,7 +98,7 @@ public class FactoryInfo {
 		this.fcontect = fcontect;
 	}
 	
-	@Column(length=30)
+	@Column(length=15)
 	public String getFcontecttel() {
 		return fcontecttel;
 	}
@@ -158,7 +158,7 @@ public class FactoryInfo {
 		this.fdomain = fdomain;
 	}
 	
-	@Column(length=30)
+	@Column(length=10)
 	public Date getFtime() {
 		return ftime;
 	}
@@ -174,7 +174,7 @@ public class FactoryInfo {
 		this.fattachment = fattachment;
 	}
 	
-	@Column(length=30)
+	@Column(length=100)
 	public String getRemark() {
 		return remark;
 	}

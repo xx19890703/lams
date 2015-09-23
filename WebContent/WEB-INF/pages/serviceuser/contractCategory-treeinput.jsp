@@ -3,7 +3,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-    <title>模板分类配置</title>
+    <title>合同分类配置</title>
 	<script type="text/javascript" src="${ctx}/resources/js/thrid/validate/jquery.validate.js"></script>
     <script type="text/javascript" src="${ctx}/resources/js/thrid/validate/messages_cn.js"></script>
     <script type="text/javascript" src="${ctx}/resources/js/thrid/validate/jquery.metadata.js"></script>
@@ -12,14 +12,14 @@
     	 rules: { 
     		 did: { 
     			required: true, 
-    			remote: {url:'${ctx}/serviceuser/contractcategory!validateDid',
+    			remote: {url:'${ctx}/serviceuser/contractCategory!validateDid',
     				     type:'post',
     				     data:{olddid:'${contractcategory.did}'}
     			}
 			},
 			name:{
 				required:true, 
-    			remote: {url:'${ctx}/serviceuser/contractcategory!validateName',
+    			remote: {url:'${ctx}/serviceuser/contractCategory!validateName',
 				     type:'post',
 				     data:{oldname:'${contractcategory.name}',id:'${suunplatformTreePid}'}
 			    }

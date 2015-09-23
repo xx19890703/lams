@@ -27,10 +27,10 @@
 	             //{columnid:'importTime',columnname:'导出时间',colwidth:60},
 	             {columnid:'auditPerson',columnname:'审核人',colwidth:50},
 	             {columnid:'auditTime',columnname:'审核时间',colwidth:50},
-	             {columnid:'importTime',columnname:'预计导入时间',colwidth:70},
+	             //{columnid:'importTime',columnname:'预计导入时间',colwidth:70},
 	             //{columnid:'conmain.name',columnname:'合同分类名称',colwidth:60}, 
 	             {columnid:'status.data_name',columnname:'合同状态',colwidth:50}],
-			inputFormWidth:800,
+			inputFormWidth:680,
             inputFormHeight:400,
             operation:{audit:{hidden:false}}
      	 } 
@@ -39,7 +39,6 @@
    <script type="text/javascript">
       function auditrecord(id,callback){
    	   var fp = new Ext.form.FormPanel({
-			width: 400,  
 			frame: true,   
 			autoHeight: true,  
 			bodyStyle: 'padding: 0px;',  
@@ -73,7 +72,7 @@
    	   var windowupload = new Ext.Window({
            	resizable: false,
             modal: true,
-            id:"suunFormWindow",
+            id:"suunFormWindowup",
            	width: 400,
    	        height: 150,
             title: '审核',

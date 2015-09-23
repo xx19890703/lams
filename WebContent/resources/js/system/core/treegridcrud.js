@@ -377,7 +377,7 @@ function createtreegrid(option) {
 					selectnode = tree.root;
 					doadd(selectnode);					
 				} else {
-					Ext.Msg.alert('提示', '请选择父节点！');
+					//Ext.Msg.alert('提示', '请选择父节点！');
 					return;
 				}
 			});

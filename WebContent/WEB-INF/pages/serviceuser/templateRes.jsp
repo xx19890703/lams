@@ -21,9 +21,9 @@
 			simplemode:true,
 			keyid:'did',//"id",//关键字 
 			suuncolumns:[{columnid:'did',columnname:'模板编号',colwidth:40,defaultsort:true},
-	             {columnid:'name',columnname:'模板名称',colwidth:40},
-	             {columnid:'path',columnname:'模板路径',colwidth:100},
-	             {columnid:'resmain.name',columnname:'模板分类名称',colwidth:60} ],
+	             {columnid:'name',columnname:'模板名称',colwidth:80},
+	             {columnid:'path',columnname:'模板路径',colwidth:80}],
+	             //{columnid:'resmain.name',columnname:'模板分类名称',colwidth:60} ],
 			inputFormWidth:800,
             inputFormHeight:400
      	 }

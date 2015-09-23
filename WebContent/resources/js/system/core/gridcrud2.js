@@ -37,7 +37,7 @@ function createsuungridupload(option){
 	var topbar=['->'];
 	topbar.push({
 		iconCls:"add",
-		text:"上传",
+		text:"导入",
         handler:function(){ 
         	addfile(refresh);
         }

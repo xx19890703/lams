@@ -21,26 +21,38 @@
 						     type:'post',
 						     data:{oldid:'${factoryinfo.fno}'}
 			   		}
-	    		 } ,
-	    		 fname: { 
+	    		} ,
+	    		fname: { 
 	     			required: true,
 	     			maxlength: 30
-	     		 } ,
+	     		} ,
 	     		fregister:  { 
-	    			 required: true,
-	    			 maxlength: 60,
-	    			 remote: {url:'${ctx}/serviceuser/factoryInfo!checkfregister',
-					     type:'post',
-					     data:{oldid:'${factoryinfo.fregister}'}
-		        	}
-	    		} ,
+					required: true,
+					maxlength: 60,
+					remote: {url:'${ctx}/serviceuser/factoryInfo!checkfregister',
+					type:'post',
+					data:{oldid:'${factoryinfo.fregister}'}
+					}
+	    		},
 	    		ftel: {
 	    			number:true,
 	    			maxlength: 11
 	    		},
+	    		faddress: {
+	    			maxlength: 30
+	    		},
+	    		fower: {
+	    			maxlength: 30
+	    		} ,
+	    		fcontect: {
+	    			maxlength: 30
+	    		},
 	    		fcontecttel: {
 	    			number:true,
 	    			maxlength: 11
+	    		},
+	    		remark: {
+	    			maxlength: 100
 	    		}
 		    },
 		 	messages: {
@@ -59,12 +71,24 @@
 	    			 remote: "制造厂注册码已存在！"
 	    		 } ,
 	    		 ftel: {
-	    			 number: "请输入数字！",
+	    			 number: "电话号码请输入数字！",
 	    			 maxlength:"电话号码不能超过11位！"
 	    		 },
+	    		 faddress: {
+	    			maxlength: "地址长度不能超过30位！"
+	    		 },
+	    		 fower: {
+	    			maxlength: "法人长度不能超过30位！"
+	    		 } ,
+	    		 fcontect: {
+	    			maxlength: "联系人长度不能超过30位！"
+	    		 },
 	    		 fcontecttel: {
-	    			 number: "请输入数字！",
+	    			 number: "联系人电话请输入数字！",
 	    			 maxlength:"联系人电话不能超过11位！"
+	    		 },
+	    		 remark: {
+	    			 maxlength:"备注长度不能超过100！"
 	    		 }
 			}
 		});
@@ -167,7 +191,7 @@
 			
 			<td style="width: 80px;" align="right">备注</td>
 			<td colspan="3">
-				<textarea style="margin-left: 0px;" name="remark" rows="2" cols="72">${factoryinfo.remark}</textarea>
+				<textarea style="margin-left: 0px;width: 448px" name="remark" rows="2">${factoryinfo.remark}</textarea>
 	        </td>
 		</tr>
 	</table>
