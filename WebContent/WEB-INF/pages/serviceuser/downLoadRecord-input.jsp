@@ -3,7 +3,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-    <title>合同下载记录</title>
+    <title>合同下发记录</title>
 	<link rel="stylesheet" type="text/css" media="all" href="${ctx}/resources/js/thrid/calendar/calendar-blue.css"  />
     <script type="text/javascript" src="${ctx}/resources/js/thrid/calendar/jquery.calendar.js"/>
     <script type="text/javascript" src="${ctx}/resources/js/thrid/calendar/calendar-cn-utf8.js"></script>
@@ -14,44 +14,42 @@
    	<script type="text/javascript" src="${ctx}/resources/js/system/core/gridsel.js"></script>
 	<script type="text/javascript" src="${ctx}/resources/js/system/core/treegridsel.js"></script>
     <script>
-	    $("form:first").validate({
+    	$("#SuunWinForm").validate({
 			rules: { 
-				fno: { 
+				'contractid.did': { 
+	    			required: true
+	    		},
+				person: { 
 	    			required: true, 
-	    			maxlength: 30,
-	    			remote: {url:'${ctx}/serviceuser/downloadrecord!check',
-						     type:'post',
-						     data:{oldid:'${downloadrecord.id}'}
-			        }
-	    		 } ,
-	    		 fname: { 
-	     			required: true,
-	     			maxlength: 30
-	     		 } ,
-	     		fregister:  { 
-	    			 required: true,
-	    			 maxlength: 60,
-	    			 remote: {url:'${ctx}/serviceuser/downloadrecord!checkfregister',
-					     type:'post',
-					     data:{oldid:'${downloadrecord.id}'}
-		        }
-	    		 }	
+	    			maxlength: 10
+	    		},
+	    		issuedTime: { 
+	     			required: true
+	     		},
+	     		importTime:  { 
+	    			required: true
+	    		},
+	    		remark: { 
+	    			maxlength: 30
+	    		}	
 		    },
 		 	messages: {
-		 		fno: { 
-	    			required: "制造厂编号不能为空！", 
-	    			maxlength: "制造厂编号长度不能超过30！",
-	    			remote: "制造厂编号已存在！"
-	    		 } ,
-	    		 fname: { 
-	     			required:  "制造厂名称不能为空！", 
-	    			maxlength: "制造厂名称长度不能超过30！"
-	     		 } ,
-	     		 fregister:  { 
-	    			 required:  "制造厂注册码不能为空！",
-	    			 maxlength: "制造厂注册码长度不能超过60！",
-	    			 remote: "制造厂注册码已存在！"
-	    		 }	
+		 		'contractid.did': { 
+	    			required: "下发合同编号不能为空！"
+	    		},
+		 		person: { 
+	    			required: "下发人不能为空！", 
+	    			maxlength: "下发人长度不能超过10！"
+	    		} ,
+	    		issuedTime: { 
+	     			required:  "下发时间不能为空！"
+	     		} ,
+	     		importTime:  { 
+	    			required:  "预计导入时间不能为空！"
+	    		},
+	    		remark: { 
+	    			maxlength: "备注不能超过30！"
+	    		}	
 			}
 		});
 	    
@@ -66,13 +64,14 @@
 					width:'25%'//默认40%
 				},
 				grid:{
+					listurl : $ctx+'/serviceuser/contractCategory!gridlists?type=sel',
 					pagenum:10,//页记录数 默认20
 					suuncolumns:[{columnid:'did',columnname:'编号',colwidth:40,defaultsort:true},
 						 {columnid:'name',columnname:'合同名称',colwidth:80},
 						 {columnid:'auditPerson',columnname:'审核人',colwidth:50},
-						 {columnid:'auditTime',columnname:'审核时间',colwidth:50},
-						 {columnid:'planImportTime',columnname:'预计导入时间',colwidth:50},
-						 {columnid:'status.data_name',columnname:'合同状态',colwidth:40}]
+						 {columnid:'auditTime',columnname:'审核时间',type:'D',colwidth:50},
+						 //{columnid:'planImportTime',columnname:'预计导入时间',colwidth:50},
+						 {columnid:'status.data_name',columnname:'合同状态',issearch:false,colwidth:40}]
 				},
 				winWidth:850,
 				winHeight:450,

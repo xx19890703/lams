@@ -110,7 +110,7 @@
 	                            	failure : function(form, action) {
 	                            		//console.log(action.result.msg);
 	                            		//alert(action.response.responseText);
-	    								Ext.Msg.alert('错误', action.response.responseText);
+	    								Ext.Msg.alert('错误', action.result.msg);
 	    								//callback();
 	    							}
                                 });

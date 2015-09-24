@@ -71,8 +71,8 @@
 	    			 remote: "制造厂注册码已存在！"
 	    		 } ,
 	    		 ftel: {
-	    			 number: "电话号码请输入数字！",
-	    			 maxlength:"电话号码不能超过11位！"
+	    			 number: "电话（传真）请输入数字！",
+	    			 maxlength:"电话（传真）不能超过11位！"
 	    		 },
 	    		 faddress: {
 	    			maxlength: "地址长度不能超过30位！"

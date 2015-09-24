@@ -21,7 +21,7 @@
 				required:true, 
     			remote: {url:'${ctx}/serviceuser/contractCategory!validateName',
 				     type:'post',
-				     data:{oldname:'${contractcategory.name}',id:'${suunplatformTreePid}'}
+				     data:{oldname:'${contractcategory.name}'}
 			    }
 			}             	
 		},
@@ -54,7 +54,7 @@
             <c:choose>		  
 		      <c:when test="${isEdit}">
 		         ${contractcategory.did}
-		         <input type="hidden" name="did"  value="${contractcategory.did}"/> 
+		         <input type="hidden" name="did" value="${contractcategory.did}"/> 
 		      </c:when>		  
            <c:otherwise>
                  <input style="width:100%;" type="text" name="did"/>

@@ -105,7 +105,7 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 	public String validateDid(HttpServletRequest request,HttpServletResponse response) {	
 		String did = request.getParameter("did");
 		String olddid = request.getParameter("olddid");		
-		if(mainManager.isContractCategoryNameUnique("", did, olddid)){
+		if(mainManager.isContractCategoryDidUnique(did, olddid)){
 			return renderText(response,"true");
 		}else{
 			return renderText(response,"false");
@@ -118,9 +118,33 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 	public String validateName(HttpServletRequest request,HttpServletResponse response) {	
 		String name = request.getParameter("name");
 		String oldname = request.getParameter("oldname");
-		String pid = request.getParameter("id");
-		
-		if(mainManager.isContractCategoryNameUnique(pid, name, oldname)){
+		if(mainManager.isContractCategoryNameUnique(name, oldname)){
+			return renderText(response,"true");
+		}else{
+			return renderText(response,"false");
+		}
+	}
+	
+	// 合同id校验
+	@RequestMapping
+	@ResponseBody
+	public String validateGdid(HttpServletRequest request,HttpServletResponse response) {	
+		String did = request.getParameter("did");
+		String olddid = request.getParameter("olddid");
+		if(mainManager.isContractDetailDidUnique(did, olddid)){
+			return renderText(response,"true");
+		}else{
+			return renderText(response,"false");
+		}
+	}
+	
+	// 合同name校验
+	@RequestMapping
+	@ResponseBody
+	public String validateGname(HttpServletRequest request,HttpServletResponse response) {	
+		String name = request.getParameter("name");
+		String oldname = request.getParameter("oldname");
+		if(mainManager.isContractDetailNameUnique(name, oldname)){
 			return renderText(response,"true");
 		}else{
 			return renderText(response,"false");
@@ -258,12 +282,15 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 			trc.setId(operatebean.getDid()+"-"+trc.getId());
 			newset.add(trc.getTemplate().getDid());
 		}
-		if(operatebean.getStatus().getKey().getData_no().equalsIgnoreCase("B") && newset.contains(oldset))
-			return "合同已审核，不能删除以前的模板！";
-		
+		if(operatebean.getStatus().getKey().getData_no().equalsIgnoreCase("B") && !newset.containsAll(oldset))
+			return "合同已审核，不能删除以前的报表！";
+		if(operatebean.getStatus().getKey().getData_no().equalsIgnoreCase("C")){
+			operatebean.setStatus(dicManager.getByKey("STATUS", "A"));
+			operatebean.setAuditPerson(null);
+			operatebean.setAuditTime(null);
+		}
 		try{
 			mainManager.deleteContractTemplateRes(operatebean.getDid());
-			//mainManager.deleteContractDetails(operatebean.getDid());
 			mainManager.saveContractDetail(operatebean);
 			return "";
 		}catch (Exception e){
@@ -273,7 +300,12 @@ public class ContractCategoryController extends TreeGridCRUDController<ContractC
 
 	@Override
 	protected Page<ContractDetail> getGridPageRecords(HttpServletRequest request, String treeid,Page<ContractDetail> page) {
-		return mainManager.getAllContractDetail(treeid, page);
+		String type = request.getParameter("type");
+		if(type!=null&&"sel".equals(type)){
+			return mainManager.getSelContractDetail(treeid,page);
+		}else{
+			return mainManager.getAllContractDetail(treeid, page);
+		}
 	}
 
 	@Override

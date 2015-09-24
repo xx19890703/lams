@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.SessionFactoryUtils;
 import org.springframework.stereotype.Service;
@@ -117,6 +118,11 @@ public class TemplateResManager {
 		f.setValue(id);
 		condition.getFilterInfos().add(f);
 		return submanager.findAll(condition);
+	}
+	
+	@Transactional(readOnly = true)
+	public Page<TemplateResDetail> getSelTemplateResDetail(String treeid,Page<TemplateResDetail> page) {
+		return submanager.findByCriteria(page, Restrictions.eq("state.key.data_no", "1"),Restrictions.eq("resmain.did", treeid));
 	}
 	
 	@Transactional(readOnly = true)

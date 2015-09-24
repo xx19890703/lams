@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,14 +58,23 @@ public class ContractCategoryManager {
 	}
 	
 	@Transactional(readOnly = true)
-	public boolean isContractCategoryNameUnique(String parentId,String name ,String oldname){
-		if (name == null || name.equals(oldname))
-			return true;
-		String hql="from ContractCategory o where o.pid=? and o.name=?";
-		if (manager.findUnique(hql, parentId,name)==null){
-			return true;
-		} else
-			return false;
+	public boolean isContractCategoryDidUnique(String id ,String oldid){
+		return manager.isUnique("did", id, oldid);
+	}
+	
+	@Transactional(readOnly = true)
+	public boolean isContractCategoryNameUnique(String name ,String oldname){
+		return manager.isUnique("name", name, oldname);
+	}
+	
+	@Transactional(readOnly = true)
+	public boolean isContractDetailDidUnique(String id ,String oldid){
+		return submanager.isUnique("did", id, oldid);
+	}
+	
+	@Transactional(readOnly = true)
+	public boolean isContractDetailNameUnique(String name ,String oldname){
+		return submanager.isUnique("name", name, oldname);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -144,6 +154,11 @@ public class ContractCategoryManager {
 	public void deleteContractDetails(String did) {
 		String hql="delete ContractDetail o where o.did=? ";
 		submanager.executeHql(hql,did);
+	}
+	
+	@Transactional(readOnly = true)
+	public Page<ContractDetail> getSelContractDetail(String treeid,Page<ContractDetail> page) {
+		return submanager.findByCriteria(page, Restrictions.eq("status.key.data_no", "B"),Restrictions.eq("conmain.did", treeid));
 	}
 	
 	@Transactional(readOnly = true)

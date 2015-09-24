@@ -74,7 +74,7 @@ public class DownLoadRecordController extends BaseCRUDController<DownLoadRecord>
 			//更新合同信息
 			ContractDetail contract = cmanager.getContractDetail(operatebean.getContractid().getDid());
 			contract.setImportTime(new Date());
-			contract.setStatus(dicManager.getByKey("STATUS", "B"));
+			contract.setStatus(dicManager.getByKey("STATUS", "C"));
 			if(contract.getImportCount()==null)
 				contract.setImportCount(1);
 			else

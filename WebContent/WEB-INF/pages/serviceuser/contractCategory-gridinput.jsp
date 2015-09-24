@@ -14,24 +14,24 @@
 		<script type="text/javascript" src="${ctx}/resources/js/system/core/gridsel.js"></script>
 		<script type="text/javascript" src="${ctx}/resources/js/system/core/treegridsel.js"></script>
 		<script>
-			$("form:first").validate({
+		$("#SuunWinForm").validate({
 				rules: { 
 					did: { 
 	        			required: true, 
 	        			maxlength: 30,
-	        			remote: {url:'${ctx}/system/developer/menu!validateFunId',
+	        			remote: {url:'${ctx}/serviceuser/contractCategory!validateGdid',
 							     type:'post',
-							     data:{oldid:'${contractdetail.did}',id:$("input[name=d]")}
+							     data:{olddid:'${contractdetail.did}'}
 				        }
-	        		 } ,
+	        		 },
 	        		 name: { 
 	         			required: true,
 	         			maxlength: 20,
-	         			remote: {url:'${ctx}/system/developer/menu!validateFunId',
+	         			remote: {url:'${ctx}/serviceuser/contractCategory!validateGname',
 						     type:'post',
-						     data:{oldname:'${contractdetail.name}',name:'${treeid}'}
+						     data:{oldname:'${contractdetail.name}'}
 			        	}
-	         		 } ,
+	         		 },
 	        		 'finfo.fno':  { 
 	        			 required: true
 	        		 }	
@@ -45,7 +45,7 @@
 	        		 name: { 
 	         			required:  "合同名称不能为空！", 
 	        			maxlength: "合同名称的长度不能超过20！",
-	        			remote: '合同编号已存在！'
+	        			remote: '合同名称已存在！'
 	         		 } ,
 	        		 'finfo.fno':  { 
 	        			 required:  "制造厂信息不能为空！"
@@ -91,6 +91,7 @@
 						width:'30%'//默认40%
 					},
 					grid:{
+						listurl : $ctx+'/serviceuser/templateRes!gridlists?type=sel',
 						pagenum:10,//页记录数 默认20
 						suuncolumns:[{columnid:'did',columnname:'编号',colwidth:20,defaultsort:true},
 							 {columnid:'name',columnname:'名称',colwidth:40},
@@ -116,16 +117,21 @@
 			<tr>
 				<td width="80" align="right">合同编号</td>					
 				<td width="240">
-				    <c:choose><c:when test="${isEdit}">
-		                <input type="text" name="did"  value="${contractdetail.did}" style="width:180px;"/>
-		                <input type="hidden" name="importCount"  value="${contractdetail.importCount }"/>
-		                <input type="hidden" name="importTime"  value="${contractdetail.importTime }"/>
-		                <input type="hidden" name="status.key.data_no"  value="${contractdetail.status.key.data_no }"/>
-		                <input type="hidden" name="orderinfo"  value="${contractdetail.orderinfo}"/>
-		            </c:when><c:otherwise>
-		                <input type="text" name="did"  value="" style="width:180px;"/>
-		                <input type="hidden" name="status.key.data_no"  value="A"/>
-		            </c:otherwise></c:choose>
+				    <c:choose>
+				    	<c:when test="${isEdit}">
+			                <input type="text" name="did" readonly="readonly" value="${contractdetail.did}" style="width:180px;"/>
+			                <input type="hidden" name="importCount"  value="${contractdetail.importCount }"/>
+			                <input type="hidden" name="importTime"  value="${contractdetail.importTime }"/>
+			                <input type="hidden" name="status.key.data_no"  value="${contractdetail.status.key.data_no}"/>
+			                <input type="hidden" name="orderinfo"  value="${contractdetail.orderinfo}"/>
+			                 <input type="hidden" name="auditPerson"  value="${contractdetail.auditPerson}"/>
+			                  <input type="hidden" name="auditTime"  value="${contractdetail.auditTime}"/>
+		            	</c:when>
+		            	<c:otherwise>
+		                	<input type="text" name="did"  value="" style="width:180px;"/>
+		                	<input type="hidden" name="status.key.data_no"  value="A"/>
+		            	</c:otherwise>
+		            </c:choose>
 		        </td>
 				<td width="80" align="right">合同名称</td>
 				<td width="240"><input  type="text" name="name"  value="${contractdetail.name}" style="width:180px;"/></td>

@@ -231,7 +231,12 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 
 	@Override
 	protected Page<TemplateResDetail> getGridPageRecords(HttpServletRequest request, String treeid,Page<TemplateResDetail> page) {
-		return mainManager.getAllTemplateResDetail(treeid, page);
+		String type = request.getParameter("type");
+		if(type!=null&&"sel".equals(type)){
+			return mainManager.getSelTemplateResDetail(treeid,page);
+		}else{
+			return mainManager.getAllTemplateResDetail(treeid, page);
+		}
 	}
 
 	@Override
@@ -296,6 +301,8 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 	@RequestMapping
 	@ResponseBody
 	public String configupload(@RequestParam("file") MultipartFile file, HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException{
+		
+		boolean isflag = false;
 		Map<String,Object> map=new HashMap<String,Object>();
 		ObjectMapper mapper = new ObjectMapper();
 		//获取文件后缀
@@ -303,7 +310,7 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 		if(!".zip".equalsIgnoreCase(suffix)){
 			map.put("success", false);
 			map.put("msg", "上传文件不符合要求(要求zip格式文件)！");
-			return mapper.writeValueAsString(map);
+			return renderHtml(response, mapper.writeValueAsString(map));
 		}
 		
 		Pattern p = Pattern.compile("[\u4e00-\u9fa5]");
@@ -311,7 +318,7 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
         if (match.find()) {
         	map.put("success", false);
 			map.put("msg", "上传文件名称不能包含中文！");
-			return mapper.writeValueAsString(map);
+			return renderHtml(response, mapper.writeValueAsString(map));
         }
         
 		if (!file.isEmpty()){
@@ -345,6 +352,7 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 						}
 						bout.close();
 						out.close();
+						isflag = isflag && true;
 					}else if(fileName.endsWith(".sql")){
 						destFile=new File(envPath,entry.getName());
 						if(!destFile.exists()){
@@ -358,6 +366,7 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 						}
 						bout.close();
 						out.close();
+						isflag = isflag && true;
 					}else if(fileName.endsWith(".xls") || fileName.endsWith(".xlsx")){
 						destFile=new File(envPath,entry.getName());
 						xls = xlspath + entry.getName();
@@ -384,15 +393,22 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 							
 							map.put("success", true);
 							map.put("msg", "解析上传文件成功!");
+							return renderHtml(response, mapper.writeValueAsString(map));
 						}
+						isflag = isflag && true;
 					}
+					bin.close();  
+					zip.close();
 				}  
-				bin.close();  
-				zip.close();
+				if(!isflag){
+					map.put("success", false);
+					map.put("msg", "文件格式错误，请核对后上传!");
+					return renderHtml(response, mapper.writeValueAsString(map));
+				}
 			} catch (IOException e) {
 				map.put("success", false);
 				map.put("msg", "解析上传文件出错!");
-				return mapper.writeValueAsString(map);
+				return renderHtml(response, mapper.writeValueAsString(map));
 			}
 		}else{
 			map.put("success", false);
