@@ -96,10 +96,20 @@
 	    function setupDateTime(me){
 	    	SuunCalendar.show(me,{ifFormat: "%Y-%m-%d %H:%M:%S",showsTime: true});
 	    }
-	    
-	    
      </script>
-      
+     <script>
+	     $(document).ready(function(){ 
+	    	 $("#remark").each(
+   	            function(){
+   	                $(this).keypress( function(e) {
+                        var key = window.event ? e.keyCode : e.which;
+                        if(key.toString() == "13"){
+                        	return false;
+                        }
+	                });
+	           });
+	     });
+	</script>
 </head>    
 <body>
 	<br>
@@ -191,7 +201,7 @@
 			
 			<td style="width: 80px;" align="right">备注</td>
 			<td colspan="3">
-				<textarea style="margin-left: 0px;width: 448px" name="remark" rows="2">${factoryinfo.remark}</textarea>
+				<textarea id="remark" style="margin-left: 0px;width: 448px" name="remark" rows="2" onKeyDown="check()">${factoryinfo.remark}</textarea>
 	        </td>
 		</tr>
 	</table>

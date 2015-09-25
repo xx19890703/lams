@@ -302,7 +302,7 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 	@ResponseBody
 	public String configupload(@RequestParam("file") MultipartFile file, HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException{
 		
-		boolean isflag = false;
+		int isflag = 0;
 		Map<String,Object> map=new HashMap<String,Object>();
 		ObjectMapper mapper = new ObjectMapper();
 		//获取文件后缀
@@ -335,7 +335,7 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 				ZipInputStream zip = new ZipInputStream(new FileInputStream(path));
 				BufferedInputStream bin=new BufferedInputStream(zip);
 				ZipEntry entry;
-				//逐个读取压缩包的文件
+				//逐个读取压缩包的文件，先处理sql、cpt
 				while((entry = zip.getNextEntry()) != null ){
 					//处理以.cpt结尾的文件  及 .sql结尾的文件  .xls文件
 					String fileName = entry.getName();
@@ -352,7 +352,7 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 						}
 						bout.close();
 						out.close();
-						isflag = isflag && true;
+						isflag ++;
 					}else if(fileName.endsWith(".sql")){
 						destFile=new File(envPath,entry.getName());
 						if(!destFile.exists()){
@@ -366,7 +366,7 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 						}
 						bout.close();
 						out.close();
-						isflag = isflag && true;
+						isflag ++;
 					}else if(fileName.endsWith(".xls") || fileName.endsWith(".xlsx")){
 						destFile=new File(envPath,entry.getName());
 						xls = xlspath + entry.getName();
@@ -378,10 +378,12 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 						}
 						bout.close();
 						out.close();
+						isflag ++;
 						String str = readExcel(xls);
 						if(!str.equals("")){
 							map.put("success", false);
 							map.put("msg", str);
+							return renderHtml(response, mapper.writeValueAsString(map));
 						}else{
 							//保存上传记录
 							TemplateCfgUpLoad upload = new TemplateCfgUpLoad();
@@ -395,14 +397,13 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 							map.put("msg", "解析上传文件成功!");
 							return renderHtml(response, mapper.writeValueAsString(map));
 						}
-						isflag = isflag && true;
 					}
 					bin.close();  
 					zip.close();
 				}  
-				if(!isflag){
+				if(isflag >= 3){
 					map.put("success", false);
-					map.put("msg", "文件格式错误，请核对后上传!");
+					map.put("msg", "文件错误(文件需包含.cpt .sql .xls文件)，请核对后上传!");
 					return renderHtml(response, mapper.writeValueAsString(map));
 				}
 			} catch (IOException e) {
@@ -423,7 +424,7 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 	 * @return
 	 */
 	public String readExcel(String path){
-		String filepath = FRContext.getCurrentEnv().getPath();
+		//String filepath = FRContext.getCurrentEnv().getPath();
 		//定义sheet名称
 		String [] sheets = {"templateres", "templateres_detail", "templateres_content"};
 		// 构造 Workbook 对象，strPath 传入文件路径  
@@ -477,11 +478,11 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 				   TemplateResDetail tempdetail = new TemplateResDetail();
 				   tempdetail.setDid(row.getCell(0).toString());
 				   tempdetail.setName(row.getCell(1).toString());
-				   String str = filepath + "reportlets" + File.separator + row.getCell(2).toString().replaceAll("\\\\", Matcher.quoteReplacement(File.separator));
-				   if(new File(str).exists())
+				   //String str = filepath + "reportlets" + File.separator + row.getCell(2).toString().replaceAll("\\\\", Matcher.quoteReplacement(File.separator));
+				   //if(new File(str).exists())
 					   tempdetail.setPath(row.getCell(2).toString());
-				   else
-					   return sheets[1]+"中"+row.getCell(2).toString()+"文件不存在！";
+				   //else
+					   //return sheets[1]+"中"+row.getCell(2).toString()+"文件不存在！";
 				   tempdetail.setResmain(tempres);
 				   tempdetail.setState(dicManager.getByKey("STATE", "1"));
 				   mainManager.saveTemplateResDetail(tempdetail);
@@ -504,10 +505,10 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 					TemplateResContent tempcontent = new TemplateResContent();
 					tempcontent.setDid(row.getCell(0).toString());
 					tempcontent.setName(row.getCell(1).toString());
-					if(new File(filepath+row.getCell(2).toString().replaceAll("\\\\", Matcher.quoteReplacement(File.separator))).exists())
+					//if(new File(filepath+row.getCell(2).toString().replaceAll("\\\\", Matcher.quoteReplacement(File.separator))).exists())
 						tempcontent.setCsqlpath(row.getCell(2).toString());
-				   else
-					   return sheets[2]+"中"+row.getCell(2).toString()+"文件不存在！";
+				    //else
+					   //return sheets[2]+"中"+row.getCell(2).toString()+"文件不存在！";
 					tempcontent.setIsqlpath(row.getCell(3).toString());
 					tempcontent.setResdetail(resdetail);
 					tempcontent.setState(dicManager.getByKey("STATE", "1"));
