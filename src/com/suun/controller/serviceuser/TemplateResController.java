@@ -337,6 +337,9 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 				ZipEntry entry;
 				//逐个读取压缩包的文件，先处理sql、cpt
 				while((entry = zip.getNextEntry()) != null ){
+					if (entry.isDirectory()) {
+						continue;
+					}
 					//处理以.cpt结尾的文件  及 .sql结尾的文件  .xls文件
 					String fileName = entry.getName();
 					if(fileName.endsWith(".cpt")){
