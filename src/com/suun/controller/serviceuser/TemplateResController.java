@@ -9,8 +9,10 @@ import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -301,9 +303,9 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 	@RequestMapping
 	@ResponseBody
 	public String configupload(@RequestParam("file") MultipartFile file, HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException{
-		
-		int isflag = 0;
 		Map<String,Object> map=new HashMap<String,Object>();
+		//记录zip文件包含的文件类型
+		Set<String> set = new HashSet<String>();
 		ObjectMapper mapper = new ObjectMapper();
 		//获取文件后缀
 		String suffix = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
@@ -355,7 +357,7 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 						}
 						bout.close();
 						out.close();
-						isflag ++;
+						set.add("cpt");
 					}else if(fileName.endsWith(".sql")){
 						destFile=new File(envPath,entry.getName());
 						if(!destFile.exists()){
@@ -369,7 +371,7 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 						}
 						bout.close();
 						out.close();
-						isflag ++;
+						set.add("sql");
 					}else if(fileName.endsWith(".xls") || fileName.endsWith(".xlsx")){
 						destFile=new File(envPath,entry.getName());
 						xls = xlspath + entry.getName();
@@ -381,35 +383,35 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 						}
 						bout.close();
 						out.close();
-						isflag ++;
+						set.add("xls");
 						String str = readExcel(xls);
 						if(!str.equals("")){
 							map.put("success", false);
 							map.put("msg", str);
 							return renderHtml(response, mapper.writeValueAsString(map));
-						}else{
-							//保存上传记录
-							TemplateCfgUpLoad upload = new TemplateCfgUpLoad();
-							UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-							upload.setPerson(userDetails.getUsername());
-							upload.setUpTime(new Date(System.currentTimeMillis()));
-							upload.setPath(path);
-							upManager.saveTemplateCfgUpLoad(upload);
-							
-							map.put("success", true);
-							map.put("msg", "解析上传文件成功!");
-							return renderHtml(response, mapper.writeValueAsString(map));
 						}
 					}
-					bin.close();  
-					zip.close();
-				}  
-				if(isflag >= 3){
+				}
+				bin.close();  
+				zip.close();
+				if(set.size() < 3){
 					map.put("success", false);
 					map.put("msg", "文件错误(文件需包含.cpt .sql .xls文件)，请核对后上传!");
 					return renderHtml(response, mapper.writeValueAsString(map));
 				}
+				//保存上传记录
+				TemplateCfgUpLoad upload = new TemplateCfgUpLoad();
+				UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+				upload.setPerson(userDetails.getUsername());
+				upload.setUpTime(new Date(System.currentTimeMillis()));
+				upload.setPath(path);
+				upManager.saveTemplateCfgUpLoad(upload);
+				
+				map.put("success", true);
+				map.put("msg", "解析上传文件成功!");
+				return renderHtml(response, mapper.writeValueAsString(map));
 			} catch (IOException e) {
+				e.printStackTrace();
 				map.put("success", false);
 				map.put("msg", "解析上传文件出错!");
 				return renderHtml(response, mapper.writeValueAsString(map));

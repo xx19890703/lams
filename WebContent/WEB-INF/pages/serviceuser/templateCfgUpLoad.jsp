@@ -41,7 +41,7 @@
 			containerid:'contextPanel-'+$tabtitle,
 			keyid:"id",//关键字
 			baseurl:$ctx+'/serviceuser/templateCfgUpLoad',//基本url
-			pagenum:5,//页记录数
+			pagenum:15,//页记录数
 			suuncolumns:[new Ext.grid.RowNumberer({header:"序号",hidden:true,width:40}),
 		             {columnid:'id',hidden:true,columnname:'编号',issearch:false},
 					 {columnid:'person',columnname:'上传人',colwidth:80},

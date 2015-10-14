@@ -24,6 +24,7 @@ import com.octo.captcha.component.image.textpaster.NonLinearTextPaster;
 import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
 
+@SuppressWarnings("restriction")
 public class CaptchaService {
 	/**/
     private static suunGenericManageableCaptchaService instance;
