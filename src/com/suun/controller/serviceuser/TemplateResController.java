@@ -458,13 +458,13 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 		// 循环输出表格中的内容  
 		for (int i = 2; i < sheet.getPhysicalNumberOfRows(); i++) {
 			row = sheet.getRow(i);
-			TemplateRes temp = mainManager.getTemplateRes(row.getCell(0).toString());
+			TemplateRes temp = mainManager.getTemplateRes(row.getCell(0).getStringCellValue());
 			if(null == temp){
 			    TemplateRes tempres = new TemplateRes();
-		        tempres.setDid(row.getCell(0).toString());
-		        tempres.setName(row.getCell(1).toString());
-		        tempres.setDescription(row.getCell(2).toString());
-		        tempres.setPid(row.getCell(3).toString());
+		        tempres.setDid(row.getCell(0).getStringCellValue());
+		        tempres.setName(row.getCell(1).getStringCellValue());
+		        tempres.setDescription(row.getCell(2).getStringCellValue());
+		        tempres.setPid(row.getCell(3).getStringCellValue());
 		        tempres.setState(dicManager.getByKey("STATE", "1"));
 		        mainManager.saveTemplateRes(tempres);
 			}else{
@@ -476,18 +476,18 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 		sheet = xls.getSheet(sheets[1]); 
 		for (int i = 2; i < sheet.getPhysicalNumberOfRows(); i++) {
 		   row = sheet.getRow(i);
-		   TemplateResDetail resdetail = mainManager.getTemplateResDetail(row.getCell(0).toString());
+		   TemplateResDetail resdetail = mainManager.getTemplateResDetail(row.getCell(0).getStringCellValue());
 		   if(null == resdetail){
-			   TemplateRes tempres = mainManager.getTemplateRes(row.getCell(3).toString());
+			   TemplateRes tempres = mainManager.getTemplateRes(row.getCell(3).getStringCellValue());
 			   if(null != tempres){
 				   TemplateResDetail tempdetail = new TemplateResDetail();
-				   tempdetail.setDid(row.getCell(0).toString());
-				   tempdetail.setName(row.getCell(1).toString());
-				   //String str = filepath + "reportlets" + File.separator + row.getCell(2).toString().replaceAll("\\\\", Matcher.quoteReplacement(File.separator));
+				   tempdetail.setDid(row.getCell(0).getStringCellValue());
+				   tempdetail.setName(row.getCell(1).getStringCellValue());
+				   //String str = filepath + "reportlets" + File.separator + row.getCell(2).getStringCellValue().replaceAll("\\\\", Matcher.quoteReplacement(File.separator));
 				   //if(new File(str).exists())
-					   tempdetail.setPath(row.getCell(2).toString());
+					   tempdetail.setPath(row.getCell(2).getStringCellValue());
 				   //else
-					   //return sheets[1]+"中"+row.getCell(2).toString()+"文件不存在！";
+					   //return sheets[1]+"中"+row.getCell(2).getStringCellValue()+"文件不存在！";
 				   tempdetail.setResmain(tempres);
 				   tempdetail.setState(dicManager.getByKey("STATE", "1"));
 				   mainManager.saveTemplateResDetail(tempdetail);
@@ -503,18 +503,18 @@ public class TemplateResController extends TreeGridCRUDController<TemplateRes,Te
 		sheet = xls.getSheet(sheets[2]); 
 		for (int i = 2; i < sheet.getPhysicalNumberOfRows(); i++) {
 			row = sheet.getRow(i);
-			TemplateResDetail rescontent = mainManager.getTemplateResDetail(row.getCell(0).toString());
+			TemplateResDetail rescontent = mainManager.getTemplateResDetail(row.getCell(0).getStringCellValue());
 			if(null == rescontent){
-				TemplateResDetail resdetail = mainManager.getTemplateResDetail(row.getCell(4).toString());
+				TemplateResDetail resdetail = mainManager.getTemplateResDetail(row.getCell(4).getStringCellValue());
 				if(null != resdetail){
 					TemplateResContent tempcontent = new TemplateResContent();
-					tempcontent.setDid(row.getCell(0).toString());
-					tempcontent.setName(row.getCell(1).toString());
-					//if(new File(filepath+row.getCell(2).toString().replaceAll("\\\\", Matcher.quoteReplacement(File.separator))).exists())
-						tempcontent.setCsqlpath(row.getCell(2).toString());
+					tempcontent.setDid(row.getCell(0).getStringCellValue());
+					tempcontent.setName(row.getCell(1).getStringCellValue());
+					//if(new File(filepath+row.getCell(2).getStringCellValue().replaceAll("\\\\", Matcher.quoteReplacement(File.separator))).exists())
+						tempcontent.setCsqlpath(row.getCell(2).getStringCellValue());
 				    //else
-					   //return sheets[2]+"中"+row.getCell(2).toString()+"文件不存在！";
-					tempcontent.setIsqlpath(row.getCell(3).toString());
+					   //return sheets[2]+"中"+row.getCell(2).getStringCellValue()+"文件不存在！";
+					tempcontent.setIsqlpath(row.getCell(3).getStringCellValue());
 					tempcontent.setResdetail(resdetail);
 					tempcontent.setState(dicManager.getByKey("STATE", "1"));
 					mainManager.saveTemplateResContent(tempcontent);
