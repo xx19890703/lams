@@ -92,7 +92,7 @@ public class TemplateResContent {
 		this.resdetail = resdetail;
 	}
 	
-	@Column(length=255)
+	@Column(length=200)
 	public String getCsqlpath() {
 		return csqlpath;
 	}
@@ -100,7 +100,7 @@ public class TemplateResContent {
 		this.csqlpath = csqlpath;
 	}
 	
-	@Column(length=255)
+	@Column(length=200)
 	public String getIsqlpath() {
 		return isqlpath;
 	}

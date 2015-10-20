@@ -36,7 +36,7 @@ public class UpLoadRecord extends IdEntity{
 	private String remark;
 	//类型
 	private String type;//上传还是下载
-	@Column(name="contractid")
+	@Column(name="contractid",length=30)
 	@NotFound(action = NotFoundAction.IGNORE)
 	public String getContractid() {
 		return contractid;

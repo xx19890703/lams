@@ -39,6 +39,9 @@ Ext.onReady(function() {
 	
 	var view = new Ext.Viewport({
 		layout : "border",
+		defaults: {
+	        split: true
+	    },
 		items : [{
 			height:60,
 			region : "north",
@@ -281,6 +284,7 @@ function showSelect() {
 		}, {
 			text : "取 消",
 			handler : function() {
+				htselectPanel.close();
 			}
 		} ]
 	});

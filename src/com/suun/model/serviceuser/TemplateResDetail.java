@@ -98,7 +98,7 @@ public class TemplateResDetail {
 		this.rescontent = rescontent;
 	}
 	
-	@Column(length=50)
+	@Column(length=200)
 	public String getPath() {
 		return path;
 	}
